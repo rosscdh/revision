@@ -33,6 +33,12 @@ Manual Setup
 4. ./manage.py loaddata sites subscribe
 5. http://localhost:8000/
 
+Design Evolutions
+-----------------
+
+```
+/p/my-cool-project/
+```
 
 Features
 --------
