@@ -1,7 +1,7 @@
-Nootroo
+Re>ision
 =======
 
-Nootroo website, get you some good stuff
+Video commenting and collaboration platform, sync with dropbox/box etc
 
 
 Development
