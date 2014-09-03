@@ -35,7 +35,7 @@ var VersionView = React.createClass({
 });
 
 // 
-var CollaboratorView = React.createClass({
+var CollaboratorDetailView = React.createClass({
     render: function () {
         var user_class = this.props.user_class
         var classNames = 'pull-right label';
@@ -58,6 +58,19 @@ var CollaboratorView = React.createClass({
     }
 });
 
+
+var CollaboratorView = React.createClass({
+    render: function () {
+        var name = this.props.name;
+        return (
+            <span>
+            <span className="glyphicon glyphicon-comment"></span> {name}:
+            </span>
+        )
+    }
+});
+
+
 var CollaboratorListView = React.createClass({
     getInitialState: function () {
         return {
@@ -66,7 +79,7 @@ var CollaboratorListView = React.createClass({
     },
     render: function () {
         var collaboratorNodes = this.state.project.collaborators.map(function ( person ) {
-            return <CollaboratorView name={person.name} user_class={person.user_class} />
+            return <CollaboratorDetailView name={person.name} user_class={person.user_class} />
         });
 
         return (
