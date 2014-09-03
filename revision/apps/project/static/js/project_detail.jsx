@@ -342,6 +342,12 @@ var BaseProjectDetailView = React.createClass({
         });
 
 
+        Mousetrap.bind('?', function () {
+            $('#modal-keyboard-help').modal('toggle');
+            return false; // dont output the text
+        });
+
+
     },
     render: function () {
 

@@ -23,10 +23,6 @@ class UserProfile(EmailIsValidatedMixin,
 
     data = JSONField(default={})
 
-    @property
-    def is_vendor(self):
-        return False
-
     def __unicode__(self):
         return '%s <%s>' % (self.user.get_full_name(), self.user.email)
 

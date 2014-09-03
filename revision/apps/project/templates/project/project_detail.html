@@ -24,7 +24,50 @@
       <p><a class="btn btn-primary" href="#" role="button">Export &raquo;</a></p>
     </div>
 
+</div>
+
+<div id="modal-keyboard-help" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modal-keyboard-help" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel">Keyboard controls</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+              <div class="col-md-4">
+                  <small>
+                  <ul>
+                      <li><b>p</b>: Play</li>
+                      <li><b>s</b>: Pause</li>
+                  </ul>
+                  </small>
+              </div>
+              <div class="col-md-4">
+                  <small>
+                  <ul>
+                      <li><b>c</b>: Add Comment - stops the player</li>
+                      <li><b>k</b>: Add Sketch - stops the player</li>
+                      <li><b>t</b>: Add Sub-Title - stops the player</li>
+                  </ul>
+                  </small>
+              </div>
+              <div class="col-md-4">
+                  <small>
+                  <ul>
+                      <li><b>command+1</b>: Goto Begin</li>
+                      <li><b>command+0</b>: Goto End</li>
+                      <li><b>command+x</b>: Goto Next Comment</li>
+                      <li><b>command+c</b>: Goto Previous Comment</li>
+                  </ul>
+                  </small>
+              </div>
+          </div>
+
+        </div>
+    </div>
   </div>
+</div>
 
 {% endblock %}
 
@@ -88,33 +131,9 @@ var Video = {
 {% endblock js %}
 
 {% block footer %}
-<div class="row">
-    <div class="col-md-4">
-        <small>
-        <ul>
-            <li><b>p</b>: Play</li>
-            <li><b>s</b>: Pause</li>
-        </ul>
-        </small>
-    </div>
-    <div class="col-md-4">
-        <small>
-        <ul>
-            <li><b>c</b>: Add Comment - stops the player</li>
-            <li><b>k</b>: Add Sketch - stops the player</li>
-            <li><b>t</b>: Add Sub-Title - stops the player</li>
-        </ul>
-        </small>
-    </div>
-    <div class="col-md-4">
-        <small>
-        <ul>
-            <li><b>command+1</b>: Goto Begin</li>
-            <li><b>command+0</b>: Goto End</li>
-            <li><b>command+x</b>: Goto Next Comment</li>
-            <li><b>command+c</b>: Goto Previous Comment</li>
-        </ul>
-        </small>
-    </div>
-</div>
+<p>
+    <ul class="list-unstyled">
+        <li><b>?</b> Press for keyboard shortcuts</li>
+    </ul>
+</p>
 {% endblock %}
