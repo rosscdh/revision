@@ -1,4 +1,4 @@
-{% extends 'project/base.html' %}
+{% extends 'project/base.html' %}{% load compressed %}
 
 {% block jumbo %}
 <div class="jumbotron">
@@ -144,4 +144,6 @@ $(function () {
  
 });
 </script>
+{% compressed_js 'project_detail' %}
+{% if DEBUG %}<script src="{{ STATIC_URL }}js/reactjs/0.11.1/JSXTransformer.js"></script>{% endif %}
 {% endblock js %}

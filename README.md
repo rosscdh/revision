@@ -48,4 +48,4 @@ Features
 3. FCP.xml - final cut pro export that has the comments and even subtitles specified and able to be imported
 4. revisions of videos
 5. invite collaborators - unique uuid urls
-6. ...
+6. keyboard shortcuts http://craig.is/killing/mice

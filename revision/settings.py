@@ -184,20 +184,24 @@ TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
 #         },
 #   }
 # }
-# PIPELINE_JS = {
-#     'core': {
-#         'source_filenames': (
-#             'js/ie-emulation-modes-warning.js',
-#             'ie10-viewport-bug-workaround.js',
-#             'js/bootstrap.min.js',
-#         ),
-#         'output_filename': 'js/application.js',
-#     }
-# }
-# PIPELINE_COMPILERS = [
-#     'pipeline.compilers.less.LessCompiler',
-#     'react.utils.pipeline.JSXCompiler',
-# ]
+PIPELINE_JS = {
+    'react': {
+        'source_filenames': (
+            'js/reactjs/0.11.1/react-with-addons.js',
+        ),
+        'output_filename': 'js/react.js'
+    },
+    'project': {
+        'source_filenames': (
+            'js/project_detail.jsx',
+        ),
+        'output_filename': 'js/project.js',
+    }
+}
+PIPELINE_COMPILERS = [
+    'pipeline.compilers.less.LessCompiler',
+    'react.utils.pipeline.JSXCompiler',
+]
 
 #
 # Payments
