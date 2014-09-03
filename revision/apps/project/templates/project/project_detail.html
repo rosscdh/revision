@@ -147,3 +147,35 @@ $(function () {
 {% compressed_js 'project_detail' %}
 {% if DEBUG %}<script src="{{ STATIC_URL }}js/reactjs/0.11.1/JSXTransformer.js"></script>{% endif %}
 {% endblock js %}
+
+{% block footer %}
+<div class="row">
+    <div class="col-md-4">
+        <small>
+        <ul>
+            <li><b>s</b>: Pause</li>
+            <li><b>p</b>: Play</li>
+        </ul>
+        </small>
+    </div>
+    <div class="col-md-4">
+        <small>
+        <ul>
+            <li><b>c</b>: Add Comment - stops the player</li>
+            <li><b>k</b>: Add Sketch - stops the player</li>
+            <li><b>t</b>: Add Sub-Title - stops the player</li>
+        </ul>
+        </small>
+    </div>
+    <div class="col-md-4">
+        <small>
+        <ul>
+            <li><b>command+1</b>: Goto Begin</li>
+            <li><b>command+0</b>: Goto End</li>
+            <li><b>command+x</b>: Goto Next Comment</li>
+            <li><b>command+c</b>: Goto Previous Comment</li>
+        </ul>
+        </small>
+    </div>
+</div>
+{% endblock %}

@@ -65,6 +65,7 @@
       <hr>
 
       <footer>
+        {% block footer %}{% endblock %}
         <p>&copy; Company 2014</p>
       </footer>
     </div> <!-- /container -->
@@ -77,6 +78,6 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="http://getbootstrap.com/ie10-viewport-bug-workaround.js"></script>
-    {% block js %}{% endblock js %}
+    {% block js %}{% endblock %}
   </body>
 </html>
