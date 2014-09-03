@@ -313,6 +313,10 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             flowplayer().seekTo(0);
         });
 
+
+        /**
+        * local function to bind common functionality together for halting and focusing
+        **/
         var commentTypeSetter = function ( type ) {
             flowplayer().pause();
             $('input[name=comment]').focus();
