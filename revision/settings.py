@@ -155,7 +155,7 @@ TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
 #
 # Pipeline
 #
-#STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
