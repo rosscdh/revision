@@ -2,7 +2,34 @@
 
 
 {% block content %}
-<div id="project-detail-base" />
+<div id="project-detail-base"></div>
+
+<div class="row">
+    <div class="col-md-4">
+      <h2>New Version</h2>
+      <p>Drop a new version of the video here</p>
+        <a href="#" class="thumbnail">
+          <img data-src="holder.js/100%x180" alt="...">
+        </a>
+    </div>
+
+    <div class="col-md-4">
+      <h2>Collaborators</h2>
+      <p>Add new collaborators here</p>
+      <ul class="list-group">
+        <li class="list-group-item"><span class="glyphicon glyphicon-user"></span> <span class="badge">Ross Crawford</span></li>
+        <li class="list-group-item"><span class="glyphicon glyphicon-user"></span> <span class="pull-right">Kris Müller</span></li>
+      </ul>
+    </div>
+
+    <div class="col-md-4">
+      <h2>Save</h2>
+      <p>Export the project to dropbox, this will export the video, a Final Cut Pro XML file as well as an activity stream document (activity.html) which allows you to search comments</p>
+      <p><a class="btn btn-primary" href="#" role="button">Export &raquo;</a></p>
+    </div>
+
+  </div>
+
 {% endblock %}
 
 
@@ -22,19 +49,39 @@
 {% endblock css %}
 
 {% block js %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/mousetrap/1.4.6/mousetrap.min.js"></script>
 <script src="//releases.flowplayer.org/5.5.0/flowplayer.js"></script>
 <script>
-// run script after document is ready
-$(function () {
- 
-   // install flowplayer to an element with CSS class "player"
-   $(".flowplayer").flowplayer();
- 
-});
+/**
+* Setup the base javascript objects for our react handler
+*
+**/
+var Project = {
+    name: 'My Test Project',
+    date_created: '',
+    versions: [
+      {name: '1', is_current: false, url: 'http://google.com/'},
+      {name: '2', is_current: false, url: 'http://google.com/'},
+      {name: '3', is_current: true, url: 'http://google.com/'}
+    ],
+    colaborators: [ ],
+    comments: [
+      {type: 'comment', comment: 'This is a comment, please change the language', comment_by: 'RC', date_of: Date.now(), timestamp: '10:24:22'},
+      {type: 'subtitle', comment: 'Das ist eine kommentar, endern Sie bitte die Sprache', comment_by: 'KM', date_of: Date.now(), timestamp: '05:34:22'},
+      {type: 'sketch', comment: '', comment_by: 'KM', date_of: Date.now(), timestamp: '04:45:13'},
+      {type: 'comment', comment: 'What about Multiple comments per timestamp?', comment_by: 'MP', date_of: Date.now(), timestamp: '02:11:01'}
+    ]
+};
+var Video = {
+    url: '{{ STATIC_URL }}HOTELENERGIEBALLMOTERSCHADE.mp4',
+    type: 'video/mp4',
+    timestamp: '00:00:00',
+};
 </script>
-{% compressed_js 'project' %}
 
+{% compressed_js 'project' %}
 {% if debug %}<script src="{{ STATIC_URL }}js/reactjs/0.11.1/JSXTransformer.js"></script>{% endif %}
+
 {% endblock js %}
 
 {% block footer %}
@@ -42,8 +89,8 @@ $(function () {
     <div class="col-md-4">
         <small>
         <ul>
-            <li><b>s</b>: Pause</li>
             <li><b>p</b>: Play</li>
+            <li><b>s</b>: Pause</li>
         </ul>
         </small>
     </div>
