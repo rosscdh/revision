@@ -313,26 +313,32 @@ var BaseProjectDetailView = React.createClass({
             flowplayer().seekTo(0);
         });
 
+
+        /**
+        * local function to bind common functionality together for halting and focusing
+        **/
+        var commentTypeSetter = function ( type ) {
+            flowplayer().pause();
+            $('input[name=comment]').focus();
+            self.setState({
+                'current_type': type
+            });
+        };
+
         Mousetrap.bind('c', function () {
             // make comment type
-            flowplayer().pause();
-            self.setState({
-                'current_type': 'Comment'
-            });
+            commentTypeSetter('Comment');
+            return false; // dont output the text
         });
         Mousetrap.bind('k', function () {
            // make sketch type 
-           flowplayer().pause();
-            self.setState({
-                'current_type': 'Sketch'
-            });
+           commentTypeSetter('Sketch');
+            return false; // dont output the text
         });
         Mousetrap.bind('t', function () {
            // make subtitle type 
-           flowplayer().pause();
-            self.setState({
-                'current_type': 'Subtitle'
-            });
+            commentTypeSetter('Subtitle');
+            return false; // dont output the text
         });
 
 
