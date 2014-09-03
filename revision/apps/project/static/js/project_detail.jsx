@@ -114,32 +114,63 @@ var TimestampView = React.createClass({
     }
 });
 
-// new comment form view
+
+// Comment form
 var CommentFormView = React.createClass({
+    getInitialState: function () {
+        return {
+            'available_types': ['Comment', 'Subtitle', 'Sketch']
+        }
+    },
     render: function () {
+        var self = this;
         var is_link = false;
         var Timestamp = <TimestampView is_link={is_link} timestamp={this.props.progress} />
+
+        var current_type = this.props.current_type;
+
+        var commentTypeNodes = this.state.available_types.map(function ( type ) {
+            return (<li>
+                <a href="javascript:;" onClick={self.props.onSetCurrentType}>{type}</a>
+            </li>);
+        });
+
+        // be more clver with this turn into an array and then push and join at end
+        var btnClassNameA = 'btn';
+        var btnClassNameB = 'btn dropdown-toggle';
+
+        if ( current_type == 'Comment' ) {
+            btnClassNameA += ' btn-success';
+            btnClassNameB += ' btn-success';
+
+        } else if ( current_type == 'Subtitle' ) {    
+            btnClassNameA += ' btn-primary';
+            btnClassNameB += ' btn-primary';
+
+        } else {
+            btnClassNameA += ' btn-info';
+            btnClassNameB += ' btn-info';
+        }
+
         return (
             <form>
                 <div className="input-group">
+
                     <span className="input-group-addon">
                         <div className="control-type-selector btn-group">
-                          <button type="button" className="btn btn-success">Comment</button>
-                          <button type="button" className="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                          <button type="button" className={btnClassNameA}>{current_type}</button>
+                          <button type="button" className={btnClassNameB} data-toggle="dropdown">
                             <span className="caret"></span>
                             <span className="sr-only">Toggle Dropdown</span>
                           </button>
                           <ul className="dropdown-menu" role="menu">
-                            <li><a href="#">Comment</a></li>
-                            <li><a href="#">Subtitle</a></li>
-                            <li><a href="#">Sketch</a></li>
+                            {commentTypeNodes}
                           </ul>
                         </div>
                     </span>
 
-                  <input type="text" name="comment" placeholder="Add comment here..." className="form-control input-lg" />
-
-                  <span className="input-group-addon">{Timestamp}</span>
+                    <input type="text" name="comment" placeholder="Add comment here..." className="form-control input-lg" />
+                    <span className="input-group-addon">{Timestamp}</span>
 
                 </div>
             </form>
@@ -238,9 +269,15 @@ var BaseProjectDetailView = React.createClass({
         return {
             'video': Video,
             'project': Project,
+            'current_type': 'Comment',
             'progress': '00:00:00',
             'flowplayer_selector': '.flowplayer'
         }
+    },
+    handleTypeChange: function ( event ) {
+        this.setState({
+            'current_type': event.target.text
+        });
     },
     componentDidMount: function () {
         var self = this;
@@ -276,13 +313,35 @@ var BaseProjectDetailView = React.createClass({
             flowplayer().seekTo(0);
         });
 
+        Mousetrap.bind('c', function () {
+            // make comment type
+            flowplayer().pause();
+            self.setState({
+                'current_type': 'Comment'
+            });
+        });
+        Mousetrap.bind('k', function () {
+           // make sketch type 
+           flowplayer().pause();
+            self.setState({
+                'current_type': 'Sketch'
+            });
+        });
+        Mousetrap.bind('t', function () {
+           // make subtitle type 
+           flowplayer().pause();
+            self.setState({
+                'current_type': 'Subtitle'
+            });
+        });
+
 
     },
     render: function () {
 
         var Title = <TitleView project={this.state.project} />
         var FlowPlayer = <FlowPlayerView video={this.state.video} />
-        var CommentForm = <CommentFormView progress={this.state.progress} video={this.state.video} />
+        var CommentForm = <CommentFormView onSetCurrentType={this.handleTypeChange} current_type={this.state.current_type} progress={this.state.progress} video={this.state.video} />
         var CommentList = <CommentListView comments={this.state.project.comments} />
 
         return (<span>

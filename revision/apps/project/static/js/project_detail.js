@@ -114,32 +114,63 @@ var TimestampView = React.createClass({displayName: 'TimestampView',
     }
 });
 
-// new comment form view
+
+// Comment form
 var CommentFormView = React.createClass({displayName: 'CommentFormView',
+    getInitialState: function () {
+        return {
+            'available_types': ['Comment', 'Subtitle', 'Sketch']
+        }
+    },
     render: function () {
+        var self = this;
         var is_link = false;
         var Timestamp = TimestampView({is_link: is_link, timestamp: this.props.progress})
+
+        var current_type = this.props.current_type;
+
+        var commentTypeNodes = this.state.available_types.map(function ( type ) {
+            return (React.DOM.li(null, 
+                React.DOM.a({href: "javascript:;", onClick: self.props.onSetCurrentType}, type)
+            ));
+        });
+
+        // be more clver with this turn into an array and then push and join at end
+        var btnClassNameA = 'btn';
+        var btnClassNameB = 'btn dropdown-toggle';
+
+        if ( current_type == 'Comment' ) {
+            btnClassNameA += ' btn-success';
+            btnClassNameB += ' btn-success';
+
+        } else if ( current_type == 'Subtitle' ) {    
+            btnClassNameA += ' btn-primary';
+            btnClassNameB += ' btn-primary';
+
+        } else {
+            btnClassNameA += ' btn-info';
+            btnClassNameB += ' btn-info';
+        }
+
         return (
             React.DOM.form(null, 
                 React.DOM.div({className: "input-group"}, 
+
                     React.DOM.span({className: "input-group-addon"}, 
                         React.DOM.div({className: "control-type-selector btn-group"}, 
-                          React.DOM.button({type: "button", className: "btn btn-success"}, "Comment"), 
-                          React.DOM.button({type: "button", className: "btn btn-success dropdown-toggle", 'data-toggle': "dropdown"}, 
+                          React.DOM.button({type: "button", className: btnClassNameA}, current_type), 
+                          React.DOM.button({type: "button", className: btnClassNameB, 'data-toggle': "dropdown"}, 
                             React.DOM.span({className: "caret"}), 
                             React.DOM.span({className: "sr-only"}, "Toggle Dropdown")
                           ), 
                           React.DOM.ul({className: "dropdown-menu", role: "menu"}, 
-                            React.DOM.li(null, React.DOM.a({href: "#"}, "Comment")), 
-                            React.DOM.li(null, React.DOM.a({href: "#"}, "Subtitle")), 
-                            React.DOM.li(null, React.DOM.a({href: "#"}, "Sketch"))
+                            commentTypeNodes
                           )
                         )
                     ), 
 
-                  React.DOM.input({type: "text", name: "comment", placeholder: "Add comment here...", className: "form-control input-lg"}), 
-
-                  React.DOM.span({className: "input-group-addon"}, Timestamp)
+                    React.DOM.input({type: "text", name: "comment", placeholder: "Add comment here...", className: "form-control input-lg"}), 
+                    React.DOM.span({className: "input-group-addon"}, Timestamp)
 
                 )
             )
@@ -238,9 +269,15 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
         return {
             'video': Video,
             'project': Project,
+            'current_type': 'Comment',
             'progress': '00:00:00',
             'flowplayer_selector': '.flowplayer'
         }
+    },
+    handleTypeChange: function ( event ) {
+        this.setState({
+            'current_type': event.target.text
+        });
     },
     componentDidMount: function () {
         var self = this;
@@ -276,13 +313,35 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             flowplayer().seekTo(0);
         });
 
+        Mousetrap.bind('c', function () {
+            // make comment type
+            flowplayer().pause();
+            self.setState({
+                'current_type': 'Comment'
+            });
+        });
+        Mousetrap.bind('k', function () {
+           // make sketch type 
+           flowplayer().pause();
+            self.setState({
+                'current_type': 'Sketch'
+            });
+        });
+        Mousetrap.bind('t', function () {
+           // make subtitle type 
+           flowplayer().pause();
+            self.setState({
+                'current_type': 'Subtitle'
+            });
+        });
+
 
     },
     render: function () {
 
         var Title = TitleView({project: this.state.project})
         var FlowPlayer = FlowPlayerView({video: this.state.video})
-        var CommentForm = CommentFormView({progress: this.state.progress, video: this.state.video})
+        var CommentForm = CommentFormView({onSetCurrentType: this.handleTypeChange, current_type: this.state.current_type, progress: this.state.progress, video: this.state.video})
         var CommentList = CommentListView({comments: this.state.project.comments})
 
         return (React.DOM.span(null, 
