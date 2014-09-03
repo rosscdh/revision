@@ -1,9 +1,10 @@
 {% extends 'project/base.html' %}{% load compressed %}
 
+{% block jumbo %}
+<div id="project-detail-base"></div>
+{% endblock %}
 
 {% block content %}
-<div id="project-detail-base"></div>
-
 <div class="row">
     <div class="col-md-4">
       <h2>New Version</h2>
@@ -13,14 +14,7 @@
         </a>
     </div>
 
-    <div class="col-md-4">
-      <h2>Collaborators</h2>
-      <p>Add new collaborators here</p>
-      <ul class="list-group">
-        <li class="list-group-item"><span class="glyphicon glyphicon-user"></span> <span class="badge">Ross Crawford</span></li>
-        <li class="list-group-item"><span class="glyphicon glyphicon-user"></span> <span class="pull-right">Kris Müller</span></li>
-      </ul>
-    </div>
+    <div id="project-detail-collaborators" class="col-md-4"></div>
 
     <div class="col-md-4">
       <h2>Save</h2>
@@ -49,6 +43,7 @@
 {% endblock css %}
 
 {% block js %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.2/moment.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/mousetrap/1.4.6/mousetrap.min.js"></script>
 <script src="//releases.flowplayer.org/5.5.0/flowplayer.js"></script>
 <script>
@@ -56,6 +51,8 @@
 * Setup the base javascript objects for our react handler
 *
 **/
+var Today = moment();
+
 var Project = {
     name: 'My Test Project',
     date_created: '',
@@ -64,12 +61,16 @@ var Project = {
       {name: '2', is_current: false, url: 'http://google.com/'},
       {name: '3', is_current: true, url: 'http://google.com/'}
     ],
-    colaborators: [ ],
+    collaborators: [
+      {name: 'Ross Crawford', initials: 'RC', user_class: 'owner'},
+      {name: 'Kris Müller', initials: 'KM', user_class: 'customer'},
+      {name: 'Michael Pedersen', initials: 'MP', user_class: 'colleague'}
+    ],
     comments: [
-      {type: 'comment', comment: 'This is a comment, please change the language', comment_by: 'RC', date_of: Date.now(), timestamp: '10:24:22'},
-      {type: 'subtitle', comment: 'Das ist eine kommentar, endern Sie bitte die Sprache', comment_by: 'KM', date_of: Date.now(), timestamp: '05:34:22'},
-      {type: 'sketch', comment: '', comment_by: 'KM', date_of: Date.now(), timestamp: '04:45:13'},
-      {type: 'comment', comment: 'What about Multiple comments per timestamp?', comment_by: 'MP', date_of: Date.now(), timestamp: '02:11:01'}
+      {type: 'comment', comment: 'This is a comment, please change the language', comment_by: 'RC', date_of: Today.from(moment().add('days', 1)), timestamp: '10:24:22'},
+      {type: 'subtitle', comment: 'Das ist eine kommentar, endern Sie bitte die Sprache', comment_by: 'KM', date_of: Today.from(moment().add('days', 3)), timestamp: '05:34:22'},
+      {type: 'sketch', comment: '', comment_by: 'KM', date_of: Today.from(moment().add('days', 3)), timestamp: '04:45:13'},
+      {type: 'comment', comment: 'What about Multiple comments per timestamp?', comment_by: 'MP', date_of: Today.from(moment().add('days', 5)), timestamp: '02:11:01'}
     ]
 };
 var Video = {

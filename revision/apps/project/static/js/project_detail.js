@@ -37,12 +37,47 @@ var VersionView = React.createClass({displayName: 'VersionView',
 // 
 var CollaboratorView = React.createClass({displayName: 'CollaboratorView',
     render: function () {
-        var name = this.props.name;
+        var user_class = this.props.user_class
+        var classNames = 'pull-right label';
+        if ( user_class === 'owner' ) {
+            classNames += ' label-primary';
+
+        } else if (  user_class === 'colleague'  ) {
+            classNames += ' label-info';
+
+        } else {
+            classNames += ' label-success';
+
+        }
+        return (
+            React.DOM.li({className: "list-group-item"}, 
+            React.DOM.span({className: "glyphicon glyphicon-comment"}), " ", this.props.name, ":", 
+            React.DOM.span({className: classNames}, user_class)
+            )
+        );
+    }
+});
+
+var CollaboratorListView = React.createClass({displayName: 'CollaboratorListView',
+    getInitialState: function () {
+        return {
+            'project': Project,
+        }
+    },
+    render: function () {
+        var collaboratorNodes = this.state.project.collaborators.map(function ( person ) {
+            return CollaboratorView({name: person.name, user_class: person.user_class})
+        });
+
         return (
             React.DOM.span(null, 
-            React.DOM.span({className: "glyphicon glyphicon-comment"}), " ", name, ":"
+              React.DOM.h2(null, "Collaborators"), 
+              React.DOM.p(null, "Add new collaborators here"), 
+              React.DOM.ul({className: "list-group"}, 
+                collaboratorNodes
+              )
             )
-        )
+        );
     }
 });
 
@@ -116,15 +151,21 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
         }
 
         return (
-            React.DOM.li({className: "list-group-item"}, 
-                React.DOM.div({className: "col-xs-1"}, 
-                    React.DOM.span({className: type_className}, comment.type), 
-                    React.DOM.br(null), React.DOM.small(null, comment.date_of)
+            React.DOM.div({className: "list-group-item"}, 
+                
+                React.DOM.div({className: "col-xs-2 pull-right"}, 
+                    React.DOM.a({href: "#delete"}, React.DOM.span({className: "glyphicon glyphicon-remove-circle pull-right"})), 
+                    React.DOM.br(null), timestamp, 
+                    React.DOM.br(null), React.DOM.span({className: "pull-right"}, React.DOM.small(null, comment.date_of))
                 ), 
-                collaborator, 
-                comment.comment, 
-                React.DOM.span({className: "glyphicon glyphicon-remove-circle pull-right"}), 
-                timestamp
+
+                React.DOM.span({className: type_className}, comment.type), 
+
+                React.DOM.blockquote(null, 
+                    collaborator, " ", 
+                    comment.comment
+                )
+                
             )
         )
     }
@@ -132,14 +173,13 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
 
 // comment list view
 var CommentListView = React.createClass({displayName: 'CommentListView',
-
     render: function () {
         commentNodes = this.props.comments.map(function (comment) {
             return CommentItemView({comment: comment})
         });
 
         return (React.DOM.span(null, 
-        React.DOM.ul({className: "list-group"}, 
+        React.DOM.div({className: "list-group"}, 
             commentNodes
         )
         ));
@@ -191,12 +231,13 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
     },
     componentDidMount: function () {
         var self = this;
-        //$(this.state.flowplayer_selector).flowplayer();
-        //
-        // Events
-        //
+        /**
+        * Flowplayer setup and configuration
+        **/
         flowplayer(function ( api, root ) {
-
+            //
+            // Capture Events
+            //
             api.bind("progress", function ( event, ob, progress ) {
                 self.state.video.timestamp = progress;
                 self.setState({
@@ -206,6 +247,9 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
 
         });
 
+        /**
+        * Capture keyboard events
+        **/
         Mousetrap.bind('s', function () {
             flowplayer().pause();
         });
@@ -238,16 +282,24 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
                     )
                 )
             ), 
-            React.DOM.div({className: "row"}, 
-                CommentList
+            React.DOM.div({className: "container"}, 
+                React.DOM.div({className: "row"}, 
+                    CommentList
+                )
             )
         ));
     }
 });
 
 
-// render the set
+// render the Base set
 React.renderComponent(
   BaseProjectDetailView(null),
   document.getElementById('project-detail-base')
+);
+
+// render the collaborators
+React.renderComponent(
+  CollaboratorListView(null),
+  document.getElementById('project-detail-collaborators')
 );

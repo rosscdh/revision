@@ -37,12 +37,47 @@ var VersionView = React.createClass({
 // 
 var CollaboratorView = React.createClass({
     render: function () {
-        var name = this.props.name;
+        var user_class = this.props.user_class
+        var classNames = 'pull-right label';
+        if ( user_class === 'owner' ) {
+            classNames += ' label-primary';
+
+        } else if (  user_class === 'colleague'  ) {
+            classNames += ' label-info';
+
+        } else {
+            classNames += ' label-success';
+
+        }
+        return (
+            <li className="list-group-item">
+            <span className="glyphicon glyphicon-comment"></span> {this.props.name}:
+            <span className={classNames}>{user_class}</span>
+            </li>
+        );
+    }
+});
+
+var CollaboratorListView = React.createClass({
+    getInitialState: function () {
+        return {
+            'project': Project,
+        }
+    },
+    render: function () {
+        var collaboratorNodes = this.state.project.collaborators.map(function ( person ) {
+            return <CollaboratorView name={person.name} user_class={person.user_class} />
+        });
+
         return (
             <span>
-            <span className="glyphicon glyphicon-comment"></span> {name}:
+              <h2>Collaborators</h2>
+              <p>Add new collaborators here</p>
+              <ul className="list-group">
+                {collaboratorNodes}
+              </ul>
             </span>
-        )
+        );
     }
 });
 
@@ -116,32 +151,37 @@ var CommentItemView = React.createClass({
         }
 
         return (
-            <li className="list-group-item">
-                <div className="col-xs-1">
-                    <span className={type_className}>{comment.type}</span>
-                    <br/><small>{comment.date_of}</small>
+            <div className="list-group-item">
+                
+                <div className="col-xs-2 pull-right">
+                    <a href="#delete"><span className="glyphicon glyphicon-remove-circle pull-right"></span></a>
+                    <br/>{timestamp}
+                    <br/><span className="pull-right"><small>{comment.date_of}</small></span>
                 </div>
-                {collaborator}
-                {comment.comment}
-                <span className="glyphicon glyphicon-remove-circle pull-right"></span>
-                {timestamp}
-            </li>
+
+                <span className={type_className}>{comment.type}</span>
+
+                <blockquote>
+                    {collaborator}&nbsp;
+                    {comment.comment}
+                </blockquote>
+                
+            </div>
         )
     }
 });
 
 // comment list view
 var CommentListView = React.createClass({
-
     render: function () {
         commentNodes = this.props.comments.map(function (comment) {
             return <CommentItemView comment={comment} />
         });
 
         return (<span>
-        <ul className="list-group">
+        <div className="list-group">
             {commentNodes}
-        </ul>
+        </div>
         </span>);
     }
 });
@@ -191,12 +231,13 @@ var BaseProjectDetailView = React.createClass({
     },
     componentDidMount: function () {
         var self = this;
-        //$(this.state.flowplayer_selector).flowplayer();
-        //
-        // Events
-        //
+        /**
+        * Flowplayer setup and configuration
+        **/
         flowplayer(function ( api, root ) {
-
+            //
+            // Capture Events
+            //
             api.bind("progress", function ( event, ob, progress ) {
                 self.state.video.timestamp = progress;
                 self.setState({
@@ -206,6 +247,9 @@ var BaseProjectDetailView = React.createClass({
 
         });
 
+        /**
+        * Capture keyboard events
+        **/
         Mousetrap.bind('s', function () {
             flowplayer().pause();
         });
@@ -238,16 +282,24 @@ var BaseProjectDetailView = React.createClass({
                     </div>
                 </div>
             </div>
-            <div className="row">
-                {CommentList}
+            <div className="container">
+                <div className="row">
+                    {CommentList}
+                </div>
             </div>
         </span>);
     }
 });
 
 
-// render the set
+// render the Base set
 React.renderComponent(
   <BaseProjectDetailView />,
   document.getElementById('project-detail-base')
+);
+
+// render the collaborators
+React.renderComponent(
+  <CollaboratorListView />,
+  document.getElementById('project-detail-collaborators')
 );
