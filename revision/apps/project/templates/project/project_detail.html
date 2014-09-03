@@ -1,120 +1,8 @@
 {% extends 'project/base.html' %}{% load compressed %}
 
-{% block jumbo %}
-<div class="jumbotron">
-  <div class="container">
-        <h2>My Cool Project <small>started: 3 days ago</small></h2>
-        <h4>Version: <small>
-            <a href="">1</a>
-            <a href="">2</a>
-            <a href=""><span class="label label-info">3</span></a>
-        </small></h4>
-        <div class="flowplayer">
-           <video>
-            <source src="http://picturereelstudios.com/wp-content/themes/picture-reel-studios/video/prs-optimised.mp4" type='video/mp4;codecs="avc1.42E01E, mp4a.40.2"' />
-            <source src="http://picturereelstudios.com/wp-content/themes/picture-reel-studios/video/prs-optimised.webm" type='video/webm;codecs="vp8, vorbis"' />
-
-           </video>
-        </div>
-
-        <div class="row">
-            <form>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <div class="control-type-selector btn-group">
-                      <button type="button" class="btn btn-success">Comment</button>
-                      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                      </button>
-                      <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Comment</a></li>
-                        <li><a href="#">Subtitle</a></li>
-                        <li><a href="#">Sketch</a></li>
-                      </ul>
-                    </div>
-                    </span>
-
-                  <input type="text" name="comment" placeholder="Add comment here..." class="form-control input-lg">
-
-                  <span class="input-group-addon"><span class="badge"><a href="#t-05:15:23">05:15:23</a></span></span>
-                </div>
-            </form>
-        </div>
-
-  </div>
-</div>
-{% endblock %}
 
 {% block content %}
-<div class="row">
-    <ul class="list-group">
-      <li class="list-group-item">
-        <div class="col-xs-1">
-            <span class="label label-warning">Subtitle</span>
-        </div>
-        <span class="glyphicon glyphicon-comment"></span> RC:
-        Cras justo odio
-        <span class="glyphicon glyphicon-remove-circle pull-right"></span>
-        <span class="badge pull-right"><a href="#t-04:03:33">04:03:33</a></span>
-        
-        
-        </li>
-      <li class="list-group-item">
-        <div class="col-xs-1">
-            <span class="label label-info">Comment</span>
-        </div>
-        <span class="glyphicon glyphicon-comment"></span> KM:
-        Dapibus ac facilisis in
-        <span class="glyphicon glyphicon-remove-circle pull-right"></span>
-        <span class="badge pull-right"><a href="#t-03:22:12">03:22:12</a></span>
-        </li>
-      <li class="list-group-item">
-        <div class="col-xs-1">
-            <span class="label label-primary">Sketch</span>
-        </div>
-        <span class="glyphicon glyphicon-comment"></span> KM:
-        Morbi leo risus
-        <span class="glyphicon glyphicon-remove-circle pull-right"></span>
-        <span class="badge pull-right"><a href="#t-02:43:17">02:43:17</a></span>
-        </li>
-      <li class="list-group-item">
-        <div class="col-xs-1">
-            <span class="label label-info">Comment</span>
-        </div>
-        <span class="glyphicon glyphicon-comment"></span> RC:
-        Vestibulum at eros
-        <span class="glyphicon glyphicon-remove-circle pull-right"></span>
-        <span class="badge pull-right"><a href="#t-01:45:30">01:45:30</a></span>
-        </li>
-    </ul>
-</div>
-
-  <div class="row">
-    <div class="col-md-4">
-      <h2>New Version</h2>
-      <p>Drop a new version of the video here</p>
-        <a href="#" class="thumbnail">
-          <img data-src="holder.js/100%x180" alt="...">
-        </a>
-    </div>
-
-    <div class="col-md-4">
-      <h2>Collaborators</h2>
-      <p>Add new collaborators here</p>
-      <ul class="list-group">
-        <li class="list-group-item"><span class="glyphicon glyphicon-user"></span> <span class="badge">Ross Crawford</span></li>
-        <li class="list-group-item"><span class="glyphicon glyphicon-user"></span> <span class="pull-right">Kris Müller</span></li>
-      </ul>
-    </div>
-
-    <div class="col-md-4">
-      <h2>Save</h2>
-      <p>Export the project to dropbox, this will export the video, a Final Cut Pro XML file as well as an activity stream document (activity.html) which allows you to search comments</p>
-      <p><a class="btn btn-primary" href="#" role="button">Export &raquo;</a></p>
-    </div>
-
-  </div>
+<div id="project-detail-base" />
 {% endblock %}
 
 
@@ -134,18 +22,19 @@
 {% endblock css %}
 
 {% block js %}
-<script src="//releases.flowplayer.org/5.5.0/flowplayer.min.js"></script>
+<script src="//releases.flowplayer.org/5.5.0/flowplayer.js"></script>
 <script>
 // run script after document is ready
 $(function () {
  
    // install flowplayer to an element with CSS class "player"
-   $(".flowplayer").flowplayer({ swf: "/swf/5.5.0/flowplayer.swf" });
+   $(".flowplayer").flowplayer();
  
 });
 </script>
 {% compressed_js 'project_detail' %}
-{% if DEBUG %}<script src="{{ STATIC_URL }}js/reactjs/0.11.1/JSXTransformer.js"></script>{% endif %}
+
+{% if debug %}<script src="{{ STATIC_URL }}js/reactjs/0.11.1/JSXTransformer.js"></script>{% endif %}
 {% endblock js %}
 
 {% block footer %}

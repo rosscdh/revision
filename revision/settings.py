@@ -125,6 +125,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+INTERNAL_IPS = ('127.0.0.1',)
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_DIRS = (
@@ -141,6 +142,7 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/m/'
 
+
 #
 # Crispy
 #
@@ -154,14 +156,14 @@ TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
 # Pipeline
 #
 #STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
-# STATICFILES_FINDERS = (
-#     'django.contrib.staticfiles.finders.FileSystemFinder',
-#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#     'pipeline.finders.FileSystemFinder',
-#     'pipeline.finders.AppDirectoriesFinder',
-#     'pipeline.finders.PipelineFinder',
-#     'pipeline.finders.CachedFileFinder',
-# )
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # 'pipeline.finders.FileSystemFinder',
+    # 'pipeline.finders.AppDirectoriesFinder',
+    # 'pipeline.finders.PipelineFinder',
+    # 'pipeline.finders.CachedFileFinder',
+)
 # PIPELINE_CSS = {
 #   'core': {
 #         'source_filenames': (

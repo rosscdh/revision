@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 
+HOTELENERGIEBALLMOTERSCHADE.mp4
+
 local_settings.py
 
 .DS_Store
