@@ -264,6 +264,7 @@ var FlowPlayerView = React.createClass({
     render: function () {
         var video_url = this.props.video.url;
         var video_type = this.props.video.type;
+
         return (
             <div className="flowplayer">
                <video>
@@ -302,64 +303,70 @@ var BaseProjectDetailView = React.createClass({
             //
             // Capture Events
             //
+            api.conf.keyboard = false;
+            api.conf.preload = 'metadata';
+
             api.bind("progress", function ( event, ob, progress ) {
                 self.state.video.timestamp = progress;
                 self.setState({
                     'progress': progress
                 });
             });
+            // setup keyboard shortcuts
+            self.setKeyboard( api );
 
         });
-
-        /**
-        * Capture keyboard events
-        **/
-        Mousetrap.bind('s', function () {
-            flowplayer().pause();
-        });
-        Mousetrap.bind('p', function () {
-            flowplayer().resume();
-        });
-        Mousetrap.bind('1', function () {
-            flowplayer().seekTo(1);
-        });
-        Mousetrap.bind('0', function () {
-            flowplayer().seekTo(0);
-        });
-
-
-        /**
-        * local function to bind common functionality together for halting and focusing
-        **/
-        var commentTypeSetter = function ( type ) {
-            flowplayer().pause();
-            $('input[name=comment]').focus();
-            self.setState({
-                'current_type': type
+    },
+    setKeyboard: function ( flowplayer ) {
+            /**
+            * Capture keyboard events
+            **/
+            Mousetrap.bind('s', function () {
+                flowplayer.pause();
             });
-        };
-
-        Mousetrap.bind('c', function () {
-            // make comment type
-            commentTypeSetter('Comment');
-            return false; // dont output the text
-        });
-        Mousetrap.bind('k', function () {
-           // make sketch type 
-           commentTypeSetter('Sketch');
-            return false; // dont output the text
-        });
-        Mousetrap.bind('t', function () {
-           // make subtitle type 
-            commentTypeSetter('Subtitle');
-            return false; // dont output the text
-        });
+            Mousetrap.bind('p', function () {
+                flowplayer.resume();
+            });
+            Mousetrap.bind('1', function () {
+                flowplayer.seekTo(1);
+            });
+            Mousetrap.bind('0', function () {
+                flowplayer.seekTo(0);
+            });
 
 
-        Mousetrap.bind('?', function () {
-            $('#modal-keyboard-help').modal('toggle');
-            return false; // dont output the text
-        });
+            /**
+            * local function to bind common functionality together for halting and focusing
+            **/
+            var commentTypeSetter = function ( type ) {
+                flowplayer().pause();
+                $('input[name=comment]').focus();
+                self.setState({
+                    'current_type': type
+                });
+            };
+
+            Mousetrap.bind('c', function () {
+                // make comment type
+                commentTypeSetter('Comment');
+                return false; // dont output the text
+            });
+            Mousetrap.bind('k', function () {
+               // make sketch type 
+               commentTypeSetter('Sketch');
+                return false; // dont output the text
+            });
+            Mousetrap.bind('t', function () {
+               // make subtitle type 
+                commentTypeSetter('Subtitle');
+                return false; // dont output the text
+            });
+
+
+            Mousetrap.bind('?', function () {
+                $('#modal-keyboard-help').modal('toggle');
+                return false; // dont output the text
+            });
 
 
     },
@@ -368,7 +375,7 @@ var BaseProjectDetailView = React.createClass({
         var Title = <TitleView project={this.state.project} />
         var FlowPlayer = <FlowPlayerView video={this.state.video} />
         var CommentForm = <CommentFormView onSetCurrentType={this.handleTypeChange} current_type={this.state.current_type} progress={this.state.progress} video={this.state.video} />
-        var CommentList = <CommentListView onSeekTo={this.handleSeekTo} comments={this.state.project.comments} />
+        var CommentList = <CommentListView onSeekTo={this.handleSeekTo} comments={this.state.video.comments} />
 
         return (<span>
             <div className="jumbotron">
