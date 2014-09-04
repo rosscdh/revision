@@ -96,19 +96,29 @@ var CollaboratorListView = React.createClass({displayName: 'CollaboratorListView
 
 // time indicator view - used as a display element in a number of other views
 var TimestampView = React.createClass({displayName: 'TimestampView',
+    secondsToStamp: function ( secs ) {
+        var minutes = Math.floor(secs / 60);
+        var seconds = (secs - minutes * 60).round(2);
+        var hours = Math.floor(secs / 3600);
+        //time = time - hours * 3600;
+        return '{hours}:{minutes}:{seconds}'.assign({ 'seconds': seconds.pad(2), 'minutes': minutes.pad(2), 'hours': hours.pad(2) })
+    },
     render: function () {
         var is_link = this.props.is_link || true;
-        var timestamp = this.props.timestamp;
-        var timestamp_link = 't-' + timestamp;
+        var progress_seconds = this.props.progress;
+        var stamp = this.secondsToStamp( progress_seconds );
+        var timestamp_link = '#' + stamp;
         var classNames = 'badge pull-right';
+//console.log(this.props.onSeekTo)
+        var handleSeek = (this.props.onSeekTo !== undefined) ? this.props.onSeekTo.bind(this, progress_seconds) : null ;
 
-        if ( is_link === true ) {
+        if ( handleSeek !== null ) {
             return (React.DOM.span({className: classNames}, 
-                React.DOM.a({href: timestamp_link}, timestamp)
+                React.DOM.a({href: timestamp_link, onClick: handleSeek}, stamp)
                 ));
         } else {
             return (React.DOM.span({className: classNames}, 
-                timestamp
+                stamp
                 ));
         }
     }
@@ -125,7 +135,7 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
     render: function () {
         var self = this;
         var is_link = false;
-        var Timestamp = TimestampView({is_link: is_link, timestamp: this.props.progress})
+        var Timestamp = TimestampView({is_link: is_link, progress: this.props.progress})
 
         var current_type = this.props.current_type;
 
@@ -183,7 +193,7 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
         var comment = this.props.comment;
         var comment_type = comment.type;
         var collaborator = CollaboratorView({name: comment.comment_by})
-        var timestamp = TimestampView({timestamp: comment.timestamp})
+        var timestamp = TimestampView({onSeekTo: this.props.onSeekTo, progress: comment.progress})
         var type_className = 'label label-warning';
 
         if ( comment_type === 'comment' ) {
@@ -195,7 +205,7 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
         }
 
         return (
-            React.DOM.div({className: "list-group-item"}, 
+            React.DOM.li({className: ""}, 
                 
                 React.DOM.div({className: "col-xs-2 pull-right"}, 
                     React.DOM.a({href: "#delete"}, React.DOM.span({className: "glyphicon glyphicon-remove-circle pull-right"})), 
@@ -218,12 +228,13 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
 // comment list view
 var CommentListView = React.createClass({displayName: 'CommentListView',
     render: function () {
+        var self = this;
         commentNodes = this.props.comments.map(function (comment) {
-            return CommentItemView({comment: comment})
+            return CommentItemView({onSeekTo: self.props.onSeekTo, comment: comment})
         });
 
         return (React.DOM.span(null, 
-        React.DOM.div({className: "list-group"}, 
+        React.DOM.ul({className: "list-unstyled list-group"}, 
             commentNodes
         )
         ));
@@ -270,7 +281,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             'video': Video,
             'project': Project,
             'current_type': 'Comment',
-            'progress': '00:00:00',
+            'progress': 0,
             'flowplayer_selector': '.flowplayer'
         }
     },
@@ -278,6 +289,9 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
         this.setState({
             'current_type': event.target.text
         });
+    },
+    handleSeekTo: function ( seek_to, event ) {
+        flowplayer().seek(seek_to);
     },
     componentDidMount: function () {
         var self = this;
@@ -354,7 +368,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
         var Title = TitleView({project: this.state.project})
         var FlowPlayer = FlowPlayerView({video: this.state.video})
         var CommentForm = CommentFormView({onSetCurrentType: this.handleTypeChange, current_type: this.state.current_type, progress: this.state.progress, video: this.state.video})
-        var CommentList = CommentListView({comments: this.state.project.comments})
+        var CommentList = CommentListView({onSeekTo: this.handleSeekTo, comments: this.state.project.comments})
 
         return (React.DOM.span(null, 
             React.DOM.div({className: "jumbotron"}, 
