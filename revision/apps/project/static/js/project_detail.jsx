@@ -262,7 +262,7 @@ var CollaboratorsView = React.createClass({
 // flowplayer
 var FlowPlayerView = React.createClass({
     render: function () {
-        var video_url = this.props.video.url;
+        var video_url = this.props.video.video_url;
         var video_type = this.props.video.type;
 
         return (

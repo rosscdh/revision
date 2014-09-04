@@ -12,7 +12,7 @@
   {
     "fields": {
       "project": 1,
-      "video_url": "http://localhost/static/HOTELENERGIEBALLMOTERSCHADE.mp4",
+      "video_url": "http://localhost:8000/static/HOTELENERGIEBALLMOTERSCHADE.mp4",
       "data": {
         "comments": [
           {
