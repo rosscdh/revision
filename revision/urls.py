@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
@@ -7,7 +8,10 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('revision.apps.project.urls', namespace='project')),
+
+    url(r'^api/v1/', include('revision.api.urls')),
+
+    url(r'^p/', include('revision.apps.project.urls', namespace='project')),
 )
 
 if settings.DEBUG is True:

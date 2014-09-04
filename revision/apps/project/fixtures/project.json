@@ -1,0 +1,55 @@
+[
+  {
+    "fields": {
+      "date_created": "2014-09-04T12:40:47.827Z",
+      "data": {},
+      "slug": "my-cool-project",
+      "name": "My Cool Project"
+    },
+    "model": "project.project",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "project": 1,
+      "video_url": "http://localhost/static/HOTELENERGIEBALLMOTERSCHADE.mp4",
+      "data": {
+        "comments": [
+          {
+            "comment": "My first comment",
+            "progress": 3.233,
+            "date_of": "2014-09-04T12:42:44",
+            "type": "comment",
+            "comment_by": "RC"
+          },
+          {
+            "comment": "My second comment",
+            "progress": 5.333,
+            "date_of": "2014-09-04T12:43:20",
+            "type": "comment",
+            "comment_by": "KC"
+          },
+          {
+            "comment": "My third comment",
+            "progress": 15.273,
+            "date_of": "2014-09-04T12:43:47",
+            "type": "subtitle",
+            "comment_by": "MP"
+          },
+          {
+            "comment": "My fourth comment",
+            "progress": 25.273,
+            "date_of": "2014-09-04T12:44:11",
+            "type": "sketch",
+            "comment_by": "RC"
+          }
+        ]
+      },
+      "slug": "75d4d8ee0f654200998bd6a1e5696358",
+      "video_type": 1,
+      "name": "Version 1"
+    },
+    "model": "project.video",
+    "pk": 1
+  }
+]

@@ -51,6 +51,7 @@ DJANGO_APPS = (
 )
 
 PROJECT_APPS = (
+    'revision.api',  # Api interface
     'revision.apps.me',  # user profiles
     'revision.apps.project',  # projects
     'revision.apps.public',  # public views

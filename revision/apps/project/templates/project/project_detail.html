@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="row">
     <div class="col-md-4">
       <h2>New Version</h2>
@@ -98,37 +99,39 @@
 **/
 var Today = moment();
 
-var Project = {
-    name: 'My Test Project',
-    date_created: '',
-    versions: [
-      {name: '1', is_current: false, url: 'http://google.com/'},
-      {name: '2', is_current: false, url: 'http://google.com/'},
-      {name: '3', is_current: true, url: 'http://google.com/'}
-    ],
-    collaborators: [
-      {name: 'Ross Crawford', initials: 'RC', user_class: 'owner'},
-      {name: 'Kris Müller', initials: 'KM', user_class: 'customer'},
-      {name: 'Michael Pedersen', initials: 'MP', user_class: 'colleague'}
-    ]
-};
-    // <source type="application/x-mpegurl" src="//192.168.2.130/hls/streaming.m3u8" />
-    // <source type="rtmp/flv" src="rtmp://192.168.2.130/live/streaming">
-var Video = {
-    url: '{{ STATIC_URL }}HOTELENERGIEBALLMOTERSCHADE.mp4',
-    type: 'video/mp4',
-    // url: '//192.168.2.130/hls/streaming.m3u8',
-    // type: 'application/x-mpegurl',
-    // url: 'rtmp://192.168.2.130/live/streaming',
-    // type: 'rtmp/flv',
-    timestamp: '00:00:00',
-    comments: [
-      {type: 'comment', comment: 'This is a comment, please change the language', comment_by: 'RC', date_of: Today.from(moment().add('days', 1)), progress: 180.23433},
-      {type: 'subtitle', comment: 'Das ist eine kommentar, endern Sie bitte die Sprache', comment_by: 'KM', date_of: Today.from(moment().add('days', 3)), progress: 120.233},
-      {type: 'sketch', comment: '', comment_by: 'KM', date_of: Today.from(moment().add('days', 3)), progress: 90.3433},
-      {type: 'comment', comment: 'What about Multiple comments per timestamp?', comment_by: 'MP', date_of: Today.from(moment().add('days', 5)), progress: 20.2322}
-    ]
-};
+var Project = {{ view.project_json|safe|default:'{}' }};
+
+var Video = {{ view.video_json|safe|default:'{}' }};
+// var Project = {
+//     name: 'My Test Project',
+//     date_created: '',
+//     versions: [
+//       {name: '1', is_current: false, url: 'http://google.com/'},
+//       {name: '2', is_current: false, url: 'http://google.com/'},
+//       {name: '3', is_current: true, url: 'http://google.com/'}
+//     ],
+    // collaborators: [
+    //   {name: 'Ross Crawford', initials: 'RC', user_class: 'owner'},
+    //   {name: 'Kris Müller', initials: 'KM', user_class: 'customer'},
+    //   {name: 'Michael Pedersen', initials: 'MP', user_class: 'colleague'}
+    // ]
+// };
+
+// var Video = {
+//     url: '{{ STATIC_URL }}HOTELENERGIEBALLMOTERSCHADE.mp4',
+//     type: 'video/mp4',
+//     // url: '//192.168.2.130/hls/streaming.m3u8',
+//     // type: 'application/x-mpegurl',
+//     // url: 'rtmp://192.168.2.130/live/streaming',
+//     // type: 'rtmp/flv',
+//     timestamp: '00:00:00',
+//     comments: [
+//       {type: 'comment', comment: 'This is a comment, please change the language', comment_by: 'RC', date_of: Today.from(moment().add('days', 1)), progress: 180.23433},
+//       {type: 'subtitle', comment: 'Das ist eine kommentar, endern Sie bitte die Sprache', comment_by: 'KM', date_of: Today.from(moment().add('days', 3)), progress: 120.233},
+//       {type: 'sketch', comment: '', comment_by: 'KM', date_of: Today.from(moment().add('days', 3)), progress: 90.3433},
+//       {type: 'comment', comment: 'What about Multiple comments per timestamp?', comment_by: 'MP', date_of: Today.from(moment().add('days', 5)), progress: 20.2322}
+//     ]
+// };
 </script>
 
 {% compressed_js 'project' %}
