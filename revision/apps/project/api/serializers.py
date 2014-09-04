@@ -6,6 +6,7 @@ from ..models import Project, Video
 
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
     comments = serializers.SerializerMethodField('get_comments')
+    video_type = serializers.Field(source='display_type')
 
     class Meta:
         model = Video

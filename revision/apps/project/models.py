@@ -54,5 +54,9 @@ class Video(VideoCommentsMixin,
     class Meta:
         ordering = ['-id']
 
+    @property
+    def display_type(self):
+        return self.VIDEO_TYPES.get_desc_by_value(self.video_type)
+
     def get_absolute_url(self):
         return reverse_lazy('project:with_video_detail', kwargs={'slug': self.project.slug, 'version_slug': str(self.slug)})
