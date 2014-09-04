@@ -20,7 +20,8 @@ Setup
 -----
 
 1. install requirements - pip install -r requirements/dev.txt
-2. fab rebuild_local
+2. ./manage.py syncdb
+2. ./manage.py loaddata project
 3. http://localhost:8000/
 
 
