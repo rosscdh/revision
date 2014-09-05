@@ -16,7 +16,7 @@
       "data": {
         "comments": [
           {
-            "index": 1,
+            "pk": 1,
             "comment": "My first comment",
             "progress": 3.233,
             "date_of": "2014-09-04T12:42:44",
@@ -24,7 +24,7 @@
             "comment_by": "RC"
           },
           {
-            "index": 2,
+            "pk": 2,
             "comment": "My second comment",
             "progress": 5.333,
             "date_of": "2014-09-04T12:43:20",
@@ -32,7 +32,7 @@
             "comment_by": "KC"
           },
           {
-            "index": 3,
+            "pk": 3,
             "comment": "My third comment",
             "progress": 15.273,
             "date_of": "2014-09-04T12:43:47",
@@ -40,7 +40,7 @@
             "comment_by": "MP"
           },
           {
-            "index": 4,
+            "pk": 4,
             "comment": "My fourth comment",
             "progress": 25.273,
             "date_of": "2014-09-04T12:44:11",

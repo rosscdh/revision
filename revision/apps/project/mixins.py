@@ -21,6 +21,7 @@ class VideoCommentsMixin(object):
         kwargs.update({
             'pk': index,
             'comment': comment,
+            'is_deleted': False,
         })
         # append the object to the list
         comments.append(kwargs)

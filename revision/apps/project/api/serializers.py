@@ -28,6 +28,7 @@ class CommentSerializer(serializers.Serializer):
     comment_by = serializers.CharField()
     date_of = CustomDateTimeField(default=_get_date_now, read_only=True, format='iso-8601')
     progress = serializers.DecimalField(max_digits=9, decimal_places=4)
+    is_deleted = serializers.BooleanField(default=False)
 
 
 class VideoSerializer(serializers.HyperlinkedModelSerializer):

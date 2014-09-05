@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework.response import Response
@@ -30,6 +32,8 @@ class VideoCommentsEndpoint(generics.ListCreateAPIView):
     """
     Comments for a specific video
     """
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'slug'
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
     paginate_by = 100
@@ -38,7 +42,7 @@ class VideoCommentsEndpoint(generics.ListCreateAPIView):
     def list(self, request, **kwargs):
         self.object = self.get_object()
         serializer = CommentSerializer
-        return Response(serializer(self.object.comments, many=True).data)
+        return Response(serializer([item for item in self.object.comments if item.get('is_deleted', False) is False], many=True).data)
 
     def create(self, request, **kwargs):
         self.object = self.get_object()
@@ -52,22 +56,63 @@ class VideoCommentsEndpoint(generics.ListCreateAPIView):
             # the comment is created via a signal, so we do NOT have the comment-object with its id directly.
             return Response(self.object.comments[-1], status=http_status.HTTP_201_CREATED)
         else:
-            return Response(status=http_status.HTTP_400_BAD_REQUEST, data={'reason': 'You should send a comment.'})
+            return Response(status=http_status.HTTP_400_BAD_REQUEST, data={'errors': comment.errors})
 
 
 class VideoCommentDetailEndpoint(generics.RetrieveUpdateDestroyAPIView):
     """
     A specific single Comment for a specific video
     """
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'slug'
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
     allowed_methods = ('get', 'patch', 'delete', 'options', 'head',)
 
+    @property
+    def pk(self):
+        return (int(self.kwargs.get('pk')) - 1) ## minus 1 to account for list index
+
     def retrieve(self, request, **kwargs):
-        import pdb;pdb.set_trace()
+        self.object = self.get_object()
+        comment = CommentSerializer(self.object.comments[self.pk])
+        return Response(comment.data, status=http_status.HTTP_200_OK)
 
     def update(self, request, **kwargs):
-        import pdb;pdb.set_trace()
+        self.object = self.get_object()
+        try:
+            data = self.object.comments[self.pk]
+        except IndexError:
+            return Response(status=http_status.HTTP_404_NOT_FOUND, data={'errors': 'Comment %d: Does not exist' % self.pk})
+
+        data.update({
+            'comment': request.DATA.get('comment', data.get('comment')),  # allow update of only is_deleted items without changing comment
+            'is_deleted': request.DATA.get('is_deleted', data.get('is_deleted', False)),  # allow update of is_deleted items
+        })
+        comment = CommentSerializer(data, data=data)
+
+        if comment.is_valid() is True:
+            self.object.comments[self.pk] = comment.data
+            self.object.save(update_fields=['data'])
+            return Response(comment.data, status=http_status.HTTP_200_OK)
+        else:
+            return Response(status=http_status.HTTP_400_BAD_REQUEST, data={'errors': comment.errors})
 
     def destroy(self, request, **kwargs):
-        import pdb;pdb.set_trace()
+        self.object = self.get_object()
+        try:
+            data = self.object.comments[self.pk]
+        except IndexError:
+            return Response(status=http_status.HTTP_404_NOT_FOUND, data={'errors': 'Comment %d: Does not exist' % self.pk})
+
+        data.update({
+            'is_deleted': True
+        })
+        comment = CommentSerializer(data, data=data)
+
+        if comment.is_valid() is True:
+            self.object.comments[self.pk] = comment.data
+            self.object.save(update_fields=['data'])
+            return Response(comment.data, status=http_status.HTTP_200_OK)
+        else:
+            return Response(status=http_status.HTTP_400_BAD_REQUEST, data={'errors': comment.errors})
