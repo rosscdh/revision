@@ -1,6 +1,7 @@
 'use strict';
 
 var Resource = {
+  params: {},
   createClass: function ( options ) {
     return $.extend({}, this, options);
   },

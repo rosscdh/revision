@@ -314,6 +314,7 @@ var FlowPlayerView = React.createClass({
 var BaseProjectDetailView = React.createClass({
     getInitialState: function () {
         return {
+            'play': false,
             'video': Video,
             'project': Project,
             'current_type': 'Comment',
@@ -358,56 +359,55 @@ var BaseProjectDetailView = React.createClass({
         });
     },
     setKeyboard: function ( flowplayer ) {
-            /**
-            * Capture keyboard events
-            **/
-            Mousetrap.bind('s', function () {
-                flowplayer.pause();
-            });
-            Mousetrap.bind('p', function () {
+        var self = this;
+        /**
+        * Capture keyboard events
+        **/
+        Mousetrap.bind('space', function () {
+            if ( self.state.play === true ) {
+                flowplayer.pause();    
+                self.setState({'play': false});
+            } else {
                 flowplayer.resume();
+                self.setState({'play': true});
+            }
+            return false;
+        });
+
+        /**
+        * local function to bind common functionality together for halting and focusing
+        **/
+        var commentTypeSetter = function ( type ) {
+            flowplayer.pause();
+            console.log(type)
+            self.setState({
+                'current_type': type,
+                'play': false,
             });
-            Mousetrap.bind('1', function () {
-                flowplayer.seekTo(1);
-            });
-            Mousetrap.bind('0', function () {
-                flowplayer.seekTo(0);
-            });
+            $('input[name=comment]').focus();
+        };
+
+        Mousetrap.bind('c', function () {
+            // make comment type
+            commentTypeSetter('Comment');
+            return false; // dont output the text
+        });
+        Mousetrap.bind('k', function () {
+           // make sketch type 
+           commentTypeSetter('Sketch');
+            return false; // dont output the text
+        });
+        Mousetrap.bind('t', function () {
+           // make subtitle type 
+            commentTypeSetter('Subtitle');
+            return false; // dont output the text
+        });
 
 
-            /**
-            * local function to bind common functionality together for halting and focusing
-            **/
-            var commentTypeSetter = function ( type ) {
-                flowplayer().pause();
-                $('input[name=comment]').focus();
-                self.setState({
-                    'current_type': type
-                });
-            };
-
-            Mousetrap.bind('c', function () {
-                // make comment type
-                commentTypeSetter('Comment');
-                return false; // dont output the text
-            });
-            Mousetrap.bind('k', function () {
-               // make sketch type 
-               commentTypeSetter('Sketch');
-                return false; // dont output the text
-            });
-            Mousetrap.bind('t', function () {
-               // make subtitle type 
-                commentTypeSetter('Subtitle');
-                return false; // dont output the text
-            });
-
-
-            Mousetrap.bind('?', function () {
-                $('#modal-keyboard-help').modal('toggle');
-                return false; // dont output the text
-            });
-
+        Mousetrap.bind('?', function () {
+            $('#modal-keyboard-help').modal('toggle');
+            return false; // dont output the text
+        });
 
     },
     render: function () {
