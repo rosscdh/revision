@@ -11,7 +11,11 @@ class VideoCommentsMixin(object):
         return [c for c in self.data.get('comments', []) if c.get('is_deleted', False) is False]
 
     @property
-    def reversed_comments(self):
+    def comments_by_id(self):
+        return sorted(self.comments, key=lambda comment: comment.get('pk'), reverse=False)
+
+    @property
+    def comments_by_id_reversed(self):
         return sorted(self.comments, key=lambda comment: comment.get('pk'), reverse=True)
 
     @comments.setter

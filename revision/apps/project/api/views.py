@@ -42,7 +42,7 @@ class VideoCommentsEndpoint(generics.ListCreateAPIView):
     def list(self, request, **kwargs):
         self.object = self.get_object()
         serializer = CommentSerializer
-        return Response(serializer([item for item in self.object.comments if item.get('is_deleted', False) is False], many=True).data)
+        return Response(serializer([item for item in self.object.comments_by_id_reversed if item.get('is_deleted', False) is False], many=True).data)
 
     def create(self, request, **kwargs):
         self.object = self.get_object()

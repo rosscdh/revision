@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import DetailView
+from django.utils.safestring import mark_safe
 
 from rest_framework.renderers import JSONRenderer
 
 from .api.serializers import ProjectSerializer, VideoSerializer
-from .models import Project
+from .models import Project, Video
 
+from decimal import Decimal, getcontext
 
 class ProjectDetailView(DetailView):
     model = Project
@@ -23,3 +25,20 @@ class ProjectDetailView(DetailView):
         version_slug = self.kwargs.get('version_slug', None)
         self._current_video = self.object.video_set.get(slug=version_slug) if version_slug is not None else self.object.video_set.all().first()
         return self._current_video
+
+
+class VideoSubtitleView(ProjectDetailView):
+    template_name = 'project/video_subtitles.html'
+
+    @property
+    def subtitles(self):
+        self.object = self.get_object()
+        subtitles = self.current_video.comments#[s for s in self.current_video.comments if s.get('comment_type') == 'subtitle']
+        getcontext().prec = 6
+        for i, s in enumerate(subtitles):
+            progress = float(s.get('progress'))
+            subtitle_start_progress = Video.secs_to_stamp(progress)
+            subtitle_end_progress = Video.secs_to_stamp(progress + 4)  # delay 4 seconds @TODO make this configurable
+            subtitles[i]['subtitle_range'] = mark_safe('%s --> %s' % (subtitle_start_progress, subtitle_end_progress))
+
+        return subtitles

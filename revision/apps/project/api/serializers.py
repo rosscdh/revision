@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from django.core.urlresolvers import reverse_lazy
+
 from rest_framework import serializers
 
 from ..models import Project, Video
@@ -32,20 +34,23 @@ class CommentSerializer(serializers.Serializer):
 
 
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
-    comments = serializers.Field(source='reversed_comments')
+    comments = serializers.Field(source='comments_by_id_reversed')
     video_type = serializers.Field(source='display_type')
+    video_subtitles_url = serializers.SerializerMethodField('get_video_subtitles_url')
 
     class Meta:
         model = Video
         lookup_field = 'slug'
         exclude = ('data',)
 
+    def get_video_subtitles_url(self, obj):
+        return reverse_lazy('project:video_subtitles_url', kwargs={'slug': obj.project.slug, 'version_slug': obj.slug})
 
 class VideoSerializerLite(VideoSerializer):
     url = serializers.Field(source='get_absolute_url')
 
     class Meta(VideoSerializer.Meta):
-        fields = ('name', 'url', 'video_url',)
+        fields = ('name', 'url', 'video_url', 'video_subtitles_url',)
 
 
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):

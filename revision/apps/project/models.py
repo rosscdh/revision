@@ -11,6 +11,7 @@ from .signals import ensure_project_slug
 from jsonfield import JSONField
 from uuidfield import UUIDField
 
+import math
 
 BASE_VIDEO_TYPES = get_namedtuple_choices('BASE_VIDEO_TYPES', (
     (1, 'video_mp4', 'video/mp4'),
@@ -53,6 +54,17 @@ class Video(VideoCommentsMixin,
 
     class Meta:
         ordering = ['-id']
+
+    @classmethod
+    def secs_to_stamp(cls, secs):
+        secs, part = str(secs).split('.')
+        secs = int(secs)
+        part = int(part[0:3])
+        minutes = math.floor(secs / 60);
+        seconds = round(secs - minutes * 60, 2);
+        hours = math.floor(secs / 3600);
+        #time = time - hours * 3600;
+        return '%02d:%02d:%02d.%03d' % (hours, minutes, seconds, part)
 
     @property
     def display_type(self):

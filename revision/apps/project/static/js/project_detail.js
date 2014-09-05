@@ -109,11 +109,12 @@ var TimestampView = React.createClass({displayName: 'TimestampView',
         var stamp = this.secondsToStamp( progress_seconds );
         var timestamp_link = '#' + stamp;
         var classNames = 'badge pull-right';
-//console.log(this.props.onSeekTo)
+
         var handleSeek = (this.props.onSeekTo !== undefined) ? this.props.onSeekTo.bind(this, progress_seconds) : null ;
 
         if ( handleSeek !== null ) {
             return (React.DOM.span({className: classNames}, 
+            handleSeek, 
                 React.DOM.a({href: timestamp_link, onClick: handleSeek}, stamp)
                 ));
         } else {
@@ -155,25 +156,22 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
     render: function () {
         var self = this;
         var is_link = false;
-        var Timestamp = TimestampView({is_link: is_link, progress: this.props.progress})
-
-        var current_type = this.props.current_type;
-
+        var current_type = this.props.current_type.toLowerCase();
         var commentTypeNodes = this.state.available_types.map(function ( type ) {
             return (React.DOM.li(null, 
                 React.DOM.a({href: "javascript:;", onClick: self.props.onSetCurrentType}, type)
             ));
         });
-
+        var Timestamp = TimestampView({is_link: is_link, progress: this.props.progress})
         // be more clver with this turn into an array and then push and join at end
         var btnClassNameA = 'btn';
         var btnClassNameB = 'btn dropdown-toggle';
 
-        if ( current_type == 'Comment' ) {
+        if ( current_type == 'comment' ) {
             btnClassNameA += ' btn-success';
             btnClassNameB += ' btn-success';
 
-        } else if ( current_type == 'Subtitle' ) {    
+        } else if ( current_type == 'subtitle' ) {    
             btnClassNameA += ' btn-primary';
             btnClassNameB += ' btn-primary';
 
@@ -224,16 +222,16 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
     },
     render: function () {
         var comment = this.props.comment;
-        var comment_type = comment.type;
+        var comment_type = comment.comment_type.toLowerCase();
         var collaborator = CollaboratorView({name: comment.comment_by})
         var timestamp = TimestampView({onSeekTo: this.props.onSeekTo, progress: comment.progress})
         var type_className = 'label label-warning';
 
         if ( comment_type === 'comment' ) {
-            type_className = 'label label-info';
+            type_className = 'label label-success';
 
         } else if ( comment_type === 'sketch' ) {
-            type_className = 'label label-primary';
+            type_className = 'label label-info';
 
         }
 
@@ -246,7 +244,7 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
                     React.DOM.br(null), React.DOM.span({className: "pull-right"}, React.DOM.small(null, comment.date_of))
                 ), 
 
-                React.DOM.span({className: type_className}, comment.type), 
+                React.DOM.span({className: type_className}, comment_type), 
 
                 React.DOM.blockquote(null, 
                     collaborator, " ", 
@@ -299,11 +297,12 @@ var FlowPlayerView = React.createClass({displayName: 'FlowPlayerView',
     render: function () {
         var video_url = this.props.video.video_url;
         var video_type = this.props.video.type;
-
+        var video_subtitles_url = this.props.video.video_subtitles_url;
         return (
             React.DOM.div({className: "flowplayer"}, 
                React.DOM.video(null, 
-                React.DOM.source({src: video_url, type: video_type})
+                React.DOM.source({src: video_url, type: video_type}), 
+                    React.DOM.track({src: video_subtitles_url})
                )
             )
         );
@@ -333,6 +332,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
         });
     },
     handleSeekTo: function ( seek_to, event ) {
+        console.log(seek_to);
         flowplayer().seek(seek_to);
     },
     componentDidMount: function () {
