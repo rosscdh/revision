@@ -132,6 +132,26 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
             'available_types': ['Comment', 'Subtitle', 'Sketch']
         }
     },
+    handleSubmitComment: function ( event ) {
+        event.preventDefault();
+        var self = this;
+
+        var comment = this.refs.comment.getDOMNode().value.trim();
+        var comment_type = this.refs.comment_type.getDOMNode().value.trim();
+        var comment_by = 'RC';
+        var progress = this.props.progress;
+
+        CommentResource.create( comment, comment_type, comment_by, progress ).defer().done(function ( data ) {
+
+            if ( data.status_text === undefined ) {
+                VideoResource.detail().defer().done(function ( data ) {
+                    self.props.onVideoUpdate( data );
+                });
+            }
+
+        });
+        return false;
+    },
     render: function () {
         var self = this;
         var is_link = false;
@@ -163,7 +183,7 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
         }
 
         return (
-            React.DOM.form(null, 
+            React.DOM.form({onSubmit: this.handleSubmitComment}, 
                 React.DOM.div({className: "input-group"}, 
 
                     React.DOM.span({className: "input-group-addon"}, 
@@ -178,8 +198,8 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
                           )
                         )
                     ), 
-
-                    React.DOM.input({type: "text", name: "comment", placeholder: "Add comment here...", className: "form-control input-lg"}), 
+                    React.DOM.input({type: "text", ref: "comment", name: "comment", placeholder: "Add comment here...", className: "form-control input-lg"}), 
+                    React.DOM.input({type: "hidden", ref: "comment_type", value: current_type}), 
                     React.DOM.span({className: "input-group-addon"}, Timestamp)
 
                 )
@@ -189,6 +209,19 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
 });
 
 var CommentItemView = React.createClass({displayName: 'CommentItemView',
+    handleDeleteComment: function ( pk, event ) {
+        var self = this;
+
+        CommentResource.destroy( pk ).defer().done(function ( data ) {
+
+            if ( data.status_text === undefined ) {
+                VideoResource.detail().defer().done(function ( data ) {
+                    self.props.onVideoUpdate( data );
+                });
+            }
+
+        });
+    },
     render: function () {
         var comment = this.props.comment;
         var comment_type = comment.type;
@@ -208,7 +241,7 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
             React.DOM.li({className: ""}, 
                 
                 React.DOM.div({className: "col-xs-2 pull-right"}, 
-                    React.DOM.a({href: "#delete"}, React.DOM.span({className: "glyphicon glyphicon-remove-circle pull-right"})), 
+                    React.DOM.a({href: "javascript:;", onClick: this.handleDeleteComment.bind(this, comment.pk)}, React.DOM.span({className: "glyphicon glyphicon-remove-circle pull-right"})), 
                     React.DOM.br(null), timestamp, 
                     React.DOM.br(null), React.DOM.span({className: "pull-right"}, React.DOM.small(null, comment.date_of))
                 ), 
@@ -230,7 +263,9 @@ var CommentListView = React.createClass({displayName: 'CommentListView',
     render: function () {
         var self = this;
         commentNodes = this.props.comments.map(function (comment) {
-            return CommentItemView({onSeekTo: self.props.onSeekTo, comment: comment})
+            return CommentItemView({onVideoUpdate: self.props.onVideoUpdate, 
+                                    onSeekTo: self.props.onSeekTo, 
+                                    comment: comment})
         });
 
         return (React.DOM.span(null, 
@@ -285,6 +320,11 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             'progress': 0,
             'flowplayer_selector': '.flowplayer'
         }
+    },
+    handleVideoUpdate: function ( video ) {
+        this.setState({
+            'video': video
+        });
     },
     handleTypeChange: function ( event ) {
         this.setState({
@@ -374,8 +414,15 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
 
         var Title = TitleView({project: this.state.project})
         var FlowPlayer = FlowPlayerView({video: this.state.video})
-        var CommentForm = CommentFormView({onSetCurrentType: this.handleTypeChange, current_type: this.state.current_type, progress: this.state.progress, video: this.state.video})
-        var CommentList = CommentListView({onSeekTo: this.handleSeekTo, comments: this.state.video.comments})
+        var CommentForm = CommentFormView({onVideoUpdate: this.handleVideoUpdate, 
+                                           onSetCurrentType: this.handleTypeChange, 
+                                           current_type: this.state.current_type, 
+                                           progress: this.state.progress, 
+                                           video: this.state.video})
+
+        var CommentList = CommentListView({onVideoUpdate: this.handleVideoUpdate, 
+                                           onSeekTo: this.handleSeekTo, 
+                                           comments: this.state.video.comments})
 
         return (React.DOM.span(null, 
             React.DOM.div({className: "jumbotron"}, 

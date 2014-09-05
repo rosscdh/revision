@@ -30,7 +30,7 @@ class VideoCommentsMixinTest(TestCase):
     def test_add_comment(self):
         self.video.add_comment(comment='Testing 123')
         self.assertEqual(self.video.comments[0].get('comment'), 'Testing 123')
-        self.assertItemsEqual(self.video.comments[0].keys(), ['comment', 'index', 'date_of'])
+        self.assertItemsEqual(self.video.comments[0].keys(), ['comment', 'pk', 'date_of', 'is_deleted'])
 
         self.video.add_comment(comment='Testing 456')
         self.video.add_comment(comment='Testing 789')

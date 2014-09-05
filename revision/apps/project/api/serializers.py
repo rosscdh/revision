@@ -27,20 +27,18 @@ class CommentSerializer(serializers.Serializer):
     comment = serializers.CharField()
     comment_by = serializers.CharField()
     date_of = CustomDateTimeField(default=_get_date_now, read_only=True, format='iso-8601')
-    progress = serializers.DecimalField(max_digits=9, decimal_places=4)
+    progress = serializers.DecimalField(max_digits=10, decimal_places=6)
     is_deleted = serializers.BooleanField(default=False)
 
 
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
-    comments = serializers.SerializerMethodField('get_comments')
+    comments = serializers.Field(source='reversed_comments')
     video_type = serializers.Field(source='display_type')
 
     class Meta:
         model = Video
         lookup_field = 'slug'
-
-    def get_comments(self, obj):
-        return obj.comments
+        exclude = ('data',)
 
 
 class VideoSerializerLite(VideoSerializer):

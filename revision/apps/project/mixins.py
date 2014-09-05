@@ -8,7 +8,11 @@ class VideoCommentsMixin(object):
     """
     @property
     def comments(self):
-        return self.data.get('comments', [])
+        return [c for c in self.data.get('comments', []) if c.get('is_deleted', False) is False]
+
+    @property
+    def reversed_comments(self):
+        return sorted(self.comments, key=lambda comment: comment.get('pk'), reverse=True)
 
     @comments.setter
     def comments(self, value):
@@ -23,6 +27,10 @@ class VideoCommentsMixin(object):
             'comment': comment,
             'is_deleted': False,
         })
+        if 'date_of' not in kwargs:
+            kwargs.update({
+                'date_of': datetime.datetime.utcnow().isoformat('T')
+            })
         # append the object to the list
         comments.append(kwargs)
         # set the comment value in data vai the setter

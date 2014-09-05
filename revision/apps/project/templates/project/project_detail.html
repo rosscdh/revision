@@ -3,11 +3,11 @@
 {% block page_title %}My Test Project{% endblock %}
 
 {% block jumbo %}
+{% csrf_token %}
 <div id="project-detail-base"></div>
 {% endblock %}
 
 {% block content %}
-
 <div class="row">
     <div class="col-md-4">
       <h2>New Version</h2>
@@ -89,10 +89,12 @@
 {% endblock css %}
 
 {% block js %}
+<script src="{{ STATIC_URL }}/js/resource.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.2/moment.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/mousetrap/1.4.6/mousetrap.min.js"></script>
 <script src="//releases.flowplayer.org/5.5.0/flowplayer.js"></script>
 <script>
+'use strict';
 /**
 * Setup the base javascript objects for our react handler
 **/
@@ -101,6 +103,38 @@ var Today = moment();
 var Project = {{ view.project_json|safe|default:'{}' }};
 
 var Video = {{ view.video_json|safe|default:'{}' }};
+
+var VideoResource = Resource.createClass({
+  base_url: function () {
+    return '/api/v1/videos/{{ view.current_video.slug }}/'
+  },
+  detail: function () {
+    var uri = this.base_url();
+    return this.process( uri, 'GET' );
+  },
+});
+
+var CommentResource = Resource.createClass({
+  base_url: function () {
+    return '/api/v1/videos/{{ view.current_video.slug }}/comments/'
+  },
+  list: function () {
+    var uri = this.base_url();
+    return this.process( uri, 'GET' );
+  },
+  create: function ( comment, comment_type, comment_by, progress ) {
+    var uri = this.base_url();
+    return this.process( uri, 'POST', {'comment': comment, 'comment_type': comment_type, 'comment_by': comment_by, 'progress': progress} );
+  },
+  detail: function ( comment_pk ) {
+    var uri = this.base_url() + comment_pk + '/';
+    return this.process( uri, 'GET' );
+  },
+  destroy: function ( comment_pk ) {
+    var uri = this.base_url() + comment_pk + '/';
+    return this.process( uri, 'DELETE', {'is_deleted': true});
+  },
+});
 // var Project = {
 //     name: 'My Test Project',
 //     date_created: '',
@@ -125,10 +159,10 @@ var Video = {{ view.video_json|safe|default:'{}' }};
 //     // type: 'rtmp/flv',
 //     timestamp: '00:00:00',
 //     comments: [
-//       {type: 'comment', comment: 'This is a comment, please change the language', comment_by: 'RC', date_of: Today.from(moment().add('days', 1)), progress: 180.23433},
-//       {type: 'subtitle', comment: 'Das ist eine kommentar, endern Sie bitte die Sprache', comment_by: 'KM', date_of: Today.from(moment().add('days', 3)), progress: 120.233},
-//       {type: 'sketch', comment: '', comment_by: 'KM', date_of: Today.from(moment().add('days', 3)), progress: 90.3433},
-//       {type: 'comment', comment: 'What about Multiple comments per timestamp?', comment_by: 'MP', date_of: Today.from(moment().add('days', 5)), progress: 20.2322}
+//       {comment_type: 'comment', comment: 'This is a comment, please change the language', comment_by: 'RC', date_of: Today.from(moment().add('days', 1)), progress: 180.23433},
+//       {comment_type: 'subtitle', comment: 'Das ist eine kommentar, endern Sie bitte die Sprache', comment_by: 'KM', date_of: Today.from(moment().add('days', 3)), progress: 120.233},
+//       {comment_type: 'sketch', comment: '', comment_by: 'KM', date_of: Today.from(moment().add('days', 3)), progress: 90.3433},
+//       {comment_type: 'comment', comment: 'What about Multiple comments per timestamp?', comment_by: 'MP', date_of: Today.from(moment().add('days', 5)), progress: 20.2322}
 //     ]
 // };
 </script>

@@ -19,5 +19,5 @@ router.register(r'videos', VideoViewSet)
 
 urlpatterns = patterns('',
     url(r'^videos/(?P<slug>[\d\w-]+)/comments/$', VideoCommentsEndpoint.as_view(), name='video_comments'),
-    url(r'^videos/(?P<slug>[\d\w-]+)/comment/(?P<pk>[\d]+)/$', VideoCommentDetailEndpoint.as_view(), name='video_comment_detail'),
+    url(r'^videos/(?P<slug>[\d\w-]+)/comments/(?P<pk>[\d]+)/$', VideoCommentDetailEndpoint.as_view(), name='video_comment_detail'),
 ) + router.urls

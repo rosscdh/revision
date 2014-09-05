@@ -71,7 +71,7 @@ class VideoCommentDetailEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
     @property
     def pk(self):
-        return (int(self.kwargs.get('pk')) - 1) ## minus 1 to account for list index
+        return int(self.kwargs.get('pk')) ## minus 1 to account for list index
 
     def retrieve(self, request, **kwargs):
         self.object = self.get_object()
@@ -101,7 +101,7 @@ class VideoCommentDetailEndpoint(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, **kwargs):
         self.object = self.get_object()
         try:
-            data = self.object.comments[self.pk]
+            index, data = [(index, c.copy()) for index, c in enumerate(self.object.comments) if c.get('pk') == self.pk][0]
         except IndexError:
             return Response(status=http_status.HTTP_404_NOT_FOUND, data={'errors': 'Comment %d: Does not exist' % self.pk})
 
@@ -111,8 +111,16 @@ class VideoCommentDetailEndpoint(generics.RetrieveUpdateDestroyAPIView):
         comment = CommentSerializer(data, data=data)
 
         if comment.is_valid() is True:
-            self.object.comments[self.pk] = comment.data
+            # copy the comments so we can modify them
+            comments = self.object.comments
+            # update the copy
+            comments[index] = comment.data
+            # set the new comments
+            self.object.comments = comments
+            # resave
             self.object.save(update_fields=['data'])
+
             return Response(comment.data, status=http_status.HTTP_200_OK)
+
         else:
             return Response(status=http_status.HTTP_400_BAD_REQUEST, data={'errors': comment.errors})
