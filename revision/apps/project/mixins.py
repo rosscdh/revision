@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 
 
 class VideoCommentsMixin(object):
@@ -16,9 +17,10 @@ class VideoCommentsMixin(object):
 
     def add_comment(self, comment, **kwargs):
         comments = self.comments
-
+        index = len(comments) + 1  # save the current index
         kwargs.update({
-            'comment': comment
+            'pk': index,
+            'comment': comment,
         })
         # append the object to the list
         comments.append(kwargs)

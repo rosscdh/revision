@@ -3,6 +3,32 @@ from rest_framework import serializers
 
 from ..models import Project, Video
 
+import datetime
+import dateutil.parser
+
+
+def _get_date_now():
+    return datetime.datetime.utcnow().isoformat('T')
+
+
+class CustomDateTimeField(serializers.DateTimeField):
+    def from_native(self, value):
+        return datetime.datetime(value).isoformat('T')
+
+    def to_native(self, value):
+        if value is None:
+            value = _get_date_now()
+        return dateutil.parser.parse(value)
+        
+
+class CommentSerializer(serializers.Serializer):
+    pk = serializers.IntegerField(read_only=True)
+    comment_type = serializers.CharField()
+    comment = serializers.CharField()
+    comment_by = serializers.CharField()
+    date_of = CustomDateTimeField(default=_get_date_now, read_only=True, format='iso-8601')
+    progress = serializers.DecimalField(max_digits=9, decimal_places=4)
+
 
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
     comments = serializers.SerializerMethodField('get_comments')

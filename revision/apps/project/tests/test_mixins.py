@@ -29,14 +29,14 @@ class VideoCommentsMixinTest(TestCase):
 
     def test_add_comment(self):
         self.video.add_comment(comment='Testing 123')
-        self.assertItemsEqual(self.video.comments, [{'comment': 'Testing 123'}])
+        self.assertEqual(self.video.comments[0].get('comment'), 'Testing 123')
+        self.assertItemsEqual(self.video.comments[0].keys(), ['comment', 'index', 'date_of'])
 
         self.video.add_comment(comment='Testing 456')
         self.video.add_comment(comment='Testing 789')
-        self.assertItemsEqual(self.video.comments,
-                              [{'comment': 'Testing 123'},
-                               {'comment': 'Testing 456'},
-                               {'comment': 'Testing 789'}])
+        self.assertEqual(self.video.comments[0].get('comment'), 'Testing 123')
+        self.assertEqual(self.video.comments[1].get('comment'), 'Testing 456')
+        self.assertEqual(self.video.comments[2].get('comment'), 'Testing 789')
 
 
     def test_empty_comments_are_returned(self):

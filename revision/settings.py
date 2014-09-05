@@ -223,6 +223,25 @@ INTERCOM_APP_ID = None
 #
 MIXPANEL_SETTINGS = {}
 
+REST_FRAMEWORK = {
+    # Use hyperlinked styles by default.
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.UnicodeJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        #'rest_framework.authentication.TokenAuthentication',
+        #'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        #'rest_framework.authentication.BasicAuthentication', # Here Temporarily for dev
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # only use this in dev
+        #'toolkit.apps.api.permissions.ApiObjectPermission',
+    ],
+    'PAGINATE_BY': 100,
+}
+
 try:
     LOCAL_SETTINGS
 except NameError:
