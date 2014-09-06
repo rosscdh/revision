@@ -7,7 +7,6 @@ from rest_framework.renderers import JSONRenderer
 from .api.serializers import ProjectSerializer, VideoSerializer
 from .models import Project, Video
 
-from decimal import Decimal, getcontext
 
 class ProjectDetailView(DetailView):
     model = Project
@@ -34,7 +33,7 @@ class VideoSubtitleView(ProjectDetailView):
     def subtitles(self):
         self.object = self.get_object()
         subtitles = self.current_video.comments#[s for s in self.current_video.comments if s.get('comment_type') == 'subtitle']
-        getcontext().prec = 6
+
         for i, s in enumerate(subtitles):
             progress = float(s.get('progress'))
             subtitle_start_progress = Video.secs_to_stamp(progress)
@@ -42,3 +41,8 @@ class VideoSubtitleView(ProjectDetailView):
             subtitles[i]['subtitle_range'] = mark_safe('%s --> %s' % (subtitle_start_progress, subtitle_end_progress))
 
         return subtitles
+
+
+class ProjectChronicleView(DetailView):
+    model = Project
+    template_name = 'project/project_chronicle.html'

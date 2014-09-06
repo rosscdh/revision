@@ -189,6 +189,12 @@ PIPELINE_JS = {
             'js/project_detail.jsx',
         ),
         'output_filename': 'js/project.js',
+    },
+    'project_chronicle': {
+        'source_filenames': (
+            'js/project_chronicle.jsx',
+        ),
+        'output_filename': 'js/chronicle.js',
     }
 }
 PIPELINE_COMPILERS = [
