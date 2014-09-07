@@ -3,41 +3,41 @@
 * Project chronicle controls
 *
 */
-var ChronicleVideoBase = React.createClass({
+var ChronicleVideoBase = React.createClass({displayName: 'ChronicleVideoBase',
     getInitialState: function () {
         return {
             'video': Video
         }
     },
     render: function () {
-        var FlowPlayer = <FlowPlayerView video={this.state.video} />
-        return (<span>
-            {FlowPlayer}
-        </span>);
+        var FlowPlayer = FlowPlayerView({video: this.state.video})
+        return (React.DOM.span(null, 
+            FlowPlayer
+        ));
     }
 });
 // render chronicle
 React.renderComponent(
-  <ChronicleVideoBase />,
+  ChronicleVideoBase(null),
   document.getElementById('project-detail-video')
 );
 
 
-var ChronicleCommentsBase = React.createClass({
+var ChronicleCommentsBase = React.createClass({displayName: 'ChronicleCommentsBase',
     getInitialState: function () {
         return {
             'comments': Comments
         }
     },
     render: function () {
-        var commentsDetail = <CommentListView comments={this.state.comments} />
-        return (<span>
-            {commentsDetail}
-        </span>);
+        var commentsDetail = CommentListView({comments: this.state.comments})
+        return (React.DOM.span(null, 
+            commentsDetail
+        ));
     }
 });
 // render chronicle
 React.renderComponent(
-  <ChronicleCommentsBase />,
+  ChronicleCommentsBase(null),
   document.getElementById('project-detail-chronicle')
 );

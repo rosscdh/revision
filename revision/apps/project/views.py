@@ -4,7 +4,9 @@ from django.utils.safestring import mark_safe
 
 from rest_framework.renderers import JSONRenderer
 
-from .api.serializers import ProjectSerializer, VideoSerializer
+from .api.serializers import (ProjectSerializer,
+                              VideoSerializer,
+                              CommentSerializer)
 from .models import Project, Video
 
 
@@ -43,6 +45,15 @@ class VideoSubtitleView(ProjectDetailView):
         return subtitles
 
 
-class ProjectChronicleView(DetailView):
+class ProjectChronicleView(ProjectDetailView):
     model = Project
     template_name = 'project/project_chronicle.html'
+
+    @property
+    def project_comments_json(self):
+        comments = []
+
+        for v in self.object.video_set.all():
+            comments += v.comments
+
+        return JSONRenderer().render(CommentSerializer(comments, many=True).data)

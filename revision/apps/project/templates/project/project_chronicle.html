@@ -4,27 +4,13 @@
 
 {% block jumbo %}
 {% csrf_token %}
-<div id="project-detail-base"></div>
-{% endblock %}
-
-{% block content %}
 <div class="row">
-    <div class="col-md-4">
-      <h2>New Version</h2>
-      <p>Drop a new version of the video here</p>
-        <a href="#" class="thumbnail">
-          <img data-src="holder.js/100%x180" alt="...">
-        </a>
+    <div class="col-md-7">
+        <div id="project-detail-video"></div>
     </div>
-
-    <div id="project-detail-collaborators" class="col-md-4"></div>
-
-    <div class="col-md-4">
-      <h2>Save</h2>
-      <p>Export the project to dropbox, this will export the video, a Final Cut Pro XML file as well as an activity stream document (activity.html) which allows you to search comments</p>
-      <p><a class="btn btn-primary" href="#" role="button">Export &raquo;</a></p>
+    <div class="col-md-5">
+        <div id="project-detail-chronicle"></div>
     </div>
-
 </div>
 {% endblock %}
 
@@ -45,6 +31,7 @@
 {% endblock css %}
 
 {% block js %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/fuse.js/1.1.7/fuse.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.2/moment.min.js"></script>
 <script src="//releases.flowplayer.org/5.5.0/flowplayer.js"></script>
 <script>
@@ -52,6 +39,13 @@
 /**
 * Setup the base javascript objects for our react handler
 **/
+var Today = moment();
+
+var Project = {{ view.project_json|safe|default:'{}' }};
+
+var Video = {{ view.video_json|safe|default:'{}' }};
+
+var Comments = {{ view.project_comments_json|safe|default:'[]' }};
 </script>
 
 {% compressed_js 'project_chronicle' %}

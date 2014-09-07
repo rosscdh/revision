@@ -181,17 +181,23 @@ PIPELINE_JS = {
     'react': {
         'source_filenames': (
             'js/reactjs/0.11.1/react-with-addons.js',
+            'js/common.jsx',
+            'js/videoplayer.jsx',
         ),
         'output_filename': 'js/react.js'
     },
     'project': {
         'source_filenames': (
+            'js/project_collaborators.jsx',
+            'js/project_comments.jsx',
             'js/project_detail.jsx',
         ),
         'output_filename': 'js/project.js',
     },
     'project_chronicle': {
         'source_filenames': (
+            'js/project_collaborators.jsx',
+            'js/project_comments.jsx',
             'js/project_chronicle.jsx',
         ),
         'output_filename': 'js/chronicle.js',
