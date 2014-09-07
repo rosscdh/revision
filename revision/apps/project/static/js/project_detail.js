@@ -34,97 +34,6 @@ var VersionView = React.createClass({displayName: 'VersionView',
     }
 });
 
-// 
-var CollaboratorDetailView = React.createClass({displayName: 'CollaboratorDetailView',
-    render: function () {
-        var user_class = this.props.user_class
-        var classNames = 'pull-right label';
-        if ( user_class === 'owner' ) {
-            classNames += ' label-primary';
-
-        } else if (  user_class === 'colleague'  ) {
-            classNames += ' label-info';
-
-        } else {
-            classNames += ' label-success';
-
-        }
-        return (
-            React.DOM.li({className: "list-group-item"}, 
-            React.DOM.span({className: "glyphicon glyphicon-comment"}), " ", this.props.name, ":", 
-            React.DOM.span({className: classNames}, user_class)
-            )
-        );
-    }
-});
-
-
-var CollaboratorView = React.createClass({displayName: 'CollaboratorView',
-    render: function () {
-        var name = this.props.name;
-        return (
-            React.DOM.span(null, 
-            React.DOM.span({className: "glyphicon glyphicon-comment"}), " ", name, ":"
-            )
-        )
-    }
-});
-
-
-var CollaboratorListView = React.createClass({displayName: 'CollaboratorListView',
-    getInitialState: function () {
-        return {
-            'project': Project,
-        }
-    },
-    render: function () {
-        var collaboratorNodes = this.state.project.collaborators.map(function ( person ) {
-            return CollaboratorDetailView({name: person.name, user_class: person.user_class})
-        });
-
-        return (
-            React.DOM.span(null, 
-              React.DOM.h2(null, "Collaborators"), 
-              React.DOM.p(null, "Add new collaborators here"), 
-              React.DOM.ul({className: "list-group"}, 
-                collaboratorNodes
-              )
-            )
-        );
-    }
-});
-
-// time indicator view - used as a display element in a number of other views
-var TimestampView = React.createClass({displayName: 'TimestampView',
-    secondsToStamp: function ( secs ) {
-        var minutes = Math.floor(secs / 60);
-        var seconds = (secs - minutes * 60).round(2);
-        var hours = Math.floor(secs / 3600);
-        //time = time - hours * 3600;
-        return '{hours}:{minutes}:{seconds}'.assign({ 'seconds': seconds.pad(2), 'minutes': minutes.pad(2), 'hours': hours.pad(2) })
-    },
-    render: function () {
-        var is_link = this.props.is_link || true;
-        var progress_seconds = this.props.progress;
-        var stamp = this.secondsToStamp( progress_seconds );
-        var timestamp_link = '#' + stamp;
-        var classNames = 'badge pull-right';
-
-        var handleSeek = (this.props.onSeekTo !== undefined) ? this.props.onSeekTo.bind(this, progress_seconds) : null ;
-
-        if ( handleSeek !== null ) {
-            return (React.DOM.span({className: classNames}, 
-            handleSeek, 
-                React.DOM.a({href: timestamp_link, onClick: handleSeek}, stamp)
-                ));
-        } else {
-            return (React.DOM.span({className: classNames}, 
-                stamp
-                ));
-        }
-    }
-});
-
 // new version view
 // comment list view
 var NewVersionView = React.createClass({displayName: 'NewVersionView',
@@ -142,23 +51,6 @@ var CollaboratorsView = React.createClass({displayName: 'CollaboratorsView',
 });
 
 // save/export view
-
-// flowplayer
-var FlowPlayerView = React.createClass({displayName: 'FlowPlayerView',
-    render: function () {
-        var video_url = this.props.video.video_url;
-        var video_type = this.props.video.type;
-        var video_subtitles_url = this.props.video.video_subtitles_url;
-        return (
-            React.DOM.div({className: "flowplayer"}, 
-               React.DOM.video(null, 
-                React.DOM.source({src: video_url, type: video_type}), 
-                    React.DOM.track({src: video_subtitles_url})
-               )
-            )
-        );
-    }
-});
 
 // base view
 var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailView',

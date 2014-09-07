@@ -180,6 +180,7 @@ STATICFILES_FINDERS = (
 PIPELINE_JS = {
     'react': {
         'source_filenames': (
+            'js/resource.js',  # api
             'js/reactjs/0.11.1/react-with-addons.js',
             'js/common.jsx',
             'js/videoplayer.jsx',
@@ -188,6 +189,10 @@ PIPELINE_JS = {
     },
     'project': {
         'source_filenames': (
+            # resources api
+            'js/project_resource.js',
+            'js/project_comments.js',
+            # react components
             'js/project_collaborators.jsx',
             'js/project_comments.jsx',
             'js/project_detail.jsx',
