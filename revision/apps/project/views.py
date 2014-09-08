@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import DetailView
+from django.http import StreamingHttpResponse
 from django.utils.safestring import mark_safe
 
 from rest_framework.renderers import JSONRenderer
@@ -8,6 +9,8 @@ from .api.serializers import (ProjectSerializer,
                               VideoSerializer,
                               CommentSerializer)
 from .models import Project, Video
+
+import requests
 
 
 class ProjectDetailView(DetailView):
@@ -57,3 +60,29 @@ class ProjectChronicleView(ProjectDetailView):
             comments += v.comments
 
         return JSONRenderer().render(CommentSerializer(comments, many=True).data)
+
+
+class VideoFileStreamView(ProjectDetailView):
+    model = Project
+    content_type = 'video/mp4'
+    response_class = StreamingHttpResponse
+
+    def stream_response_generator(self):
+        url = self.current_video.video_url
+        stream_request = requests.get(url, stream=True)
+        for line in stream_request.iter_lines():
+            if line: # filter out keep-alive new lines
+                yield line
+
+    def render_to_response(self, context, **response_kwargs):
+        """
+        Returns a response, using the `response_class` for this
+        view, with a template rendered with the given context.
+        If any keyword arguments are provided, they will be
+        passed to the constructor of the response class.
+        """
+        response_kwargs.setdefault('content_type', self.content_type)
+        return self.response_class(
+            self.stream_response_generator(),
+            **response_kwargs
+        )

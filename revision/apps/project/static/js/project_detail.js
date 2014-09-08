@@ -61,7 +61,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             'project': Project,
             'current_type': 'Comment',
             'progress': 0,
-            'flowplayer_selector': '.flowplayer'
+            'flowplayer': null,
         }
     },
     handleVideoUpdate: function ( video ) {
@@ -75,8 +75,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
         });
     },
     handleSeekTo: function ( seek_to, event ) {
-        console.log(seek_to);
-        flowplayer().seek(seek_to);
+        this.state.flowplayer.seek( seek_to );
     },
     componentDidMount: function () {
         var self = this;
@@ -87,14 +86,26 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             //
             // Capture Events
             //
+            api.conf.debug = true;
+            api.conf.engine = 'html5';
+            api.conf.preload = 'auto';
             api.conf.keyboard = false;
-            api.conf.preload = 'metadata';
 
             api.bind("progress", function ( event, ob, progress ) {
                 self.state.video.timestamp = progress;
                 self.setState({
                     'progress': progress
                 });
+            });
+            api.bind("seek", function ( event, ob, progress ) {
+                console.log(event)
+                console.log(ob)
+                console.log(progress)
+            });
+            
+            // set the state handler
+            self.setState({
+                'flowplayer': api
             });
             // setup keyboard shortcuts
             self.setKeyboard( api );
