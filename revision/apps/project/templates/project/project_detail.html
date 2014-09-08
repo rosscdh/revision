@@ -89,11 +89,9 @@
 {% endblock css %}
 
 {% block js %}
-<script src="{{ STATIC_URL }}/js/resource.js"></script>
-<script src="{{ STATIC_URL }}/js/project_resource.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.2/moment.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mousetrap/1.4.6/mousetrap.min.js"></script>
-<script src="//releases.flowplayer.org/5.5.0/flowplayer.js"></script>
+
+{% compressed_js 'resources' %}
+
 <script>
 'use strict';
 /**
@@ -144,7 +142,6 @@ var Video = {
 </script>
 
 {% compressed_js 'project' %}
-{% if debug %}<script src="{{ STATIC_URL }}js/reactjs/0.11.1/JSXTransformer.js"></script>{% endif %}
 
 {% endblock js %}
 
