@@ -141,7 +141,7 @@ var CreateMatterButton = React.createClass({displayName: 'CreateMatterButton',
 
 
 var ProjectList = React.createClass({displayName: 'ProjectList',
-    fuse: new Fuse(Projects, { keys: ["name"], threshold: 0.35 }),
+    fuse: new Fuse(Projects, { keys: ["name", "client.name"], threshold: 0.35 }),
     getInitialState: function() {
         return {
             'can_create': true,
