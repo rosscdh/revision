@@ -11,9 +11,12 @@ var TitleView = React.createClass({displayName: 'TitleView',
         var versionNodes = this.props.project.versions.map(function ( version ) {
             return VersionView({version: version})
         });
-        return (React.DOM.span(null, 
+        return (React.DOM.div({className: "row"}, 
             React.DOM.h2(null, name, " ", React.DOM.small(null, "started: ", started)), 
-            React.DOM.h4(null, "Version: ", React.DOM.small(null, versionNodes))
+            React.DOM.h4(null, "Version: ", React.DOM.small(null, versionNodes)), 
+            React.DOM.h4(null, React.DOM.a({href: this.props.links.chronicle, className: "btn btn-primary pull-right"}, "Chronicle")), 
+            React.DOM.br(null), 
+            React.DOM.br(null)
         ));
     }
 });
@@ -316,6 +319,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             'play': false,
             'video': Video,
             'project': Project,
+            'links': Links,
             'current_type': 'Comment',
             'progress': 0,
             'flowplayer_selector': '.flowplayer'
@@ -412,7 +416,8 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
     },
     render: function () {
 
-        var Title = TitleView({project: this.state.project})
+        var Title = TitleView({project: this.state.project, 
+                               links: this.state.links})
         var FlowPlayer = FlowPlayerView({video: this.state.video})
         var CommentForm = CommentFormView({onVideoUpdate: this.handleVideoUpdate, 
                                            onSetCurrentType: this.handleTypeChange, 

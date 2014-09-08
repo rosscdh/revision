@@ -105,6 +105,9 @@ var Project = {{ view.project_json|safe|default:'{}' }};
 
 var Video = {{ view.video_json|safe|default:'{}' }};
 
+var Links = {
+  'chronicle': "{% url 'project:chronicle' slug=project.slug %}",
+};
 // configure the params for each resource
 VideoResource.params.video_slug = '{{ view.current_video.slug }}';
 CommentResource.params.video_slug = '{{ view.current_video.slug }}';
