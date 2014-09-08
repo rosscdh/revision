@@ -1,0 +1,31 @@
+{% extends 'project/base.html' %}{% load compressed %}
+
+{% block content %}
+
+<div id="project-list" class="row"></div>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+'use strict';
+/**
+* Setup the base javascript objects for our react handler
+**/
+var Today = moment();
+
+var Projects = {{ view.project_json|safe|default:'[]' }};
+
+var UserData = {};
+
+var Links = {
+    'create_url': null,
+    'edit_url': null,
+};
+</script>
+
+{% compressed_js 'project_list' %}
+
+
+{% endblock js %}

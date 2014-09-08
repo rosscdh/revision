@@ -28,7 +28,7 @@ class Project(models.Model):
     data = JSONField(default={})
 
     def get_absolute_url(self):
-        return reverse_lazy('project:detail', kwargs={'slug': self.project.slug})
+        return reverse_lazy('project:detail', kwargs={'slug': self.slug})
 
 #
 # Signals

@@ -46,6 +46,7 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
     def get_video_subtitles_url(self, obj):
         return reverse_lazy('project:video_subtitles_url', kwargs={'slug': obj.project.slug, 'version_slug': obj.slug})
 
+
 class VideoSerializerLite(VideoSerializer):
     url = serializers.Field(source='get_absolute_url')
 
@@ -57,6 +58,9 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
     date_created = serializers.DateTimeField(read_only=True, format='iso-8601')
     collaborators = serializers.SerializerMethodField('get_collaborators')
     versions = serializers.SerializerMethodField('get_versions')
+    client = serializers.SerializerMethodField('get_client')
+
+    detail_url = serializers.SerializerMethodField('get_detail_url')
 
     class Meta:
         model = Project
@@ -65,6 +69,14 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_versions(self, obj):
         return VideoSerializerLite(obj.video_set.all(), many=True).data
+
+    def get_client(self, obj):
+        return {
+            'name': 'Client Name here'
+        }
+
+    def get_detail_url(self, obj):
+        return obj.get_absolute_url()
 
     def get_collaborators(self, obj):
         #

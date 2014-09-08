@@ -195,6 +195,12 @@ PIPELINE_JS = {
         ),
         'output_filename': 'js/react.js'
     },
+    'project_list': {
+        'source_filenames': (
+            'js/project_list.jsx',
+        ),
+        'output_filename': 'js/project_list.js',
+    },
     'project': {
         'source_filenames': (
             # react components

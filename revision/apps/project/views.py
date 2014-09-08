@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 from django.http import StreamingHttpResponse
 from django.utils.safestring import mark_safe
 
@@ -11,6 +11,19 @@ from .api.serializers import (ProjectSerializer,
 from .models import Project, Video
 
 import requests
+
+
+class ProjectListView(ListView):
+    model = Project
+
+    def get_queryset(self, **kwargs):
+        queryset = self.model._default_manager.all()
+        #queryset = self.model._default_manager.filter(collaborators__in=[self.request.user])
+        return queryset
+
+    @property
+    def project_json(self):
+        return JSONRenderer().render(ProjectSerializer(self.get_queryset(), many=True).data)
 
 
 class ProjectDetailView(DetailView):
