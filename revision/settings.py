@@ -184,7 +184,7 @@ PIPELINE_JS = {
             'js/common.jsx',
             'js/videoplayer.jsx',
         ),
-        'output_filename': 'js/react.js'
+        'output_filename': 'js/dist/react.js'
     },
     'resources': {
         'source_filenames': (
@@ -193,7 +193,7 @@ PIPELINE_JS = {
             'js/project_resource.js',
             'js/project_comments.js',
         ),
-        'output_filename': 'js/react.js'
+        'output_filename': 'js/dist/react.js'
     },
     'project_list': {
         'source_filenames': (
@@ -208,7 +208,7 @@ PIPELINE_JS = {
             'js/project_comments.jsx',
             'js/project_detail.jsx',
         ),
-        'output_filename': 'js/project.js',
+        'output_filename': 'js/dist/project.js',
     },
     'project_chronicle': {
         'source_filenames': (
@@ -216,7 +216,7 @@ PIPELINE_JS = {
             'js/project_comments.jsx',
             'js/project_chronicle.jsx',
         ),
-        'output_filename': 'js/chronicle.js',
+        'output_filename': 'js/dist/chronicle.js',
     }
 }
 PIPELINE_COMPILERS = [
