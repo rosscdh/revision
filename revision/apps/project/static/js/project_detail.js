@@ -37,246 +37,6 @@ var VersionView = React.createClass({displayName: 'VersionView',
     }
 });
 
-// 
-var CollaboratorDetailView = React.createClass({displayName: 'CollaboratorDetailView',
-    render: function () {
-        var user_class = this.props.user_class
-        var classNames = 'pull-right label';
-        if ( user_class === 'owner' ) {
-            classNames += ' label-primary';
-
-        } else if (  user_class === 'colleague'  ) {
-            classNames += ' label-info';
-
-        } else {
-            classNames += ' label-success';
-
-        }
-        return (
-            React.DOM.li({className: "list-group-item"}, 
-            React.DOM.span({className: "glyphicon glyphicon-comment"}), " ", this.props.name, ":", 
-            React.DOM.span({className: classNames}, user_class)
-            )
-        );
-    }
-});
-
-
-var CollaboratorView = React.createClass({displayName: 'CollaboratorView',
-    render: function () {
-        var name = this.props.name;
-        return (
-            React.DOM.span(null, 
-            React.DOM.span({className: "glyphicon glyphicon-comment"}), " ", name, ":"
-            )
-        )
-    }
-});
-
-
-var CollaboratorListView = React.createClass({displayName: 'CollaboratorListView',
-    getInitialState: function () {
-        return {
-            'project': Project,
-        }
-    },
-    render: function () {
-        var collaboratorNodes = this.state.project.collaborators.map(function ( person ) {
-            return CollaboratorDetailView({name: person.name, user_class: person.user_class})
-        });
-
-        return (
-            React.DOM.span(null, 
-              React.DOM.h2(null, "Collaborators"), 
-              React.DOM.p(null, "Add new collaborators here"), 
-              React.DOM.ul({className: "list-group"}, 
-                collaboratorNodes
-              )
-            )
-        );
-    }
-});
-
-// time indicator view - used as a display element in a number of other views
-var TimestampView = React.createClass({displayName: 'TimestampView',
-    secondsToStamp: function ( secs ) {
-        var minutes = Math.floor(secs / 60);
-        var seconds = (secs - minutes * 60).round(2);
-        var hours = Math.floor(secs / 3600);
-        //time = time - hours * 3600;
-        return '{hours}:{minutes}:{seconds}'.assign({ 'seconds': seconds.pad(2), 'minutes': minutes.pad(2), 'hours': hours.pad(2) })
-    },
-    render: function () {
-        var is_link = this.props.is_link || true;
-        var progress_seconds = this.props.progress;
-        var stamp = this.secondsToStamp( progress_seconds );
-        var timestamp_link = '#' + stamp;
-        var classNames = 'badge pull-right';
-
-        var handleSeek = (this.props.onSeekTo !== undefined) ? this.props.onSeekTo.bind(this, progress_seconds) : null ;
-
-        if ( handleSeek !== null ) {
-            return (React.DOM.span({className: classNames}, 
-            handleSeek, 
-                React.DOM.a({href: timestamp_link, onClick: handleSeek}, stamp)
-                ));
-        } else {
-            return (React.DOM.span({className: classNames}, 
-                stamp
-                ));
-        }
-    }
-});
-
-
-// Comment form
-var CommentFormView = React.createClass({displayName: 'CommentFormView',
-    getInitialState: function () {
-        return {
-            'available_types': ['Comment', 'Subtitle', 'Sketch']
-        }
-    },
-    handleSubmitComment: function ( event ) {
-        event.preventDefault();
-        var self = this;
-
-        var comment = this.refs.comment.getDOMNode().value.trim();
-        var comment_type = this.refs.comment_type.getDOMNode().value.trim();
-        var comment_by = 'RC';
-        var progress = this.props.progress;
-
-        CommentResource.create( comment, comment_type, comment_by, progress ).defer().done(function ( data ) {
-
-            if ( data.status_text === undefined ) {
-                VideoResource.detail().defer().done(function ( data ) {
-                    self.props.onVideoUpdate( data );
-                });
-            }
-
-        });
-        return false;
-    },
-    render: function () {
-        var self = this;
-        var is_link = false;
-        var current_type = this.props.current_type.toLowerCase();
-        var commentTypeNodes = this.state.available_types.map(function ( type ) {
-            return (React.DOM.li(null, 
-                React.DOM.a({href: "javascript:;", onClick: self.props.onSetCurrentType}, type)
-            ));
-        });
-        var Timestamp = TimestampView({is_link: is_link, progress: this.props.progress})
-        // be more clver with this turn into an array and then push and join at end
-        var btnClassNameA = 'btn';
-        var btnClassNameB = 'btn dropdown-toggle';
-
-        if ( current_type == 'comment' ) {
-            btnClassNameA += ' btn-success';
-            btnClassNameB += ' btn-success';
-
-        } else if ( current_type == 'subtitle' ) {    
-            btnClassNameA += ' btn-primary';
-            btnClassNameB += ' btn-primary';
-
-        } else {
-            btnClassNameA += ' btn-info';
-            btnClassNameB += ' btn-info';
-        }
-
-        return (
-            React.DOM.form({onSubmit: this.handleSubmitComment}, 
-                React.DOM.div({className: "input-group"}, 
-
-                    React.DOM.span({className: "input-group-addon"}, 
-                        React.DOM.div({className: "control-type-selector btn-group"}, 
-                          React.DOM.button({type: "button", className: btnClassNameA}, current_type), 
-                          React.DOM.button({type: "button", className: btnClassNameB, 'data-toggle': "dropdown"}, 
-                            React.DOM.span({className: "caret"}), 
-                            React.DOM.span({className: "sr-only"}, "Toggle Dropdown")
-                          ), 
-                          React.DOM.ul({className: "dropdown-menu", role: "menu"}, 
-                            commentTypeNodes
-                          )
-                        )
-                    ), 
-                    React.DOM.input({type: "text", ref: "comment", name: "comment", placeholder: "Add comment here...", className: "form-control input-lg"}), 
-                    React.DOM.input({type: "hidden", ref: "comment_type", value: current_type}), 
-                    React.DOM.span({className: "input-group-addon"}, Timestamp)
-
-                )
-            )
-        );
-    }
-});
-
-var CommentItemView = React.createClass({displayName: 'CommentItemView',
-    handleDeleteComment: function ( pk, event ) {
-        var self = this;
-
-        CommentResource.destroy( pk ).defer().done(function ( data ) {
-
-            if ( data.status_text === undefined ) {
-                VideoResource.detail().defer().done(function ( data ) {
-                    self.props.onVideoUpdate( data );
-                });
-            }
-
-        });
-    },
-    render: function () {
-        var comment = this.props.comment;
-        var comment_type = comment.comment_type.toLowerCase();
-        var collaborator = CollaboratorView({name: comment.comment_by})
-        var timestamp = TimestampView({onSeekTo: this.props.onSeekTo, progress: comment.progress})
-        var type_className = 'label label-warning';
-
-        if ( comment_type === 'comment' ) {
-            type_className = 'label label-success';
-
-        } else if ( comment_type === 'sketch' ) {
-            type_className = 'label label-info';
-
-        }
-
-        return (
-            React.DOM.li({className: ""}, 
-                
-                React.DOM.div({className: "col-xs-2 pull-right"}, 
-                    React.DOM.a({href: "javascript:;", onClick: this.handleDeleteComment.bind(this, comment.pk)}, React.DOM.span({className: "glyphicon glyphicon-remove-circle pull-right"})), 
-                    React.DOM.br(null), timestamp, 
-                    React.DOM.br(null), React.DOM.span({className: "pull-right"}, React.DOM.small(null, comment.date_of))
-                ), 
-
-                React.DOM.span({className: type_className}, comment_type), 
-
-                React.DOM.blockquote(null, 
-                    collaborator, " ", 
-                    comment.comment
-                )
-                
-            )
-        )
-    }
-});
-
-// comment list view
-var CommentListView = React.createClass({displayName: 'CommentListView',
-    render: function () {
-        var self = this;
-        commentNodes = this.props.comments.map(function (comment) {
-            return CommentItemView({onVideoUpdate: self.props.onVideoUpdate, 
-                                    onSeekTo: self.props.onSeekTo, 
-                                    comment: comment})
-        });
-
-        return (React.DOM.span(null, 
-        React.DOM.ul({className: "list-unstyled list-group"}, 
-            commentNodes
-        )
-        ));
-    }
-});
-
 // new version view
 // comment list view
 var NewVersionView = React.createClass({displayName: 'NewVersionView',
@@ -295,23 +55,6 @@ var CollaboratorsView = React.createClass({displayName: 'CollaboratorsView',
 
 // save/export view
 
-// flowplayer
-var FlowPlayerView = React.createClass({displayName: 'FlowPlayerView',
-    render: function () {
-        var video_url = this.props.video.video_url;
-        var video_type = this.props.video.type;
-        var video_subtitles_url = this.props.video.video_subtitles_url;
-        return (
-            React.DOM.div({className: "flowplayer"}, 
-               React.DOM.video(null, 
-                React.DOM.source({src: video_url, type: video_type}), 
-                    React.DOM.track({src: video_subtitles_url})
-               )
-            )
-        );
-    }
-});
-
 // base view
 var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailView',
     getInitialState: function () {
@@ -322,7 +65,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             'links': Links,
             'current_type': 'Comment',
             'progress': 0,
-            'flowplayer_selector': '.flowplayer'
+            'flowplayer': null,
         }
     },
     handleVideoUpdate: function ( video ) {
@@ -336,8 +79,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
         });
     },
     handleSeekTo: function ( seek_to, event ) {
-        console.log(seek_to);
-        flowplayer().seek(seek_to);
+        this.state.flowplayer.seek( seek_to );
     },
     componentDidMount: function () {
         var self = this;
@@ -348,14 +90,26 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             //
             // Capture Events
             //
+            api.conf.debug = true;
+            api.conf.engine = 'html5';
+            api.conf.preload = 'auto';
             api.conf.keyboard = false;
-            api.conf.preload = 'metadata';
 
             api.bind("progress", function ( event, ob, progress ) {
                 self.state.video.timestamp = progress;
                 self.setState({
                     'progress': progress
                 });
+            });
+            api.bind("seek", function ( event, ob, progress ) {
+                console.log(event)
+                console.log(ob)
+                console.log(progress)
+            });
+            
+            // set the state handler
+            self.setState({
+                'flowplayer': api
             });
             // setup keyboard shortcuts
             self.setKeyboard( api );

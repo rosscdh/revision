@@ -31,7 +31,7 @@ Manual Setup
 1. install requirements - pip install -r requirements/dev.txt
 2. ./manage.py syncdb
 3. ./manage.py migrate
-4. ./manage.py loaddata sites subscribe
+4. ./manage.py loaddata project
 5. http://localhost:8000/
 
 Design Evolutions
