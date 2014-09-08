@@ -94,6 +94,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             api.conf.engine = 'html5';
             api.conf.preload = 'auto';
             api.conf.keyboard = false;
+            //api.conf.rtmp = 'rtmp://127.0.0.1:8080';
 
             api.bind("progress", function ( event, ob, progress ) {
                 self.state.video.timestamp = progress;

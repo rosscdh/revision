@@ -70,7 +70,7 @@ class ProjectChronicleView(ProjectDetailView):
         comments = []
 
         for v in self.object.video_set.all():
-            comments += v.comments
+            comments += v.comments_by_id_reversed
 
         return JSONRenderer().render(CommentSerializer(comments, many=True).data)
 
