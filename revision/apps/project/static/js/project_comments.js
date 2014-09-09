@@ -15,6 +15,7 @@ var CollaboratorsView = React.createClass({displayName: 'CollaboratorsView',
 var CommentFormView = React.createClass({displayName: 'CommentFormView',
     getInitialState: function () {
         return {
+            'comment': '',
             'available_types': ['Comment', 'Subtitle', 'Sketch']
         }
     },
@@ -31,6 +32,9 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
 
             if ( data.status_text === undefined ) {
                 VideoResource.detail().defer().done(function ( data ) {
+                    self.setState({
+                        'comment': ''
+                    });
                     self.props.onVideoUpdate( data );
                 });
             }
@@ -66,9 +70,10 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
         }
 
         return (
-            React.DOM.form({onSubmit: this.handleSubmitComment}, 
-                React.DOM.div({className: "input-group"}, 
+            React.DOM.form({onSubmit: this.handleSubmitComment, className: "text-center"}, 
+                Timestamp, 
 
+                React.DOM.div({className: "input-group"}, 
                     React.DOM.span({className: "input-group-addon"}, 
                         React.DOM.div({className: "control-type-selector btn-group"}, 
                           React.DOM.button({type: "button", className: btnClassNameA}, this.props.current_type), 
@@ -81,10 +86,9 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
                           )
                         )
                     ), 
-                    React.DOM.input({type: "text", ref: "comment", name: "comment", placeholder: "Add comment here...", className: "form-control input-lg"}), 
+                    React.DOM.textarea({ref: "comment", name: "comment", placeholder: "Add comment here...", className: "form-control input-lg"}, this.state.comment), 
                     React.DOM.input({type: "hidden", ref: "comment_type", value: current_type}), 
-                    React.DOM.span({className: "input-group-addon"}, Timestamp)
-
+                    React.DOM.span({className: "input-group-addon"}, React.DOM.input({className: "btn btn-primary", type: "submit", value: "send"}))
                 )
             )
         );
@@ -110,6 +114,7 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
         var comment_type = comment.comment_type.toLowerCase();
         var collaborator = CollaboratorView({name: comment.comment_by})
         var timestamp = TimestampView({onSeekTo: this.props.onSeekTo, progress: comment.progress})
+        var date_of = moment(comment.date_of).fromNow();
         var type_className = 'label label-warning';
 
         if ( comment_type === 'comment' ) {
@@ -125,8 +130,8 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
                 
                 React.DOM.div({className: "col-xs-2 pull-right"}, 
                     React.DOM.a({href: "javascript:;", onClick: this.handleDeleteComment.bind(this, comment.pk)}, React.DOM.span({className: "glyphicon glyphicon-remove-circle pull-right"})), 
-                    React.DOM.br(null), timestamp, 
-                    React.DOM.br(null), React.DOM.span({className: "pull-right"}, React.DOM.small(null, comment.date_of))
+                    React.DOM.br(null), React.DOM.span({className: "pull-right"}, timestamp), 
+                    React.DOM.br(null), React.DOM.span({className: "pull-right"}, React.DOM.small(null, date_of))
                 ), 
 
                 React.DOM.span({className: type_className}, comment_type), 

@@ -17,7 +17,7 @@ var TimestampView = React.createClass({
         var progress_seconds = this.props.progress;
         var stamp = this.secondsToStamp( progress_seconds );
         var timestamp_link = '#' + stamp;
-        var classNames = 'badge pull-right';
+        var classNames = 'badge';
 
         var handleSeek = (this.props.onSeekTo !== undefined) ? this.props.onSeekTo.bind(this, progress_seconds) : null ;
 

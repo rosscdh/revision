@@ -15,6 +15,7 @@ var CollaboratorsView = React.createClass({
 var CommentFormView = React.createClass({
     getInitialState: function () {
         return {
+            'comment': '',
             'available_types': ['Comment', 'Subtitle', 'Sketch']
         }
     },
@@ -31,6 +32,9 @@ var CommentFormView = React.createClass({
 
             if ( data.status_text === undefined ) {
                 VideoResource.detail().defer().done(function ( data ) {
+                    self.setState({
+                        'comment': ''
+                    });
                     self.props.onVideoUpdate( data );
                 });
             }
@@ -66,9 +70,10 @@ var CommentFormView = React.createClass({
         }
 
         return (
-            <form onSubmit={this.handleSubmitComment}>
-                <div className="input-group">
+            <form onSubmit={this.handleSubmitComment} className="text-center">
+                {Timestamp}
 
+                <div className="input-group">
                     <span className="input-group-addon">
                         <div className="control-type-selector btn-group">
                           <button type="button" className={btnClassNameA}>{this.props.current_type}</button>
@@ -81,10 +86,9 @@ var CommentFormView = React.createClass({
                           </ul>
                         </div>
                     </span>
-                    <input type="text" ref="comment" name="comment" placeholder="Add comment here..." className="form-control input-lg" />
+                    <textarea ref="comment" name="comment" placeholder="Add comment here..." className="form-control input-lg">{this.state.comment}</textarea>
                     <input type="hidden" ref="comment_type" value={current_type} />
-                    <span className="input-group-addon">{Timestamp}</span>
-
+                    <span className="input-group-addon"><input className="btn btn-primary" type="submit" value="send" /></span>
                 </div>
             </form>
         );
@@ -110,6 +114,7 @@ var CommentItemView = React.createClass({
         var comment_type = comment.comment_type.toLowerCase();
         var collaborator = <CollaboratorView name={comment.comment_by} />
         var timestamp = <TimestampView onSeekTo={this.props.onSeekTo} progress={comment.progress}/>
+        var date_of = moment(comment.date_of).fromNow();
         var type_className = 'label label-warning';
 
         if ( comment_type === 'comment' ) {
@@ -125,8 +130,8 @@ var CommentItemView = React.createClass({
                 
                 <div className="col-xs-2 pull-right">
                     <a href="javascript:;" onClick={this.handleDeleteComment.bind(this, comment.pk)}><span className="glyphicon glyphicon-remove-circle pull-right"></span></a>
-                    <br/>{timestamp}
-                    <br/><span className="pull-right"><small>{comment.date_of}</small></span>
+                    <br/><span className="pull-right">{timestamp}</span>
+                    <br/><span className="pull-right"><small>{date_of}</small></span>
                 </div>
 
                 <span className={type_className}>{comment_type}</span>
