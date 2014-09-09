@@ -6,12 +6,14 @@
 // title view
 var TitleView = React.createClass({
     render: function () {
+        var createVideoView = <CreateVideoView />
         var name = this.props.project.name;
         var started = this.props.project.date_created;
-        var versionNodes = this.props.project.versions.map(function ( version ) {
-            return <VersionView version={version} />
+        var versionNodes = this.props.project.versions.map(function ( version, index ) {
+            return <VersionView key={index} version={version} />
         });
         return (<div className="row">
+            {createVideoView}
             <h2>{name} <small>started: {started}</small></h2>
             <h4>Version: <small>{versionNodes}</small></h4>
             <h4><a href={this.props.links.chronicle} className="btn btn-primary pull-right">Chronicle</a></h4>
@@ -187,9 +189,10 @@ var BaseProjectDetailView = React.createClass({
                                            progress={this.state.progress}
                                            video={this.state.video} />
 
+        var comments = this.state.video.comments;
         var CommentList = <CommentListView onVideoUpdate={this.handleVideoUpdate}
                                            onSeekTo={this.handleSeekTo}
-                                           comments={this.state.video.comments} />
+                                           comments={comments} />
 
         return (<span>
             <div className="jumbotron">

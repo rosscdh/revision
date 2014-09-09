@@ -46,8 +46,8 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
         var self = this;
         var is_link = false;
         var current_type = this.props.current_type.toLowerCase();
-        var commentTypeNodes = this.state.available_types.map(function ( type ) {
-            return (React.DOM.li(null, 
+        var commentTypeNodes = this.state.available_types.map(function ( type, index ) {
+            return (React.DOM.li({key: index}, 
                 React.DOM.a({href: "javascript:;", onClick: self.props.onSetCurrentType}, type)
             ));
         });
@@ -126,7 +126,7 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
         }
 
         return (
-            React.DOM.li({className: ""}, 
+            React.DOM.li({key: comment.pk, className: ""}, 
                 
                 React.DOM.div({className: "col-xs-2 pull-right"}, 
                     React.DOM.a({href: "javascript:;", onClick: this.handleDeleteComment.bind(this, comment.pk)}, React.DOM.span({className: "glyphicon glyphicon-remove-circle pull-right"})), 
@@ -151,7 +151,8 @@ var CommentListView = React.createClass({displayName: 'CommentListView',
     render: function () {
         var self = this;
         commentNodes = this.props.comments.map(function (comment) {
-            return CommentItemView({onVideoUpdate: self.props.onVideoUpdate, 
+            return CommentItemView({key: comment.pk, 
+                                    onVideoUpdate: self.props.onVideoUpdate, 
                                     onSeekTo: self.props.onSeekTo, 
                                     comment: comment})
         });

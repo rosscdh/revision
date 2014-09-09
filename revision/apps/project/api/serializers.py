@@ -81,7 +81,7 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         # Make use of the comment serializer here
         #
         return [
-          {'name': 'Ross Crawford', 'initials': 'RC', 'user_class': 'owner'},
-          {'name': 'Kris Müller', 'initials': 'KM', 'user_class': 'customer'},
-          {'name': 'Michael Pedersen', 'initials': 'MP', 'user_class': 'colleague'}
+          {'pk': 1, 'name': 'Ross Crawford', 'initials': 'RC', 'user_class': 'owner'},
+          {'pk': 2, 'name': 'Kris Müller', 'initials': 'KM', 'user_class': 'customer'},
+          {'pk': 3, 'name': 'Michael Pedersen', 'initials': 'MP', 'user_class': 'colleague'}
         ]

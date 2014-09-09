@@ -6,7 +6,7 @@
 // 
 var CollaboratorDetailView = React.createClass({displayName: 'CollaboratorDetailView',
     render: function () {
-        var user_class = this.props.user_class
+        var user_class = this.props.person.user_class
         var classNames = 'pull-right label';
         if ( user_class === 'owner' ) {
             classNames += ' label-primary';
@@ -19,9 +19,9 @@ var CollaboratorDetailView = React.createClass({displayName: 'CollaboratorDetail
 
         }
         return (
-            React.DOM.li({className: "list-group-item"}, 
-            React.DOM.span({className: "glyphicon glyphicon-comment"}), " ", this.props.name, ":", 
-            React.DOM.span({className: classNames}, user_class)
+            React.DOM.li({key: this.props.person.pk, className: "list-group-item"}, 
+            React.DOM.span({className: "glyphicon glyphicon-comment"}), " ", this.props.person.name, ":", 
+            React.DOM.span({className: classNames}, this.props.person.user_class)
             )
         );
     }
@@ -48,7 +48,7 @@ var CollaboratorListView = React.createClass({displayName: 'CollaboratorListView
     },
     render: function () {
         var collaboratorNodes = this.state.project.collaborators.map(function ( person ) {
-            return CollaboratorDetailView({name: person.name, user_class: person.user_class})
+            return CollaboratorDetailView({key: person.pk, person: person})
         });
 
         return (

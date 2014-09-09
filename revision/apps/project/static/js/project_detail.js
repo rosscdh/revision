@@ -6,12 +6,14 @@
 // title view
 var TitleView = React.createClass({displayName: 'TitleView',
     render: function () {
+        var createVideoView = CreateVideoView(null)
         var name = this.props.project.name;
         var started = this.props.project.date_created;
-        var versionNodes = this.props.project.versions.map(function ( version ) {
-            return VersionView({version: version})
+        var versionNodes = this.props.project.versions.map(function ( version, index ) {
+            return VersionView({key: index, version: version})
         });
         return (React.DOM.div({className: "row"}, 
+            createVideoView, 
             React.DOM.h2(null, name, " ", React.DOM.small(null, "started: ", started)), 
             React.DOM.h4(null, "Version: ", React.DOM.small(null, versionNodes)), 
             React.DOM.h4(null, React.DOM.a({href: this.props.links.chronicle, className: "btn btn-primary pull-right"}, "Chronicle")), 
@@ -187,9 +189,10 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
                                            progress: this.state.progress, 
                                            video: this.state.video})
 
+        var comments = this.state.video.comments;
         var CommentList = CommentListView({onVideoUpdate: this.handleVideoUpdate, 
                                            onSeekTo: this.handleSeekTo, 
-                                           comments: this.state.video.comments})
+                                           comments: comments})
 
         return (React.DOM.span(null, 
             React.DOM.div({className: "jumbotron"}, 

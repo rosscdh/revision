@@ -46,8 +46,8 @@ var CommentFormView = React.createClass({
         var self = this;
         var is_link = false;
         var current_type = this.props.current_type.toLowerCase();
-        var commentTypeNodes = this.state.available_types.map(function ( type ) {
-            return (<li>
+        var commentTypeNodes = this.state.available_types.map(function ( type, index ) {
+            return (<li key={index}>
                 <a href="javascript:;" onClick={self.props.onSetCurrentType}>{type}</a>
             </li>);
         });
@@ -126,7 +126,7 @@ var CommentItemView = React.createClass({
         }
 
         return (
-            <li className="">
+            <li key={comment.pk} className="">
                 
                 <div className="col-xs-2 pull-right">
                     <a href="javascript:;" onClick={this.handleDeleteComment.bind(this, comment.pk)}><span className="glyphicon glyphicon-remove-circle pull-right"></span></a>
@@ -151,7 +151,8 @@ var CommentListView = React.createClass({
     render: function () {
         var self = this;
         commentNodes = this.props.comments.map(function (comment) {
-            return <CommentItemView onVideoUpdate={self.props.onVideoUpdate}
+            return <CommentItemView key={comment.pk}
+                                    onVideoUpdate={self.props.onVideoUpdate}
                                     onSeekTo={self.props.onSeekTo}
                                     comment={comment} />
         });
