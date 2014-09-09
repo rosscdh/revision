@@ -6,7 +6,7 @@
 // title view
 var TitleView = React.createClass({
     render: function () {
-        var createVideoView = <CreateVideoView />
+        var createVideoView = <CreateVideoView onVideoUpdate={this.props.onVideoUpdate} />
         var name = this.props.project.name;
         var started = this.props.project.date_created;
         var versionNodes = this.props.project.versions.map(function ( version, index ) {
@@ -62,17 +62,21 @@ var BaseProjectDetailView = React.createClass({
     getInitialState: function () {
         return {
             'play': false,
-            'video': Video,
-            'project': Project,
-            'links': Links,
+            'links': Links || [],
+            'video': Video || {},
+            'project': Project || {},
+            'comments': Video.comments || [],
             'current_type': 'Comment',
             'progress': 0,
             'flowplayer': null,
         }
     },
     handleVideoUpdate: function ( video ) {
+        console.log(video);
+        console.log(video.comments);
         this.setState({
-            'video': video
+            'video': video,
+            'comments': video.comments || [],
         });
     },
     handleTypeChange: function ( event ) {
@@ -117,12 +121,6 @@ var BaseProjectDetailView = React.createClass({
             // setup keyboard shortcuts
             self.setKeyboard( api );
 
-        });
-
-        // handle the new video event
-        $(document).on("newVideo", function ( event ) {
-            //console.log(event.video)
-            self.handleVideoUpdate( event.video );
         });
 
     },
@@ -181,7 +179,8 @@ var BaseProjectDetailView = React.createClass({
     render: function () {
 
         var Title = <TitleView project={this.state.project}
-                               links={this.state.links} />
+                               links={this.state.links}
+                               onVideoUpdate={this.handleVideoUpdate} />
         var FlowPlayer = <FlowPlayerView video={this.state.video} />
         var CommentForm = <CommentFormView onVideoUpdate={this.handleVideoUpdate}
                                            onSetCurrentType={this.handleTypeChange}
@@ -189,7 +188,7 @@ var BaseProjectDetailView = React.createClass({
                                            progress={this.state.progress}
                                            video={this.state.video} />
 
-        var comments = this.state.video.comments;
+        var comments = this.state.comments;
         var CommentList = <CommentListView onVideoUpdate={this.handleVideoUpdate}
                                            onSeekTo={this.handleSeekTo}
                                            comments={comments} />

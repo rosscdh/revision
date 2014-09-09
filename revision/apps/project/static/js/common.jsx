@@ -19,7 +19,7 @@ var TimestampView = React.createClass({
         var timestamp_link = '#' + stamp;
         var classNames = 'badge';
 
-        var handleSeek = (this.props.onSeekTo !== undefined) ? this.props.onSeekTo.bind(this, progress_seconds) : null ;
+        var handleSeek = (this.props.onSeekTo !== undefined) ? this.props.onSeekTo.bind( null, progress_seconds ) : null ;
 
         if ( handleSeek !== null ) {
             return (<span className={classNames}>
