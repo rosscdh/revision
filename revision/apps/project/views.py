@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.views.generic import DetailView, ListView
-from django.http import StreamingHttpResponse
+from django.views.generic import (DetailView,
+                                  ListView,
+                                  CreateView,)
 from django.utils.safestring import mark_safe
 
 from rest_framework.renderers import JSONRenderer
@@ -9,6 +10,7 @@ from .api.serializers import (ProjectSerializer,
                               VideoSerializer,
                               CommentSerializer)
 from .models import Project, Video
+from .forms import VideoForm
 
 import requests
 
@@ -43,6 +45,10 @@ class ProjectDetailView(DetailView):
         self._current_video = self.object.video_set.get(slug=version_slug) if version_slug is not None else self.object.video_set.all().first()
         return self._current_video
 
+    @property
+    def video_create_form(self):
+        return VideoForm()
+
 
 class VideoSubtitleView(ProjectDetailView):
     template_name = 'project/video_subtitles.html'
@@ -74,28 +80,3 @@ class ProjectChronicleView(ProjectDetailView):
 
         return JSONRenderer().render(CommentSerializer(comments, many=True).data)
 
-
-class VideoFileStreamView(ProjectDetailView):
-    model = Project
-    content_type = 'video/mp4'
-    response_class = StreamingHttpResponse
-
-    def stream_response_generator(self):
-        url = self.current_video.video_url
-        stream_request = requests.get(url, stream=True)
-        for line in stream_request.iter_lines():
-            if line: # filter out keep-alive new lines
-                yield line
-
-    def render_to_response(self, context, **response_kwargs):
-        """
-        Returns a response, using the `response_class` for this
-        view, with a template rendered with the given context.
-        If any keyword arguments are provided, they will be
-        passed to the constructor of the response class.
-        """
-        response_kwargs.setdefault('content_type', self.content_type)
-        return self.response_class(
-            self.stream_response_generator(),
-            **response_kwargs
-        )

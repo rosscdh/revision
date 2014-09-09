@@ -199,6 +199,7 @@ PIPELINE_JS = {
         'source_filenames': (
             'js/resources/resource.js',  # api
             # resources api
+            'js/resources/project_resource.js',
             'js/resources/video_resource.js',
             'js/resources/comment_resource.js',
         ),
@@ -215,6 +216,7 @@ PIPELINE_JS = {
             # react components
             'js/project_collaborators.jsx',
             'js/project_comments.jsx',
+            'js/project_video.jsx',
             'js/project_detail.jsx',
         ),
         'output_filename': 'js/dist/project.js',

@@ -116,6 +116,13 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             self.setKeyboard( api );
 
         });
+
+        // handle the new video event
+        $(document).on("newVideo", function ( event ) {
+            //console.log(event.video)
+            self.handleVideoUpdate( event.video );
+        });
+
     },
     setKeyboard: function ( flowplayer ) {
         var self = this;

@@ -29,6 +29,7 @@ class Video(VideoCommentsMixin,
     name = models.CharField(max_length=255)
     video_url = models.URLField(db_index=True)
     video_type = models.IntegerField(choices=VIDEO_TYPES.get_choices(),
+                                     default=VIDEO_TYPES.video_mp4,
                                      db_index=True)
     data = JSONField(default={})
 
