@@ -67,8 +67,8 @@ docs/_build/
 .vagrant/
 
 # Static files
-media/
-static/
+media/*
+static/*
 
 # Allow empty files as placeholders for directories
 !EMPTY
