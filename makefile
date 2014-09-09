@@ -12,6 +12,7 @@ help:
 bootstrap:
 	vagrant up
 	honcho run python manage.py migrate
+	honcho run python manage.py loaddata project.json
 	honcho run python -c "from django.db import DEFAULT_DB_ALIAS as db; from django.contrib.auth.models import User; User.objects.db_manager(db).create_superuser('admin', 'admin@example.com', 'admin')"
 
 
