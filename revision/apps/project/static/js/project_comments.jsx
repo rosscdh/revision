@@ -86,7 +86,7 @@ var CommentFormView = React.createClass({
                           </ul>
                         </div>
                     </span>
-                    <textarea ref="comment" name="comment" placeholder="Add comment here..." className="form-control input-lg">{this.state.comment}</textarea>
+                    <textarea ref="comment" name="comment" placeholder="Add comment here..." className="form-control input-lg" defaultValue={this.state.comment} />
                     <input type="hidden" ref="comment_type" value={current_type} />
                     <span className="input-group-addon"><input className="btn btn-primary" type="submit" value="send" /></span>
                 </div>

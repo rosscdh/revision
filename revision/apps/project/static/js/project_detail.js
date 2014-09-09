@@ -1,4 +1,5 @@
 /** @jsx React.DOM */
+'use strict';
 /**
 * Project detail controls
 *
@@ -6,14 +7,12 @@
 // title view
 var TitleView = React.createClass({displayName: 'TitleView',
     render: function () {
-        var createVideoView = CreateVideoView({onVideoUpdate: this.props.onVideoUpdate})
         var name = this.props.project.name;
         var started = this.props.project.date_created;
         var versionNodes = this.props.project.versions.map(function ( version, index ) {
             return VersionView({key: index, version: version})
         });
         return (React.DOM.div({className: "row"}, 
-            createVideoView, 
             React.DOM.h2(null, name, " ", React.DOM.small(null, "started: ", started)), 
             React.DOM.h4(null, "Version: ", React.DOM.small(null, versionNodes)), 
             React.DOM.h4(null, React.DOM.a({href: this.props.links.chronicle, className: "btn btn-primary pull-right"}, "Chronicle")), 
@@ -177,10 +176,12 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
 
     },
     render: function () {
+        var createVideoView = CreateVideoView(null)
+        var formVideoModal = VideoFormModal({onVideoUpdate: this.handleVideoUpdate})
 
         var Title = TitleView({project: this.state.project, 
-                               links: this.state.links, 
-                               onVideoUpdate: this.handleVideoUpdate})
+                               links: this.state.links})
+
         var FlowPlayer = FlowPlayerView({video: this.state.video})
         var CommentForm = CommentFormView({onVideoUpdate: this.handleVideoUpdate, 
                                            onSetCurrentType: this.handleTypeChange, 
@@ -188,14 +189,14 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
                                            progress: this.state.progress, 
                                            video: this.state.video})
 
-        var comments = this.state.comments;
         var CommentList = CommentListView({onVideoUpdate: this.handleVideoUpdate, 
                                            onSeekTo: this.handleSeekTo, 
-                                           comments: comments})
+                                           comments: this.state.comments})
 
         return (React.DOM.span(null, 
             React.DOM.div({className: "jumbotron"}, 
                 React.DOM.div({className: "container"}, 
+                    createVideoView, 
                     Title, 
                     FlowPlayer, 
                     React.DOM.div({className: "row"}, 
@@ -207,7 +208,8 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
                 React.DOM.div({className: "row"}, 
                     CommentList
                 )
-            )
+            ), 
+            formVideoModal
         ));
     }
 });
