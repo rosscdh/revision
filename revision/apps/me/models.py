@@ -35,7 +35,8 @@ class UserProfile(EmailIsValidatedMixin,
 def _get_or_create_user_profile(user):
     # set the profile
     try:
-        profile, is_new = UserProfile.objects.get_or_create(user=user)  # added like this so django noobs can see the result of get_or_create
+        # added like this so django noobs can see the result of get_or_create
+        profile, is_new = UserProfile.objects.get_or_create(user=user)
         return (profile, is_new,)
 
     except Exception as e:
