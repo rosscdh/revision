@@ -3,20 +3,20 @@
 * Project chronicle controls
 *
 */
-var SearchForm = React.createClass({
+var SearchForm = React.createClass({displayName: 'SearchForm',
     render: function () {
-        return (<div className="row">
-            <div className="form-group">
-                <div className="input-group search-field">
-                    <input type="text" className="form-control input-lg" placeholder="Search comments by type, text or commenter..." name="q" autocomplete="off" onChange={this.props.onSearch}/>
-                </div>
-            </div>
-        </div>);
+        return (React.DOM.div({className: "row"}, 
+            React.DOM.div({className: "form-group"}, 
+                React.DOM.div({className: "input-group search-field"}, 
+                    React.DOM.input({type: "text", className: "form-control input-lg", placeholder: "Search comments by type, text or commenter...", name: "q", autocomplete: "off", onChange: this.props.onSearch})
+                )
+            )
+        ));
     }
 });
 
 
-var ChronicleCommentsBase = React.createClass({
+var ChronicleCommentsBase = React.createClass({displayName: 'ChronicleCommentsBase',
     fuse: new Fuse(Comments, { keys: ["comment_type", "comment_by", "comment"], threshold: 0.35 }),
     getInitialState: function () {
         return {
@@ -75,24 +75,24 @@ var ChronicleCommentsBase = React.createClass({
         });
     },
     render: function () {
-        var searchForm = <SearchForm onSearch={this.onSearch} />
-        var flowPlayer = <FlowPlayerView video={this.state.video} />
-        var commentsDetail = <CommentListView comments={this.state.comments}
-                                              onVideoUpdate={this.onVideoUpdate}
-                                              onSeekTo={this.onSeekTo} />
-        return (<div className="row">
-            <div className="col-md-7">
-                {flowPlayer}
-            </div>
-            <div className="col-md-5">
-                {searchForm}
-                {commentsDetail}
-            </div>
-        </div>);
+        var searchForm = SearchForm({onSearch: this.onSearch})
+        var flowPlayer = FlowPlayerView({video: this.state.video})
+        var commentsDetail = CommentListView({comments: this.state.comments, 
+                                              onVideoUpdate: this.onVideoUpdate, 
+                                              onSeekTo: this.onSeekTo})
+        return (React.DOM.div({className: "row"}, 
+            React.DOM.div({className: "col-md-7"}, 
+                flowPlayer
+            ), 
+            React.DOM.div({className: "col-md-5"}, 
+                searchForm, 
+                commentsDetail
+            )
+        ));
     }
 });
 // render chronicle
 React.renderComponent(
-  <ChronicleCommentsBase />,
+  ChronicleCommentsBase(null),
   document.getElementById('project-detail-chronicle')
 );
