@@ -57,8 +57,8 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
             btnClassNameB += ' btn-success';
 
         } else if ( current_type == 'subtitle' ) {    
-            btnClassNameA += ' btn-primary';
-            btnClassNameB += ' btn-primary';
+            btnClassNameA += ' btn-warning';
+            btnClassNameB += ' btn-warning';
 
         } else {
             btnClassNameA += ' btn-info';
@@ -71,7 +71,7 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
 
                     React.DOM.span({className: "input-group-addon"}, 
                         React.DOM.div({className: "control-type-selector btn-group"}, 
-                          React.DOM.button({type: "button", className: btnClassNameA}, current_type), 
+                          React.DOM.button({type: "button", className: btnClassNameA}, this.props.current_type), 
                           React.DOM.button({type: "button", className: btnClassNameB, 'data-toggle': "dropdown"}, 
                             React.DOM.span({className: "caret"}), 
                             React.DOM.span({className: "sr-only"}, "Toggle Dropdown")
