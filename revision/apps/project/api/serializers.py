@@ -44,7 +44,7 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
         exclude = ('data',)
 
     def get_video_subtitles_url(self, obj):
-        return reverse_lazy('project:video_subtitles_url', kwargs={'slug': obj.project.slug, 'version_slug': obj.slug})
+        return obj.subtitles_url()
 
 
 class VideoSerializerLite(VideoSerializer):

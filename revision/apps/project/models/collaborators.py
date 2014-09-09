@@ -1,22 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.db.models.signals import pre_save
-from django.core.urlresolvers import reverse_lazy
 
 from revision.utils import get_namedtuple_choices
 
-from .mixins import VideoCommentsMixin
-from .signals import ensure_project_slug
-
 from jsonfield import JSONField
-from uuidfield import UUIDField
-
-import math
-
-BASE_VIDEO_TYPES = get_namedtuple_choices('BASE_VIDEO_TYPES', (
-    (1, 'video_mp4', 'video/mp4'),
-))
-
 
 #
 # These are the master permissions set
@@ -101,6 +88,38 @@ class ProjectCollaborators(models.Model):
     def role_name(self):
         return self.ROLES.get_name_by_value(self.role)
 
+    @property
+    def permissions(self):
+        """
+        combine the default permissions and override with the specific users
+        permissions; this allows for the addition of new permissions easily
+        """
+        default_permissions = self.default_permissions().copy()
+        user_permissions = self.data.get('permissions', default_permissions)
+        default_permissions.update(user_permissions)
+        return default_permissions
+
+    @permissions.setter
+    def permissions(self, value):
+        if type(value) not in [dict] and len(value.keys()) > 0:
+            raise Exception('ProjectCollaborators.permissions must be a dict of permissions %s' %
+                            self.default_permissions())
+        self.data['permissions'] = self.clean_permissions(**value)
+
+    @classmethod
+    def clean_permissions(cls, **kwargs):
+        """
+        Pass in a set of permissions and remove those that do not exist in
+        the base set of permissions
+        """
+        kwargs_to_test = kwargs.copy()  # clone the kwargs dict so we can pop on it
+
+        for permission in kwargs:
+            if permission not in cls.PERMISSIONS:
+                kwargs_to_test.pop(permission)
+                # @TODO ? need to check for boolean value?
+        return kwargs_to_test
+
     def default_permissions(self, user_class=None):
         """
         Class to provide a wrapper for user permissions
@@ -124,38 +143,6 @@ class ProjectCollaborators(models.Model):
         # Anon permissions, for anyone else that does not match
         return ANONYMOUS_USER_PERMISSIONS
 
-    @classmethod
-    def clean_permissions(cls, **kwargs):
-        """
-        Pass in a set of permissions and remove those that do not exist in
-        the base set of permissions
-        """
-        kwargs_to_test = kwargs.copy()  # clone the kwargs dict so we can pop on it
-
-        for permission in kwargs:
-            if permission not in cls.PERMISSIONS:
-                kwargs_to_test.pop(permission)
-                # @TODO ? need to check for boolean value?
-        return kwargs_to_test
-
-    @property
-    def permissions(self):
-        """
-        combine the default permissions and override with the specific users
-        permissions; this allows for the addition of new permissions easily
-        """
-        default_permissions = self.default_permissions().copy()
-        user_permissions = self.data.get('permissions', default_permissions)
-        default_permissions.update(user_permissions)
-        return default_permissions
-
-    @permissions.setter
-    def permissions(self, value):
-        if type(value) not in [dict] and len(value.keys()) > 0:
-            raise Exception('ProjectCollaborators.permissions must be a dict of permissions %s' %
-                            self.default_permissions())
-        self.data['permissions'] = self.clean_permissions(**value)
-
     def reset_permissions(self):
         self.permissions = self.default_permissions()
 
@@ -168,61 +155,3 @@ class ProjectCollaborators(models.Model):
         """
         permissions = self.permissions
         return all(req_perm in permissions and permissions[req_perm] == value for req_perm, value in kwargs.iteritems())
-
-
-class Project(models.Model):
-    slug = models.SlugField(blank=True)  # blank to allow slug to be auto-generated
-    name = models.CharField(max_length=255)
-    date_created = models.DateTimeField(auto_now=False,
-                                        auto_now_add=True,
-                                        db_index=True)
-    collaborators = models.ManyToManyField('auth.User',
-                                           through='project.ProjectCollaborators',
-                                           through_fields=('project', 'user'))
-    data = JSONField(default={})
-
-    def get_absolute_url(self):
-        return reverse_lazy('project:detail', kwargs={'slug': self.slug})
-
-#
-# Signals
-#
-pre_save.connect(ensure_project_slug, sender=Project, dispatch_uid='project.pre_save.ensure_project_slug')
-
-
-class Video(VideoCommentsMixin,
-            models.Model):
-    """
-    Video Version model
-    """
-    VIDEO_TYPES = BASE_VIDEO_TYPES
-
-    slug = UUIDField(auto=True,
-                     db_index=True)
-    project = models.ForeignKey('project.Project')
-    name = models.CharField(max_length=255)
-    video_url = models.URLField(db_index=True)
-    video_type = models.IntegerField(choices=VIDEO_TYPES.get_choices(),
-                                     db_index=True)
-    data = JSONField(default={})
-
-    class Meta:
-        ordering = ['-id']
-
-    @classmethod
-    def secs_to_stamp(cls, secs):
-        secs, part = str(secs).split('.')
-        secs = int(secs)
-        part = int(part[0:3])
-        minutes = math.floor(secs / 60);
-        seconds = round(secs - minutes * 60, 2);
-        hours = math.floor(secs / 3600);
-        #time = time - hours * 3600;
-        return '%02d:%02d:%02d.%03d' % (hours, minutes, seconds, part)
-
-    @property
-    def display_type(self):
-        return self.VIDEO_TYPES.get_desc_by_value(self.video_type)
-
-    def get_absolute_url(self):
-        return reverse_lazy('project:with_video_detail', kwargs={'slug': self.project.slug, 'version_slug': str(self.slug)})

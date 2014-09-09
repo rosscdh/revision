@@ -17,8 +17,7 @@ class ProjectListView(ListView):
     model = Project
 
     def get_queryset(self, **kwargs):
-        queryset = self.model._default_manager.all()
-        #queryset = self.model._default_manager.filter(collaborators__in=[self.request.user])
+        queryset = self.model._default_manager.filter(collaborators__in=[self.request.user])
         return queryset
 
     @property
