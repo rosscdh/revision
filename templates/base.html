@@ -85,6 +85,7 @@
     <script src="//releases.flowplayer.org/5.5.0/flowplayer.js"></script>
 
     {% compressed_js 'react' %}
+    {% compressed_js 'resources' %}
     {% if debug %}<script src="{{ STATIC_URL }}js/reactjs/0.11.1/JSXTransformer.js"></script>{% endif %}
 
     {% block js %}{% endblock %}

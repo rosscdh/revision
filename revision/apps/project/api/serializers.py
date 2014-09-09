@@ -36,15 +36,12 @@ class CommentSerializer(serializers.Serializer):
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
     comments = serializers.Field(source='comments_by_id_reversed')
     video_type = serializers.Field(source='display_type')
-    video_subtitles_url = serializers.SerializerMethodField('get_video_subtitles_url')
+    video_subtitles_url = serializers.Field(source='subtitles_url')
 
     class Meta:
         model = Video
         lookup_field = 'slug'
         exclude = ('data',)
-
-    def get_video_subtitles_url(self, obj):
-        return obj.subtitles_url()
 
 
 class VideoSerializerLite(VideoSerializer):

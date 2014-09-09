@@ -199,10 +199,10 @@ PIPELINE_JS = {
         'source_filenames': (
             'js/resources/resource.js',  # api
             # resources api
-            'js/resources/project_resource.js',
-            'js/resources/project_comments.js',
+            'js/resources/video_resource.js',
+            'js/resources/comment_resource.js',
         ),
-        'output_filename': 'js/dist/react.js'
+        'output_filename': 'js/dist/resources.js'
     },
     'project_list': {
         'source_filenames': (
