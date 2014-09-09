@@ -5,10 +5,12 @@
 */
 var SearchForm = React.createClass({displayName: 'SearchForm',
     render: function () {
-        return (React.DOM.div({className: "row"}, 
-            React.DOM.div({className: "form-group"}, 
-                React.DOM.div({className: "input-group search-field"}, 
-                    React.DOM.input({type: "text", className: "form-control input-lg", placeholder: "Search comments by type, text or commenter...", name: "q", autocomplete: "off", onChange: this.props.onSearch})
+        return (React.DOM.div({className: "row col-md-12"}, 
+            React.DOM.form({class: "form-horizontal", role: "form"}, 
+                React.DOM.div({className: "form-group"}, 
+                    React.DOM.div({className: "input-group search-field"}, 
+                        React.DOM.input({type: "text", className: "form-control input-lg", placeholder: "Search comments by type, text or commenter...", name: "q", autocomplete: "off", onChange: this.props.onSearch})
+                    )
                 )
             )
         ));
@@ -17,7 +19,7 @@ var SearchForm = React.createClass({displayName: 'SearchForm',
 
 
 var ChronicleCommentsBase = React.createClass({displayName: 'ChronicleCommentsBase',
-    fuse: new Fuse(Comments, { keys: ["comment_type", "comment_by", "comment"], threshold: 0.35 }),
+    fuse: new Fuse(Comments, { keys: ["comment_type", "comment_by", "comment", "progress"], threshold: 0.35 }),
     getInitialState: function () {
         return {
             'comments': Comments,

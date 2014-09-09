@@ -5,19 +5,21 @@
 */
 var SearchForm = React.createClass({
     render: function () {
-        return (<div className="row">
-            <div className="form-group">
-                <div className="input-group search-field">
-                    <input type="text" className="form-control input-lg" placeholder="Search comments by type, text or commenter..." name="q" autocomplete="off" onChange={this.props.onSearch}/>
+        return (<div className="row col-md-12">
+            <form class="form-horizontal" role="form">
+                <div className="form-group">
+                    <div className="input-group search-field">
+                        <input type="text" className="form-control input-lg" placeholder="Search comments by type, text or commenter..." name="q" autocomplete="off" onChange={this.props.onSearch}/>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>);
     }
 });
 
 
 var ChronicleCommentsBase = React.createClass({
-    fuse: new Fuse(Comments, { keys: ["comment_type", "comment_by", "comment"], threshold: 0.35 }),
+    fuse: new Fuse(Comments, { keys: ["comment_type", "comment_by", "comment", "progress"], threshold: 0.35 }),
     getInitialState: function () {
         return {
             'comments': Comments,
