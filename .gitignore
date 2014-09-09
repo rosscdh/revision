@@ -61,3 +61,14 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+# Environment
+.env
+.vagrant/
+
+# Static files
+media/
+static/
+
+# Allow empty files as placeholders for directories
+!EMPTY

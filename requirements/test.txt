@@ -1,0 +1,8 @@
+-r base.txt
+
+# testing
+coverage
+mock
+model_mommy
+pyquery
+django-inmemorystorage

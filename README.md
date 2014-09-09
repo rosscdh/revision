@@ -19,20 +19,13 @@ Deploy
 Setup
 -----
 
-1. install requirements - pip install -r requirements/dev.txt
-2. ./manage.py syncdb
-2. ./manage.py loaddata project
-3. http://localhost:8000/
+1. Create a new virtualenv: `mkvirtualenv revision`
+2. Install local requirements: `pip install -r requirements/local.txt`
+3. Create .env file: `cp .env.example .env`
+4. Bootstrap project: `make bootstrap`
+5. Start dev server: `honcho start`
+6. Open a browser to [http://localhost:8000/](http://localhost:8000/)
 
-
-Manual Setup
-------------
-
-1. install requirements - pip install -r requirements/dev.txt
-2. ./manage.py syncdb
-3. ./manage.py migrate
-4. ./manage.py loaddata project
-5. http://localhost:8000/
 
 Design Evolutions
 -----------------

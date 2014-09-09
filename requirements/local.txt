@@ -1,0 +1,30 @@
+-r base.txt
+
+django-debug-toolbar
+django-debug-toolbar-template-timings
+-e git+https://github.com/playfire/django-debug-toolbar-user-panel.git@29a163dc985c4b173ead57b09b3cfdd6ca84e76f#egg=django_debug_toolbar_user_panel-dev
+
+# testing
+coverage
+mock
+model_mommy
+pyquery
+django-inmemorystorage
+
+# documentation
+sphinx
+sphinxcontrib-napoleon
+sphinx_rtd_theme
+
+# tools
+honcho
+ipython
+
+# linting
+flake8
+pep8-naming
+
+# fabric integration
+fabric
+termcolor
+GitPython
