@@ -25,6 +25,7 @@ class CustomDateTimeField(serializers.DateTimeField):
 
 class CommentSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
+    uuid = serializers.CharField(read_only=True)
     comment_type = serializers.CharField()
     comment = serializers.CharField()
     comment_by = serializers.CharField()

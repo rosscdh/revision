@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import uuid
 import datetime
 
 
@@ -28,6 +29,7 @@ class VideoCommentsMixin(object):
         index = len(comments) + 1  # save the current index
         kwargs.update({
             'pk': index,
+            'uuid': str(uuid.uuid4()),
             'comment': comment,
             'is_deleted': False,
         })

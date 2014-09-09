@@ -18,6 +18,7 @@
         "comments": [
           {
             "pk": 1,
+            "uuid": "29fe5b9a-d27e-47eb-b30b-28a146a7a22b",
             "comment": "My first comment",
             "progress": 3.233,
             "date_of": "2014-09-04T12:42:44",
@@ -26,6 +27,7 @@
           },
           {
             "pk": 2,
+            "uuid": "6a6f05a7-ca18-45db-b548-58471b879a2c",
             "comment": "My second comment",
             "progress": 5.333,
             "date_of": "2014-09-04T12:43:20",
@@ -34,6 +36,7 @@
           },
           {
             "pk": 3,
+            "uuid": "27eff025-2a24-44b8-b79c-80da82e832f1",
             "comment": "My third comment",
             "progress": 15.273,
             "date_of": "2014-09-04T12:43:47",
@@ -42,6 +45,7 @@
           },
           {
             "pk": 4,
+            "uuid": "676bc3c9-e4b9-4ce3-bd71-3bea05772a9e",
             "comment": "My fourth comment",
             "progress": 25.273,
             "date_of": "2014-09-04T12:44:11",
