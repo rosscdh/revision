@@ -129,7 +129,7 @@ var CommentItemView = React.createClass({
             <li key={comment.pk} className="">
                 
                 <div className="col-xs-2 pull-right">
-                    <a href="javascript:;" onClick={this.handleDeleteComment.bind( null, comment.pk )}><span className="glyphicon glyphicon-remove-circle pull-right"></span></a>
+                    <a href="javascript:;" onClick={this.handleDeleteComment.bind( this, comment.pk )}><span className="glyphicon glyphicon-remove-circle pull-right"></span></a>
                     <br/><span className="pull-right">{timestamp}</span>
                     <br/><span className="pull-right"><small>{date_of}</small></span>
                 </div>

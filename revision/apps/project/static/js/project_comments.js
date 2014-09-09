@@ -129,7 +129,7 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
             React.DOM.li({key: comment.pk, className: ""}, 
                 
                 React.DOM.div({className: "col-xs-2 pull-right"}, 
-                    React.DOM.a({href: "javascript:;", onClick: this.handleDeleteComment.bind( null, comment.pk)}, React.DOM.span({className: "glyphicon glyphicon-remove-circle pull-right"})), 
+                    React.DOM.a({href: "javascript:;", onClick: this.handleDeleteComment.bind( this, comment.pk)}, React.DOM.span({className: "glyphicon glyphicon-remove-circle pull-right"})), 
                     React.DOM.br(null), React.DOM.span({className: "pull-right"}, timestamp), 
                     React.DOM.br(null), React.DOM.span({className: "pull-right"}, React.DOM.small(null, date_of))
                 ), 
