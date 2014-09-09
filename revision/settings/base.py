@@ -174,6 +174,8 @@ STATICFILES_FINDERS = (
     # 'pipeline.finders.CachedFileFinder',
 )
 
+STATICFILES_DIRS = ()
+
 # PIPELINE_CSS = {
 #   'core': {
 #         'source_filenames': (
