@@ -43,3 +43,39 @@ Features
 4. revisions of videos
 5. invite collaborators - unique uuid urls
 6. keyboard shortcuts http://craig.is/killing/mice
+
+
+Phases
+------
+
+**Phase 1:**
+
+As a videographer
+I want the ability to upload/refer to revisions of my project
+and invite my client and perhaps thrd-parties to review each revision
+and give feedback via comments
+
+As a videographer
+I want the ability to add subtitles to each video
+
+As a videographer and client
+I want the ability to add sketches to a video to allow easier illustration of
+my concept
+
+As a videographer
+I want the ability to export comments and subtitles out as FCP xml
+along with timing settings (show subtitle from this point to this point)
+
+
+As a videographer
+I want the ability to add effect notation as FCP xml
+i.e. add fade in and fade outs over time
+
+
+**Phase 2:**
+
+As an anonymous user
+I want the ability to refer to a facebook.youtube.vimeo video
+and allow public or invite only comments on that video
+
+
