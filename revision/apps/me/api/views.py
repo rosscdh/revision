@@ -8,6 +8,7 @@ from rest_framework import status as http_status
 
 from revision.apps.project.models import Project
 
+from ..services import EnsureCollaboratorService
 from .serializers import (UserSerializer,
                           CollaboratorSerializer,)
 
@@ -35,7 +36,19 @@ class CollaboratorEndpoint(generics.ListCreateAPIView,
         return Response(collaborator_serializer.data, status=http_status.HTTP_200_OK, headers=headers)
 
     def create(self, request, **kwargs):
-        import pdb;pdb.set_trace()
+        project = self.get_object()
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name', None)
+        last_name = request.POST.get('last_name', None)
+        full_name = '%s %s' % (first_name, last_name)
+
+        service = EnsureCollaboratorService(project=project, email=email, full_name=full_name)
+        is_new, user, profile, collaborator, collaborator_is_new = service.process()
+
+        collaborator_serializer = self.get_serializer(collaborator)
+        headers = self.get_success_headers(collaborator_serializer)
+        status = http_status.HTTP_201_CREATED if collaborator_is_new is True else http_status.HTTP_202_ACCEPTED
+        return Response(collaborator_serializer.data, status=status, headers=headers)
 
     def retrieve(self, request, **kwargs):
         import pdb;pdb.set_trace()

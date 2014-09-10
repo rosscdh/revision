@@ -7,6 +7,7 @@ var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormMod
     getInitialState: function () {
         return {
             'project': Project,
+            'is_disabled': true,
             'show_name_fields': false,
         }
     },
@@ -24,36 +25,38 @@ var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormMod
             searchEvent = setTimeout( function () {
                 UserResource.list( {'email': email} ).defer().done(function ( data ) {
                     var show_name_fields = false;
-
                     if ( data.results.length === 0 ) {
                         show_name_fields = true;
                     }
                     // show the fields
                     self.setState({
-                        'show_name_fields': show_name_fields
+                        'show_name_fields': show_name_fields,
+                        'is_disabled': false
                     });
                 });
-            }, 1000 );
+            }, 900 );
         }
 
         self.setState({
-            'show_name_fields': false
+            'show_name_fields': false,
+            'is_disabled': true
         });
     },
     onSubmitForm: function ( event ) {
         var self = this;
-        if ( $(event.target).parsley().isValid() === true ) {
-            var post_params = {
-                'email': this.refs.email.getDOMNode().value.trim(),
-                'first_name': this.refs.first_name.getDOMNode().value.trim(),
-                'last_name': this.refs.last_name.getDOMNode().value.trim(),
-            };
 
-            CollaboratorResource.create( post_params ).defer().done(function ( video_data ) {
+        if ( $(event.target).parsley().isValid() === true ) {
+
+            var email = this.refs.email.getDOMNode().value.trim();
+            var first_name = this.refs.first_name.getDOMNode().value.trim();
+            var last_name = this.refs.last_name.getDOMNode().value.trim();
+
+            CollaboratorResource.create( email, first_name, last_name ).defer().done(function ( data ) {
 
                 // self.props.onVideoUpdate( video_data );
-                // $( '#modal-new-video' ).modal('hide');
-                document.location = video_data.video_url;
+                $( '#modal-new-collaborator' ).modal('hide');
+                //document.location = video_data.video_url;
+                document.location.reload();
 
             });
         }
@@ -62,6 +65,7 @@ var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormMod
     render: function () {
 
         var showFieldsClass = (this.state.show_name_fields === true) ? '' : 'hide';
+        var disabled = (this.state.is_disabled === true) ? 'disabled' : '' ;
 
         return (React.DOM.div({id: "modal-new-collaborator", className: "modal fade bs-example-modal-lg", tabIndex: "-1", role: "dialog", 'aria-labelledby': "modal-new-collaborator-help", 'aria-hidden': "true"}, 
           React.DOM.div({className: "modal-dialog modal-lg"}, 
@@ -76,9 +80,9 @@ var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormMod
                         React.DOM.label({htmlFor: "id_email"}, "Email Address:"), React.DOM.input({ref: "email", onChange: this.onCheckCollaboratorExists, 'data-parsley-maxlength': "200", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", 'data-parsley-type': "email", 'data-parsley-type-url-message': "Enter a valid Email Address.", id: "id_email", maxlength: "200", name: "email", type: "email"}), 
                             React.DOM.div({className: showFieldsClass}, 
                                 React.DOM.label({htmlFor: "id_first_name"}, "First name:"), React.DOM.input({ref: "first_name", 'data-parsley-maxlength': "255", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", id: "id_first_name", maxlength: "255", name: "first_name", type: "text"}), 
-                                React.DOM.label({htmlFor: "id_last_name"}, "Last name:"), React.DOM.input({ref: "last_name", 'data-parsley-maxlength': "255", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", id: "id_last_name", maxlength: "255", name: "last_name", type: "text"}), 
-                                React.DOM.input({type: "submit", value: "Create"})
-                            )
+                                React.DOM.label({htmlFor: "id_last_name"}, "Last name:"), React.DOM.input({ref: "last_name", 'data-parsley-maxlength': "255", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", id: "id_last_name", maxlength: "255", name: "last_name", type: "text"})
+                            ), 
+                            React.DOM.input({type: "submit", value: "Add", disabled: disabled})
                         )
                     )
                 )

@@ -12,6 +12,7 @@ django-defaultsite
 
 # API
 djangorestframework==2.3.14
+django-filter
 
 # Configuration
 unipath

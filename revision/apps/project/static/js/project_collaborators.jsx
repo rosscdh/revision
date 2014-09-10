@@ -7,6 +7,7 @@ var CollaboratorFormModal = React.createClass({
     getInitialState: function () {
         return {
             'project': Project,
+            'is_disabled': true,
             'show_name_fields': false,
         }
     },
@@ -24,36 +25,38 @@ var CollaboratorFormModal = React.createClass({
             searchEvent = setTimeout( function () {
                 UserResource.list( {'email': email} ).defer().done(function ( data ) {
                     var show_name_fields = false;
-
                     if ( data.results.length === 0 ) {
                         show_name_fields = true;
                     }
                     // show the fields
                     self.setState({
-                        'show_name_fields': show_name_fields
+                        'show_name_fields': show_name_fields,
+                        'is_disabled': false
                     });
                 });
-            }, 1000 );
+            }, 900 );
         }
 
         self.setState({
-            'show_name_fields': false
+            'show_name_fields': false,
+            'is_disabled': true
         });
     },
     onSubmitForm: function ( event ) {
         var self = this;
-        if ( $(event.target).parsley().isValid() === true ) {
-            var post_params = {
-                'email': this.refs.email.getDOMNode().value.trim(),
-                'first_name': this.refs.first_name.getDOMNode().value.trim(),
-                'last_name': this.refs.last_name.getDOMNode().value.trim(),
-            };
 
-            CollaboratorResource.create( post_params ).defer().done(function ( video_data ) {
+        if ( $(event.target).parsley().isValid() === true ) {
+
+            var email = this.refs.email.getDOMNode().value.trim();
+            var first_name = this.refs.first_name.getDOMNode().value.trim();
+            var last_name = this.refs.last_name.getDOMNode().value.trim();
+
+            CollaboratorResource.create( email, first_name, last_name ).defer().done(function ( data ) {
 
                 // self.props.onVideoUpdate( video_data );
-                // $( '#modal-new-video' ).modal('hide');
-                document.location = video_data.video_url;
+                $( '#modal-new-collaborator' ).modal('hide');
+                //document.location = video_data.video_url;
+                document.location.reload();
 
             });
         }
@@ -62,6 +65,7 @@ var CollaboratorFormModal = React.createClass({
     render: function () {
 
         var showFieldsClass = (this.state.show_name_fields === true) ? '' : 'hide';
+        var disabled = (this.state.is_disabled === true) ? 'disabled' : '' ;
 
         return (<div id="modal-new-collaborator" className="modal fade bs-example-modal-lg" tabIndex="-1" role="dialog" aria-labelledby="modal-new-collaborator-help" aria-hidden="true">
           <div className="modal-dialog modal-lg">
@@ -77,8 +81,8 @@ var CollaboratorFormModal = React.createClass({
                             <div className={showFieldsClass}>
                                 <label htmlFor="id_first_name">First name:</label><input ref="first_name" data-parsley-maxlength="255" data-parsley-required="true" data-parsley-required-message="This field is required." id="id_first_name" maxlength="255" name="first_name" type="text" />
                                 <label htmlFor="id_last_name">Last name:</label><input ref="last_name" data-parsley-maxlength="255" data-parsley-required="true" data-parsley-required-message="This field is required." id="id_last_name" maxlength="255" name="last_name" type="text" />
-                                <input type="submit" value="Create" />
                             </div>
+                            <input type="submit" value="Add" disabled={disabled} />
                         </form>
                     </div>
                 </div>
