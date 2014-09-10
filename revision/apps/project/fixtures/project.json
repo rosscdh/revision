@@ -12,8 +12,8 @@
   {
     "fields": {
       "project": 1,
-      
-      "video_url": "http://localhost:8000/static/HOTELENERGIEBALLMOTERSCHADE.mp4",
+
+      "video_url": "http://localhost:8000/static/big_buck_bunny.mp4",
       "data": {
         "comments": [
           {
