@@ -45,10 +45,13 @@ Features
 6. keyboard shortcuts http://craig.is/killing/mice
 
 
-Phases
-------
+Vectors
+-------
 
-**Phase 1:**
+To discuss the various options available to direct the product.
+
+
+**Phase 1 - Primary objective:**
 
 As a videographer
 I want the ability to upload/refer to revisions of my project
@@ -72,7 +75,7 @@ I want the ability to add effect notation as FCP xml
 i.e. add fade in and fade outs over time
 
 
-**Phase 2:**
+**Vector 1:**
 
 As an anonymous user
 I want the ability to refer to a facebook.youtube.vimeo video
