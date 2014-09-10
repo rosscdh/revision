@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from rest_framework import serializers
 
+from revision.apps.me.api.serializers import CollaboratorSerializer
 from ..models import Project, Video
 
 import datetime
@@ -21,7 +22,7 @@ class CustomDateTimeField(serializers.DateTimeField):
         if value is None:
             value = _get_date_now()
         return dateutil.parser.parse(value)
-        
+
 
 class CommentSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
@@ -78,11 +79,4 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         return obj.get_absolute_url()
 
     def get_collaborators(self, obj):
-        #
-        # Make use of the comment serializer here
-        #
-        return [
-          {'pk': 1, 'name': 'Ross Crawford', 'initials': 'RC', 'user_class': 'owner'},
-          {'pk': 2, 'name': 'Kris Müller', 'initials': 'KM', 'user_class': 'customer'},
-          {'pk': 3, 'name': 'Michael Pedersen', 'initials': 'MP', 'user_class': 'colleague'}
-        ]
+        return CollaboratorSerializer(obj.projectcollaborators_set.all(), many=True).data

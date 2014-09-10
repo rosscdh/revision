@@ -102,6 +102,7 @@ var Links = {
 /**
 * Setup resource slugs
 **/
+CollaboratorResource.params.slug = Project.slug;
 VideoResource.params.video_slug = '{{ view.current_video.slug }}';
 CommentResource.params.video_slug = '{{ view.current_video.slug }}';
 </script>

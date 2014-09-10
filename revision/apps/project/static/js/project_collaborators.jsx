@@ -3,7 +3,91 @@
 * Project collaborators
 *
 */
-// 
+var CollaboratorFormModal = React.createClass({
+    getInitialState: function () {
+        return {
+            'project': Project,
+            'show_name_fields': false,
+        }
+    },
+    onCheckCollaboratorExists: function ( event ) {
+        var self = this;
+        var searchEvent;
+        var email = this.refs.email.getDOMNode().value.trim();
+        var form = $('<form data-parsley-validate/>');
+        form.append($('<input type="email" data-parsley-required="true" data-parsley-type="email" value="{email}" />'.assign({'email': email})))
+
+        if ( form.parsley().isValid() === true ) {
+
+            clearTimeout( searchEvent );
+
+            searchEvent = setTimeout( function () {
+                UserResource.list( {'email': email} ).defer().done(function ( data ) {
+                    var show_name_fields = false;
+
+                    if ( data.results.length === 0 ) {
+                        show_name_fields = true;
+                    }
+                    // show the fields
+                    self.setState({
+                        'show_name_fields': show_name_fields
+                    });
+                });
+            }, 1000 );
+        }
+
+        self.setState({
+            'show_name_fields': false
+        });
+    },
+    onSubmitForm: function ( event ) {
+        var self = this;
+        if ( $(event.target).parsley().isValid() === true ) {
+            var post_params = {
+                'email': this.refs.email.getDOMNode().value.trim(),
+                'first_name': this.refs.first_name.getDOMNode().value.trim(),
+                'last_name': this.refs.last_name.getDOMNode().value.trim(),
+            };
+
+            CollaboratorResource.create( post_params ).defer().done(function ( video_data ) {
+
+                // self.props.onVideoUpdate( video_data );
+                // $( '#modal-new-video' ).modal('hide');
+                document.location = video_data.video_url;
+
+            });
+        }
+        return false;
+    },
+    render: function () {
+
+        var showFieldsClass = (this.state.show_name_fields === true) ? '' : 'hide';
+
+        return (<div id="modal-new-collaborator" className="modal fade bs-example-modal-lg" tabIndex="-1" role="dialog" aria-labelledby="modal-new-collaborator-help" aria-hidden="true">
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <button type="button" className="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span className="sr-only">Close</span></button>
+                    <h4 className="modal-title" id="myModalLabel">New Collaborator</h4>
+                </div>
+                <div className="modal-body">
+                    <div className="row">
+                        <form onSubmit={this.onSubmitForm} data-parsley-validate>
+                        <label htmlFor="id_email">Email Address:</label><input ref="email" onChange={this.onCheckCollaboratorExists} data-parsley-maxlength="200" data-parsley-required="true" data-parsley-required-message="This field is required." data-parsley-type="email" data-parsley-type-url-message="Enter a valid Email Address." id="id_email" maxlength="200" name="email" type="email" />
+                            <div className={showFieldsClass}>
+                                <label htmlFor="id_first_name">First name:</label><input ref="first_name" data-parsley-maxlength="255" data-parsley-required="true" data-parsley-required-message="This field is required." id="id_first_name" maxlength="255" name="first_name" type="text" />
+                                <label htmlFor="id_last_name">Last name:</label><input ref="last_name" data-parsley-maxlength="255" data-parsley-required="true" data-parsley-required-message="This field is required." id="id_last_name" maxlength="255" name="last_name" type="text" />
+                                <input type="submit" value="Create" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>);
+    }
+});
+
 var CollaboratorDetailView = React.createClass({
     render: function () {
         var user_class = this.props.person.user_class
@@ -47,6 +131,7 @@ var CollaboratorListView = React.createClass({
         }
     },
     render: function () {
+        var collaboratorFormModal = <CollaboratorFormModal />
         var collaboratorNodes = this.state.project.collaborators.map(function ( person ) {
             return <CollaboratorDetailView key={person.pk} person={person} />
         });
@@ -54,10 +139,11 @@ var CollaboratorListView = React.createClass({
         return (
             <span>
               <h2>Collaborators</h2>
-              <p>Add new collaborators here</p>
+              <p><a href="#" className="btn btn-success" data-toggle="modal" data-target="#modal-new-collaborator">New Collaborator</a></p>
               <ul className="list-group">
                 {collaboratorNodes}
               </ul>
+              {collaboratorFormModal}
             </span>
         );
     }

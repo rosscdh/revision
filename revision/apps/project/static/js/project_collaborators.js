@@ -3,7 +3,91 @@
 * Project collaborators
 *
 */
-// 
+var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormModal',
+    getInitialState: function () {
+        return {
+            'project': Project,
+            'show_name_fields': false,
+        }
+    },
+    onCheckCollaboratorExists: function ( event ) {
+        var self = this;
+        var searchEvent;
+        var email = this.refs.email.getDOMNode().value.trim();
+        var form = $('<form data-parsley-validate/>');
+        form.append($('<input type="email" data-parsley-required="true" data-parsley-type="email" value="{email}" />'.assign({'email': email})))
+
+        if ( form.parsley().isValid() === true ) {
+
+            clearTimeout( searchEvent );
+
+            searchEvent = setTimeout( function () {
+                UserResource.list( {'email': email} ).defer().done(function ( data ) {
+                    var show_name_fields = false;
+
+                    if ( data.results.length === 0 ) {
+                        show_name_fields = true;
+                    }
+                    // show the fields
+                    self.setState({
+                        'show_name_fields': show_name_fields
+                    });
+                });
+            }, 1000 );
+        }
+
+        self.setState({
+            'show_name_fields': false
+        });
+    },
+    onSubmitForm: function ( event ) {
+        var self = this;
+        if ( $(event.target).parsley().isValid() === true ) {
+            var post_params = {
+                'email': this.refs.email.getDOMNode().value.trim(),
+                'first_name': this.refs.first_name.getDOMNode().value.trim(),
+                'last_name': this.refs.last_name.getDOMNode().value.trim(),
+            };
+
+            CollaboratorResource.create( post_params ).defer().done(function ( video_data ) {
+
+                // self.props.onVideoUpdate( video_data );
+                // $( '#modal-new-video' ).modal('hide');
+                document.location = video_data.video_url;
+
+            });
+        }
+        return false;
+    },
+    render: function () {
+
+        var showFieldsClass = (this.state.show_name_fields === true) ? '' : 'hide';
+
+        return (React.DOM.div({id: "modal-new-collaborator", className: "modal fade bs-example-modal-lg", tabIndex: "-1", role: "dialog", 'aria-labelledby': "modal-new-collaborator-help", 'aria-hidden': "true"}, 
+          React.DOM.div({className: "modal-dialog modal-lg"}, 
+            React.DOM.div({className: "modal-content"}, 
+                React.DOM.div({className: "modal-header"}, 
+                    React.DOM.button({type: "button", className: "close", 'data-dismiss': "modal"}, React.DOM.span({'aria-hidden': "true"}, "×"), React.DOM.span({className: "sr-only"}, "Close")), 
+                    React.DOM.h4({className: "modal-title", id: "myModalLabel"}, "New Collaborator")
+                ), 
+                React.DOM.div({className: "modal-body"}, 
+                    React.DOM.div({className: "row"}, 
+                        React.DOM.form({onSubmit: this.onSubmitForm, 'data-parsley-validate': true}, 
+                        React.DOM.label({htmlFor: "id_email"}, "Email Address:"), React.DOM.input({ref: "email", onChange: this.onCheckCollaboratorExists, 'data-parsley-maxlength': "200", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", 'data-parsley-type': "email", 'data-parsley-type-url-message': "Enter a valid Email Address.", id: "id_email", maxlength: "200", name: "email", type: "email"}), 
+                            React.DOM.div({className: showFieldsClass}, 
+                                React.DOM.label({htmlFor: "id_first_name"}, "First name:"), React.DOM.input({ref: "first_name", 'data-parsley-maxlength': "255", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", id: "id_first_name", maxlength: "255", name: "first_name", type: "text"}), 
+                                React.DOM.label({htmlFor: "id_last_name"}, "Last name:"), React.DOM.input({ref: "last_name", 'data-parsley-maxlength': "255", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", id: "id_last_name", maxlength: "255", name: "last_name", type: "text"}), 
+                                React.DOM.input({type: "submit", value: "Create"})
+                            )
+                        )
+                    )
+                )
+            )
+          )
+        ));
+    }
+});
+
 var CollaboratorDetailView = React.createClass({displayName: 'CollaboratorDetailView',
     render: function () {
         var user_class = this.props.person.user_class
@@ -47,6 +131,7 @@ var CollaboratorListView = React.createClass({displayName: 'CollaboratorListView
         }
     },
     render: function () {
+        var collaboratorFormModal = CollaboratorFormModal(null)
         var collaboratorNodes = this.state.project.collaborators.map(function ( person ) {
             return CollaboratorDetailView({key: person.pk, person: person})
         });
@@ -54,10 +139,11 @@ var CollaboratorListView = React.createClass({displayName: 'CollaboratorListView
         return (
             React.DOM.span(null, 
               React.DOM.h2(null, "Collaborators"), 
-              React.DOM.p(null, "Add new collaborators here"), 
+              React.DOM.p(null, React.DOM.a({href: "#", className: "btn btn-success", 'data-toggle': "modal", 'data-target': "#modal-new-collaborator"}, "New Collaborator")), 
               React.DOM.ul({className: "list-group"}, 
                 collaboratorNodes
-              )
+              ), 
+              collaboratorFormModal
             )
         );
     }

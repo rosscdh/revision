@@ -46,16 +46,6 @@ var NewVersionView = React.createClass({
     }
 });
 
-// collaborators view
-// comment list view
-var CollaboratorsView = React.createClass({
-    render: function () {
-        return (<span/>);
-    }
-});
-
-// save/export view
-
 // base view
 var BaseProjectDetailView = React.createClass({
     getInitialState: function () {

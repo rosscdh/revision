@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import (DetailView,
-                                  ListView,
-                                  CreateView,)
+                                  ListView,)
 from django.utils.safestring import mark_safe
 
 from rest_framework.renderers import JSONRenderer
@@ -10,9 +9,6 @@ from .api.serializers import (ProjectSerializer,
                               VideoSerializer,
                               CommentSerializer)
 from .models import Project, Video
-from .forms import VideoForm
-
-import requests
 
 
 class ProjectListView(ListView):
@@ -44,10 +40,6 @@ class ProjectDetailView(DetailView):
         version_slug = self.kwargs.get('version_slug', None)
         self._current_video = self.object.video_set.get(slug=version_slug) if version_slug is not None else self.object.video_set.all().first()
         return self._current_video
-
-    @property
-    def video_create_form(self):
-        return VideoForm()
 
 
 class VideoSubtitleView(ProjectDetailView):
