@@ -7,8 +7,8 @@ var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormMod
     getInitialState: function () {
         return {
             'project': Project,
-            'message': 'Please enter an email address',
-            'message_class': 'label-info',
+            'collaborator': {},
+            'messages': [],
             'is_disabled': true,
             'show_name_fields': false,
         }
@@ -49,7 +49,8 @@ var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormMod
                         if ( data.results.length === 0 ) {
 
                             self.setState({
-                                'messages': [{'message': 'Please provide additional details for {email} to continue.'.assign({'email': email}), 'type': 'warning'}],
+                                'collaborator': {},
+                                'messages': [{'message': 'Please provide additional details for {email} to continue.'.assign({'email': email}), 'type': 'success'}],
                                 'show_name_fields': true,
                                 'is_disabled': false,
                             });
@@ -57,6 +58,7 @@ var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormMod
                         } else {
                             var collab = data.results[0];
                             self.setState({
+                                'collaborator': collab,
                                 'messages': [{'message': '{colaborator_name} can be added as a collaborator'.assign({'colaborator_name': collab.name}), 'type': 'success'}],
                                 'show_name_fields': false,
                                 'is_disabled': false,
@@ -66,18 +68,21 @@ var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormMod
                 }, 900 );
             }
 
-            // self.setState({
-            //     'messages': [{'message': '', 'type': ''}]
-            //     'show_name_fields': false,
-            //     'is_disabled': true
-            // });
+            self.setState({
+                'messages': [],
+                'show_name_fields': false,
+                'is_disabled': true
+            });
+
         } else {
             self.setState({
-                'messages': [{'message': '{colaborator_name} is already a collaborator'.assign({'colaborator_name': collab.name}), 'type': 'info'}],
+                'collaborator': {},
+                'messages': [{'message': '{colaborator_name} is already a collaborator'.assign({'colaborator_name': collab.name}), 'type': 'warning'}],
             });
         } // end if is_collaborating
     },
     onSubmitForm: function ( event ) {
+        event.preventDefault();
         var self = this;
 
         if ( $(event.target).parsley().isValid() === true ) {
@@ -115,10 +120,12 @@ var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormMod
                     React.DOM.div({className: "row"}, 
                         messagesView, 
                         React.DOM.form({onSubmit: this.onSubmitForm, 'data-parsley-validate': true}, 
-                        React.DOM.label({htmlFor: "id_email"}, "Email Address:"), React.DOM.input({ref: "email", onChange: this.onCheckCollaboratorExists, 'data-parsley-maxlength': "200", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", 'data-parsley-type': "email", 'data-parsley-type-url-message': "Enter a valid Email Address.", id: "id_email", maxlength: "200", name: "email", type: "email"}), 
+                        React.DOM.label({htmlFor: "id_email"}, "Email Address:"), React.DOM.input({ref: "email", onChange: this.onCheckCollaboratorExists, 'data-parsley-maxlength': "200", 'data-parsley-group': "basic", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", 'data-parsley-type': "email", 'data-parsley-type-url-message': "Enter a valid Email Address.", id: "id_email", maxlength: "200", name: "email", type: "email"}), 
                             React.DOM.div({className: showFieldsClass}, 
-                                React.DOM.label({htmlFor: "id_first_name"}, "First name:"), React.DOM.input({ref: "first_name", 'data-parsley-maxlength': "255", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", id: "id_first_name", maxlength: "255", name: "first_name", type: "text"}), 
-                                React.DOM.label({htmlFor: "id_last_name"}, "Last name:"), React.DOM.input({ref: "last_name", 'data-parsley-maxlength': "255", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", id: "id_last_name", maxlength: "255", name: "last_name", type: "text"})
+                                React.DOM.label({htmlFor: "id_first_name"}, "First name:"), 
+                                    React.DOM.input({ref: "first_name", 'data-parsley-maxlength': "255", 'data-parsley-group': "details", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", id: "id_first_name", maxlength: "255", name: "first_name", type: "text", value: this.state.collaborator.first_name}), 
+                                React.DOM.label({htmlFor: "id_last_name"}, "Last name:"), 
+                                    React.DOM.input({ref: "last_name", 'data-parsley-maxlength': "255", 'data-parsley-group': "details", 'data-parsley-required': "true", 'data-parsley-required-message': "This field is required.", id: "id_last_name", maxlength: "255", name: "last_name", type: "text", value: this.state.collaborator.last_name})
                             ), 
                             React.DOM.input({type: "submit", value: "Add", disabled: disabled})
                         )
@@ -131,11 +138,20 @@ var CollaboratorFormModal = React.createClass({displayName: 'CollaboratorFormMod
 });
 
 var CollaboratorDetailView = React.createClass({displayName: 'CollaboratorDetailView',
+    onDeleteCollaborator: function ( email, event ) {
+            CollaboratorResource.destroy( email ).defer().done(function ( data ) {
+
+                window.location.reload();
+
+            });
+    },
     render: function () {
         var user_class = this.props.person.user_class
         var classNames = 'pull-right label';
+        var deleteCss = 'pull-right';
         if ( user_class === 'owner' ) {
             classNames += ' label-primary';
+            deleteCss = 'hide'; // dony allow user to delete the owner
 
         } else if (  user_class === 'colleague'  ) {
             classNames += ' label-info';
@@ -147,6 +163,7 @@ var CollaboratorDetailView = React.createClass({displayName: 'CollaboratorDetail
         return (
             React.DOM.li({key: this.props.person.pk, className: "list-group-item"}, 
             React.DOM.span({className: "glyphicon glyphicon-comment"}), " ", this.props.person.name, ":", 
+            React.DOM.span({className: deleteCss}, " ", React.DOM.a({href: "javscript:;", onClick: this.onDeleteCollaborator.bind( this, this.props.person.email)}, React.DOM.span({className: "glyphicon glyphicon-remove"}))), 
             React.DOM.span({className: classNames}, this.props.person.user_class)
             )
         );

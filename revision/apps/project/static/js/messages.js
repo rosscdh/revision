@@ -21,7 +21,10 @@ var Messages = React.createClass({displayName: 'Messages',
         var messages = message_set.map( function( message ) {
             return MessageItem({message: message});
         });
-        return (React.DOM.ul({className: "row col-xs-12"}, 
+        console.log(message_set)
+        showOrHideCss = (message_set.length > 0)? 'row col-xs-12' : 'row col-xs-12 hide';
+
+        return (React.DOM.ul({className: showOrHideCss}, 
             messages
         ));
     }

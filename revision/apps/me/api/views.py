@@ -54,4 +54,7 @@ class CollaboratorEndpoint(generics.ListCreateAPIView,
         import pdb;pdb.set_trace()
 
     def destroy(self, request, **kwargs):
-        import pdb;pdb.set_trace()
+        project = self.get_object()
+        collaborator_record = project.projectcollaborators_set.get(user__email=kwargs.get('email'))
+        collaborator_record.delete()
+        return Response({'message': 'Removed %s' % collaborator_record.user.get_full_name()}, status=http_status.HTTP_202_ACCEPTED)

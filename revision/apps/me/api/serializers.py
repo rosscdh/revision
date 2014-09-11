@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     name = serializers.Field(source='get_full_name')
     class Meta:
         model = User
-        fields = ('username', 'email', 'name')
+        fields = ('username', 'email', 'name', 'first_name', 'last_name')
 
 
 class CollaboratorSerializer(serializers.Serializer):
