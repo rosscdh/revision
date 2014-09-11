@@ -45,8 +45,9 @@ class CollaboratorEndpoint(generics.ListCreateAPIView,
         service = EnsureCollaboratorService(project=project, email=email, full_name=full_name)
         is_new, user, profile, collaborator, collaborator_is_new = service.process()
 
-        collaborator_serializer = self.get_serializer(collaborator)
+        collaborator_serializer = self.get_serializer(project.projectcollaborators_set.all(), many=True)
         headers = self.get_success_headers(collaborator_serializer)
+
         status = http_status.HTTP_201_CREATED if collaborator_is_new is True else http_status.HTTP_202_ACCEPTED
         return Response(collaborator_serializer.data, status=status, headers=headers)
 
@@ -57,4 +58,8 @@ class CollaboratorEndpoint(generics.ListCreateAPIView,
         project = self.get_object()
         collaborator_record = project.projectcollaborators_set.get(user__email=kwargs.get('email'))
         collaborator_record.delete()
-        return Response({'message': 'Removed %s' % collaborator_record.user.get_full_name()}, status=http_status.HTTP_202_ACCEPTED)
+
+        collaborator_serializer = self.get_serializer(project.projectcollaborators_set.all(), many=True)
+        headers = self.get_success_headers(collaborator_serializer)
+
+        return Response(collaborator_serializer.data, status=http_status.HTTP_202_ACCEPTED)

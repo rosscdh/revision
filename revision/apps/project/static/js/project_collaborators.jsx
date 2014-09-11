@@ -6,7 +6,6 @@
 var CollaboratorFormModal = React.createClass({
     getInitialState: function () {
         return {
-            'project': Project,
             'collaborator': {},
             'messages': [],
             'is_disabled': true,
@@ -14,7 +13,7 @@ var CollaboratorFormModal = React.createClass({
         }
     },
     isAlreadyCollaborating: function ( email ) {
-        var collaborators = this.state.project.collaborators;
+        var collaborators = this.props.collaborators;
         var is_collaborating = false;
         var colaborator = {'name': null};
 
@@ -93,10 +92,10 @@ var CollaboratorFormModal = React.createClass({
 
             CollaboratorResource.create( email, first_name, last_name ).defer().done(function ( data ) {
 
-                // self.props.onVideoUpdate( video_data );
                 $( '#modal-new-collaborator' ).modal('hide');
                 //document.location = video_data.video_url;
-                document.location.reload();
+                //document.location.reload();
+                self.props.onUpdateCollaborators( data );
 
             });
         }
@@ -139,11 +138,12 @@ var CollaboratorFormModal = React.createClass({
 
 var CollaboratorDetailView = React.createClass({
     onDeleteCollaborator: function ( email, event ) {
-            CollaboratorResource.destroy( email ).defer().done(function ( data ) {
+        var self = this;
+        CollaboratorResource.destroy( email ).defer().done(function ( data ) {
 
-                window.location.reload();
+            self.props.onUpdateCollaborators( data );
 
-            });
+        });
     },
     render: function () {
         var user_class = this.props.person.user_class
@@ -186,13 +186,20 @@ var CollaboratorView = React.createClass({
 var CollaboratorListView = React.createClass({
     getInitialState: function () {
         return {
-            'project': Project,
+            'collaborators': Project.collaborators,
         }
     },
+    updateCollaborators: function ( collaborators ) {
+        this.setState({'collaborators': collaborators});
+    },
     render: function () {
-        var collaboratorFormModal = <CollaboratorFormModal />
-        var collaboratorNodes = this.state.project.collaborators.map(function ( person ) {
-            return <CollaboratorDetailView key={person.pk} person={person} />
+        var self = this;
+        var collaboratorFormModal = <CollaboratorFormModal collaborators={this.state.collaborators}
+                                                           onUpdateCollaborators={this.updateCollaborators} />
+        var collaboratorNodes = this.state.collaborators.map(function ( person ) {
+            return <CollaboratorDetailView key={person.pk}
+                                           onUpdateCollaborators={self.updateCollaborators} 
+                                           person={person} />
         });
 
         return (
