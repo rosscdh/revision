@@ -14,24 +14,28 @@ var CollaboratorFormModal = React.createClass({
         }
     },
     isAlreadyCollaborating: function ( email ) {
-        var is_collaborating = false;
         var collaborators = this.state.project.collaborators;
+        var is_collaborating = false;
+        var colaborator = {'name': null};
 
-        for ( var i = 0; i < collaborators.length; i++ ) {
-            if ( collaborators[i].email == email ) {
+        $.each(collaborators, function ( index, collab ) {
+            if ( collab.email == email ) {
                 is_collaborating = true;
-                break;
+                colaborator = collab;
+                return false;
             }
-        }
-        return is_collaborating;
+        });
+
+        return $.extend({}, {'is_collaborating': is_collaborating}, colaborator);
     },
     onCheckCollaboratorExists: function ( event ) {
         var self = this;
         var searchEvent;
         var email = this.refs.email.getDOMNode().value.trim();
-        var is_collaborating = this.isAlreadyCollaborating( email );
+        var is_collaborating, colaborator_name;
+        var collab = this.isAlreadyCollaborating( email );
 
-        if ( is_collaborating === false ) {
+        if ( collab.is_collaborating === false ) {
             var form = $('<form data-parsley-validate/>');
             form.append($('<input type="email" data-parsley-required="true" data-parsley-type="email" value="{email}" />'.assign({'email': email})))
 
@@ -43,29 +47,33 @@ var CollaboratorFormModal = React.createClass({
                     UserResource.list( {'email': email} ).defer().done(function ( data ) {
                         var show_name_fields = false;
                         if ( data.results.length === 0 ) {
-                            show_name_fields = true;
+
+                            self.setState({
+                                'messages': [{'message': 'Please provide additional details for {email} to continue.'.assign({'email': email}), 'type': 'warning'}],
+                                'show_name_fields': true,
+                                'is_disabled': false,
+                            });
+    
+                        } else {
+                            var collab = data.results[0];
+                            self.setState({
+                                'messages': [{'message': '{colaborator_name} can be added as a collaborator'.assign({'colaborator_name': collab.name}), 'type': 'success'}],
+                                'show_name_fields': false,
+                                'is_disabled': false,
+                            });
                         }
-                        // show the fields
-                        self.setState({
-                            'message': ( show_name_fields === false ) ? '{email} was found, press add to add as collaborator.'.assign({'email': email}) : '{email} was not found, please provide their details to continue.'.assign({'email': email}),
-                            'message_class': 'label-info',
-                            'show_name_fields': show_name_fields,
-                            'is_disabled': false
-                        });
                     });
                 }, 900 );
             }
 
-            self.setState({
-                'message': '',
-                'message_class': 'label-info',
-                'show_name_fields': false,
-                'is_disabled': true
-            });
+            // self.setState({
+            //     'messages': [{'message': '', 'type': ''}]
+            //     'show_name_fields': false,
+            //     'is_disabled': true
+            // });
         } else {
             self.setState({
-                'message': '{email} is already a collaborator'.assign({'email': email}),
-                'message_class': 'label-warning',
+                'messages': [{'message': '{colaborator_name} is already a collaborator'.assign({'colaborator_name': collab.name}), 'type': 'info'}],
             });
         } // end if is_collaborating
     },
@@ -91,10 +99,10 @@ var CollaboratorFormModal = React.createClass({
     },
     render: function () {
 
-        var showFieldsClass = (this.state.show_name_fields === true) ? '' : 'hide';
+        var messagesView = <Messages messages={this.state.messages} />
         var disabled = (this.state.is_disabled === true) ? 'disabled' : '' ;
-        var message = this.state.message;
-        var messageClass = 'label {message_class}'.assign({'message_class': this.state.message_class});
+        var showFieldsClass = (this.state.show_name_fields === true) ? '' : 'hide';
+
 
         return (<div id="modal-new-collaborator" className="modal fade bs-example-modal-lg" tabIndex="-1" role="dialog" aria-labelledby="modal-new-collaborator-help" aria-hidden="true">
           <div className="modal-dialog modal-lg">
@@ -105,12 +113,12 @@ var CollaboratorFormModal = React.createClass({
                 </div>
                 <div className="modal-body">
                     <div className="row">
-                        <p className={messageClass}>{message}</p>
+                        {messagesView}
                         <form onSubmit={this.onSubmitForm} data-parsley-validate>
                         <label htmlFor="id_email">Email Address:</label><input ref="email" onChange={this.onCheckCollaboratorExists} data-parsley-maxlength="200" data-parsley-required="true" data-parsley-required-message="This field is required." data-parsley-type="email" data-parsley-type-url-message="Enter a valid Email Address." id="id_email" maxlength="200" name="email" type="email" />
                             <div className={showFieldsClass}>
-                                <label htmlFor="id_first_name">First name:</label><input ref="first_name" data-parsley-maxlength="255" data-parsley-required-message="This field is required." id="id_first_name" maxlength="255" name="first_name" type="text" />
-                                <label htmlFor="id_last_name">Last name:</label><input ref="last_name" data-parsley-maxlength="255" data-parsley-required-message="This field is required." id="id_last_name" maxlength="255" name="last_name" type="text" />
+                                <label htmlFor="id_first_name">First name:</label><input ref="first_name" data-parsley-maxlength="255" data-parsley-required="true" data-parsley-required-message="This field is required." id="id_first_name" maxlength="255" name="first_name" type="text" />
+                                <label htmlFor="id_last_name">Last name:</label><input ref="last_name" data-parsley-maxlength="255" data-parsley-required="true" data-parsley-required-message="This field is required." id="id_last_name" maxlength="255" name="last_name" type="text" />
                             </div>
                             <input type="submit" value="Add" disabled={disabled} />
                         </form>

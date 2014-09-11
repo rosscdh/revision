@@ -191,6 +191,7 @@ PIPELINE_JS = {
         'source_filenames': (
             'js/reactjs/0.11.1/react-with-addons.js',
             'js/common.jsx',
+            'js/messages.jsx',
             'js/videoplayer.jsx',
         ),
         'output_filename': 'js/dist/react.js'
