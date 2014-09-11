@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.core.exceptions import ObjectDoesNotExist
-
 from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework.response import Response

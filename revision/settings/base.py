@@ -191,6 +191,7 @@ PIPELINE_JS = {
         'source_filenames': (
             'js/reactjs/0.11.1/react-with-addons.js',
             'js/common.jsx',
+            'js/messages.jsx',
             'js/videoplayer.jsx',
         ),
         'output_filename': 'js/dist/react.js'
@@ -199,7 +200,9 @@ PIPELINE_JS = {
         'source_filenames': (
             'js/resources/resource.js',  # api
             # resources api
+            'js/resources/user_resource.js',
             'js/resources/project_resource.js',
+            'js/resources/collaborator_resource.js',
             'js/resources/video_resource.js',
             'js/resources/comment_resource.js',
         ),
@@ -290,6 +293,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',  # only use this in dev
         # 'toolkit.apps.api.permissions.ApiObjectPermission',
     ],
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.DjangoFilterBackend',
+    ),
     'PAGINATE_BY': 100,
 }
 

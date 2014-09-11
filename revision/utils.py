@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
+
 from collections import namedtuple, OrderedDict
+
+import uuid
+import logging
+logger = logging.getLogger('django.request')
 
 
 def _model_slug_exists(model, queryset=None, **kwargs):
@@ -16,6 +23,24 @@ def _model_slug_exists(model, queryset=None, **kwargs):
         # in case we have the same key (which we do in a few cases)
         #
         return None
+
+
+def _user_exists(username):
+    try:
+        return User.objects.get(username=username)
+    except User.DoesNotExist:
+        return None
+
+
+def _get_unique_username(username):
+    username = slugify(username)  # apply the transforms first so that the lookup acts on the actual username
+    username = username[0:29]
+    while _user_exists(username=username):
+        logger.info('Username %s exists, trying to create another' % username)
+        username = '%s-%s' % (username, uuid.uuid4().get_hex()[:4])
+        username = username[0:29]  # be aware of fencepost error here field limit is 30
+
+    return username
 
 
 def get_namedtuple_choices(name, choices_tuple):
