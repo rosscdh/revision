@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE fcpxml>
+
+<fcpxml version="1.4">
+    <resources>
+        <format id="r1" name="FFVideoFormat720p25" frameDuration="100/2500s" width="1280" height="720"/>
+        <asset id="r2" name="HOTELENERGIEBALLMOTERSCHADE" uid="D4993387DE4E0FB056FA7B2F0F07E1F1" src="file:///Users/mp/Downloads/HOTELENERGIEBALLMOTERSCHADE.mp4" start="0s" duration="98436/600s" hasVideo="1" format="r1" hasAudio="1" audioSources="1" audioChannels="2" audioRate="44100">
+            <metadata>
+                <md key="com.apple.proapps.spotlight.kMDItemCodecs">
+                    <array>
+                        <string>AAC</string>
+                        <string>H.264</string>
+                    </array>
+                </md>
+                <md key="com.apple.proapps.mio.ingestDate" value="2014-09-14 11:31:35 +0200"/>
+            </metadata>
+        </asset>
+    </resources>
+    <library location="file:///Users/mp/Movies/Untitled.fcpbundle/">
+        <event name="14-09-14" uid="E3FC767C-8A39-4C07-85BA-22CCECCCE737">
+            <clip name="HOTELENERGIEBALLMOTERSCHADE" duration="7235046/44100s" format="r1" tcFormat="NDF">
+                <video offset="0s" ref="r2" duration="410100/2500s">
+                    <audio lane="-1" offset="0s" ref="r2" duration="7235046/44100s" role="dialogue" srcCh="1, 2"/>
+                    <marker start="1201/25s" duration="100/2500s" value="Dette er en test"/>
+                    <marker start="1904/25s" duration="100/2500s" value="Something needs to be done here!" completed="0"/>
+                </video>
+            </clip>
+        </event>
+    </library>
+</fcpxml>
