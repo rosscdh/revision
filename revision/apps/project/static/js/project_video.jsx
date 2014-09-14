@@ -43,8 +43,8 @@ var VideoFormModal = React.createClass({
                 <div className="modal-body">
                     <div className="row">
                         <form onSubmit={this.onSubmitForm} data-parsley-validate>
-                            <label htmlFor="id_name">Name:</label><input ref="name" data-parsley-maxlength="255" data-parsley-required="true" data-parsley-required-message="This field is required." id="id_name" maxlength="255" name="name" type="text" />
-                            <label htmlFor="id_video_url">Video url:</label><input ref="video_url" data-parsley-maxlength="200" data-parsley-required="true" data-parsley-required-message="This field is required." data-parsley-type="url" data-parsley-type-url-message="Enter a valid URL." id="id_video_url" maxlength="200" name="video_url" type="url" />
+                            <label htmlFor="id_name">Name:</label><input ref="name" data-parsley-maxlength="255" data-parsley-required="true" data-parsley-required-message="This field is required." id="id_name" maxLength="255" name="name" type="text" />
+                            <label htmlFor="id_video_url">Video url:</label><input ref="video_url" data-parsley-maxlength="200" data-parsley-required="true" data-parsley-required-message="This field is required." data-parsley-type="url" data-parsley-type-url-message="Enter a valid URL." id="id_video_url" maxLength="200" name="video_url" type="url" />
                             <input type="submit" value="Create" />
                         </form>
                     </div>
