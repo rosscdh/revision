@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.http import HttpResponse
 from django.views.generic import (DetailView,
                                   ListView,)
 from django.utils.safestring import mark_safe
@@ -9,6 +10,7 @@ from .api.serializers import (ProjectSerializer,
                               VideoSerializer,
                               CommentSerializer)
 from .models import Project, Video
+from . import finalcut
 
 
 class ProjectListView(ListView):
@@ -72,3 +74,11 @@ class ProjectChronicleView(ProjectDetailView):
 
         return JSONRenderer().render(CommentSerializer(comments, many=True).data)
 
+
+class ProjectXmlView(ProjectDetailView):
+    model = Project
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        xml = finalcut.render_xml(self.current_video)
+        return HttpResponse(xml, content_type="application/xml")

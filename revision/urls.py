@@ -8,9 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-
     url(r'^api/v1/', include('revision.api.urls')),
-
     url(r'^p/', include('revision.apps.project.urls', namespace='project')),
 )
 
