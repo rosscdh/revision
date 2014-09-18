@@ -24,7 +24,7 @@ var VideoFormModal = React.createClass({displayName: 'VideoFormModal',
 
                 // self.props.onVideoUpdate( video_data );
                 // $( '#modal-new-video' ).modal('hide');
-                document.location = video_data.video_url;
+                document.location = video_data.video_view_url;
 
             });
         }

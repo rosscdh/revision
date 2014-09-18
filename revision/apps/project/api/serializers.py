@@ -39,7 +39,8 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
     comments = serializers.Field(source='comments_by_id_reversed')
     video_type = serializers.Field(source='display_type')
     video_subtitles_url = serializers.Field(source='subtitles_url')
-    video_url = serializers.Field(source='get_absolute_url')
+    video_view_url = serializers.Field(source='get_absolute_url')
+    video_url = serializers.Field(source='video_url')
 
     class Meta:
         model = Video
