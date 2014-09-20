@@ -13,6 +13,8 @@ import math
 
 BASE_VIDEO_TYPES = get_namedtuple_choices('BASE_VIDEO_TYPES', (
     (1, 'video_mp4', 'video/mp4'),
+    (2, 'video_mov', 'video/mov'),
+    
 ))
 
 
