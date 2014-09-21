@@ -25,7 +25,7 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
 
         var comment = this.refs.comment.getDOMNode().value.trim();
         var comment_type = this.refs.comment_type.getDOMNode().value.trim();
-        var comment_by = 'RC';
+        var comment_by = User.initials;
         var progress = this.props.progress;
 
         CommentResource.create( comment, comment_type, comment_by, progress ).defer().done(function ( data ) {
@@ -95,6 +95,27 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
     }
 });
 
+var SubtitleForm = React.createClass({displayName: 'SubtitleForm',
+    handleSubmit: function ( event ) {
+        event.preventDefault();
+        var self = this;
+
+        CommentResource.edit().defer().done(function ( data ) {
+
+        });
+        return false;
+    },
+    render: function () {
+        return (React.DOM.form({onSubmit: this.handleSubmit, 'data-parsley-validate': true}, 
+            React.DOM.div({className: "input-group"}, 
+                React.DOM.label({htmlFor: ""}, "Show for:"), 
+                React.DOM.input({type: "input", ref: "secs", name: "secs", value: "3", 'data-parsley-length': "[1, 5]", 'data-parsley-group': "subtitle", 'data-parsley-required': "true", 'data-parsley-type': "integer", type: "number"}), 
+                React.DOM.span({class: "input-group-addon"}, "secs")
+            )
+        ));
+    }
+});
+
 var CommentItemView = React.createClass({displayName: 'CommentItemView',
     handleDeleteComment: function ( pk, event ) {
         var self = this;
@@ -116,6 +137,7 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
         var timestamp = TimestampView({onSeekTo: this.props.onSeekTo, progress: comment.progress})
         var date_of = moment(comment.date_of).fromNow();
         var type_className = 'label label-warning';
+        var form = null;
 
         if ( comment_type === 'comment' ) {
             type_className = 'label label-success';
@@ -123,6 +145,9 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
         } else if ( comment_type === 'sketch' ) {
             type_className = 'label label-info';
 
+        } else {
+            // subtitle
+            form = SubtitleForm({comment: comment})
         }
 
         return (
@@ -139,8 +164,8 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
                 React.DOM.blockquote(null, 
                     collaborator, " ", 
                     comment.comment
-                )
-                
+                ), 
+                form
             )
         )
     }

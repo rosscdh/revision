@@ -99,6 +99,12 @@ var Links = {
   'chronicle': "{% url 'project:chronicle' slug=project.slug %}",
 };
 
+var User = {
+  'username': '{{ request.user.username }}',
+  'initials': '{{ request.user.get_initials }}',
+  'email': '{{ request.user.email }}'
+}
+
 /**
 * Setup resource slugs
 **/
