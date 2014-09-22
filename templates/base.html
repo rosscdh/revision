@@ -42,6 +42,7 @@
           <a class="navbar-brand" href="#">Re<span class="label-danger">&gt;</span>ision</a>
         </div>
         <div class="navbar-collapse collapse">
+          {% if not user.is_authenticated %}
           <form class="navbar-form navbar-right" role="form">
             <div class="form-group">
               <input type="text" placeholder="Email" class="form-control">
@@ -51,6 +52,9 @@
             </div>
             <button type="submit" class="btn btn-success">Sign in</button>
           </form>
+          {% else %}
+          {{ user.get_full_name }}
+          {% endif %}
         </div><!--/.navbar-collapse -->
       </div>
     </div>
