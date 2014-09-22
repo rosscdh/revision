@@ -13,7 +13,7 @@
     "fields": {
       "project": 1,
       
-      "video_url": "https://www.dropbox.com/s/4j7uzaqh5c25qgr/HOTELENERGIEBALLMOTERSCHADE.mp4?dl=1",
+      "video_url": "https://s3-eu-west-1.amazonaws.com/rosstest1234/20856655.ogg",
       "data": {
         "comments": [
           {
@@ -55,7 +55,7 @@
         ]
       },
       "slug": "75d4d8ee0f654200998bd6a1e5696358",
-      "video_type": 1,
+      "video_type": 3,
       "name": "Version 1"
     },
     "model": "project.video",

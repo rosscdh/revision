@@ -13,8 +13,11 @@ urlpatterns = patterns('',
 
     url(r'^api/v1/', include('revision.api.urls')),
     url(r'^webhook/heywatch/$', TemplateView.as_view(template_name='base.html')),
-    
+
+    url(r'^me/password/', include('password_reset.urls')),
+
     url(r'^p/', include('revision.apps.project.urls', namespace='project')),
+    url(r'^', include('revision.apps.public.urls', namespace='public')),
 )
 
 if settings.DEBUG is True:

@@ -44,3 +44,4 @@ requests==2.3.0
 stripe==1.18.0
 wsgiref==0.1.2
 python-dateutil
+django-password-reset

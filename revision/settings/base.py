@@ -88,6 +88,7 @@ THIRD_PARTY_APPS = (
     # 'payments',
     'pipeline',
     'crispy_forms',
+    'password_reset',
     'rest_framework',
     'templated_email',
     'django_extensions',
@@ -107,15 +108,14 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # Authentication
 AUTHENTICATION_BACKENDS = (
-    # TODO: where are these hiding?
-    # 'revision.auth_backends.EmailBackend',
+    'revision.auth_backends.EmailBackend',
     # 'revision.auth_backends.SimpleUserLoginBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
 LOGIN_URL = '/start/'
-LOGIN_REDIRECT_URL = '/'
-LOGIN_ERROR_URL = '/'
+LOGIN_REDIRECT_URL = '/p/'
+LOGIN_ERROR_URL = '/login-error/'
 LOGOUT_URL = '/end/'
 
 # Database
