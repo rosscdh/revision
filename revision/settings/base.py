@@ -86,6 +86,7 @@ THIRD_PARTY_APPS = (
     'braces',
     'parsley',
     # 'payments',
+    'storages',
     'pipeline',
     'crispy_forms',
     'password_reset',
@@ -105,6 +106,9 @@ LOCAL_APPS = (
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+# Default File Storage
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 # Authentication
 AUTHENTICATION_BACKENDS = (
@@ -314,6 +318,16 @@ REST_FRAMEWORK = {
 # CELERYD_LOG_COLOR = False
 # CELERY_REDIRECT_STDOUTS = True
 # CELERY_REDIRECT_STDOUTS_LEVEL = 'INFO'
+
+# AWS
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+
+AWS_HEADERS = {
+    'Cache-Control': 'max-age=86400',
+    'x-amz-acl': 'public-read',
+}
 
 # Logging
 LOGGING = {

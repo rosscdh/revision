@@ -37,6 +37,9 @@ heywatch==1.1.0
 # Deployment
 raven
 
+# Storage
+django-storages
+
 # misc
 PyReact
 futures==2.1.6
