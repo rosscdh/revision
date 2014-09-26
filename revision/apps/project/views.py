@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import (DetailView,
                                   ListView,)
+
+from django.views.generic.edit import FormMixin
+
 from django.utils.safestring import mark_safe
 
 from rest_framework.renderers import JSONRenderer
@@ -8,15 +11,24 @@ from rest_framework.renderers import JSONRenderer
 from .api.serializers import (ProjectSerializer,
                               VideoSerializer,
                               CommentSerializer)
+from .forms import ProjectForm
 from .models import Project, Video
 
 
-class ProjectListView(ListView):
+class ProjectListView(ListView,
+                      FormMixin):
     model = Project
+    form_class = ProjectForm
 
+    def get_context_data(self, **kwargs):
+        kwargs = super(ProjectListView, self).get_context_data(**kwargs)
+        kwargs.update({
+            'form': self.get_form(form_class=self.form_class)
+        })
+        return kwargs
     def get_queryset(self, **kwargs):
-        queryset = self.model._default_manager.all()
-        #queryset = self.model._default_manager.filter(collaborators__in=[self.request.user])
+        #queryset = self.model._default_manager.all()
+        queryset = self.model._default_manager.filter(collaborators__in=[self.request.user])
         return queryset
 
     @property

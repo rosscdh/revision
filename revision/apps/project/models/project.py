@@ -17,6 +17,9 @@ class Project(models.Model):
     collaborators = models.ManyToManyField('auth.User',
                                            through='project.ProjectCollaborators',
                                            through_fields=('project', 'user'))
+
+    client = models.ForeignKey('client.Client', null=True, blank=True)
+
     data = JSONField(default={})
 
     def get_absolute_url(self):

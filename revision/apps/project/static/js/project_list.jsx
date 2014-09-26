@@ -134,7 +134,7 @@ var CreateMatterButton = React.createClass({
     render: function() {
         var create_url = Links.create_url;
         return (
-            <a href={create_url} data-toggle="modal" data-target="#project-create" className="btn btn-success btn-embossed pull-right"><i className="fui-plus"></i> New Project</a>
+            <a href={create_url} data-toggle="modal" data-target="#modal-project-create" className="btn btn-success btn-embossed pull-right"><i className="fui-plus"></i> New Project</a>
         );
     },
 });
@@ -179,7 +179,7 @@ var ProjectList = React.createClass({
 
                 var participantList = <Participants data={project.collaborators} />
 
-                var editMatterInterface = <EditMatterInterface key={project.slug} can_edit={UserData.can_edit} edit_url={editUrl} />
+                var editMatterInterface = <EditMatterInterface key={project.slug} can_edit={User.can_edit} edit_url={editUrl} />
 
                 return <ProjectItem
                         key={project.slug}

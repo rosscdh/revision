@@ -98,6 +98,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     'revision.api',  # Api interface
     'revision.apps.me',  # user profiles
+    'revision.apps.client',  # clients
     'revision.apps.project',  # projects
     'revision.apps.public',  # public views
     # 'revision.apps.revision',

@@ -11,6 +11,7 @@ import uuidfield.fields
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('client', '__first__'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -23,6 +24,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('date_created', models.DateTimeField(auto_now_add=True, db_index=True)),
                 ('data', jsonfield.fields.JSONField(default={})),
+                ('client', models.ForeignKey(blank=True, to='client.Client', null=True)),
             ],
             options={
             },
@@ -49,7 +51,7 @@ class Migration(migrations.Migration):
                 ('slug', uuidfield.fields.UUIDField(db_index=True, unique=True, max_length=32, editable=False, blank=True)),
                 ('name', models.CharField(max_length=255)),
                 ('video_url', models.URLField(db_index=True)),
-                ('video_type', models.IntegerField(db_index=True, choices=[(1, b'video/mp4')])),
+                ('video_type', models.IntegerField(default=1, db_index=True, choices=[(1, b'video/mp4'), (2, b'video/mov'), (3, b'video/ogg')])),
                 ('data', jsonfield.fields.JSONField(default={})),
                 ('project', models.ForeignKey(to='project.Project')),
             ],

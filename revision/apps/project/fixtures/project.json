@@ -2,6 +2,7 @@
   {
     "fields": {
       "date_created": "2014-09-04T12:40:47.827Z",
+      "client": null,
       "data": {},
       "slug": "my-cool-project",
       "name": "My Cool Project"
@@ -11,52 +12,72 @@
   },
   {
     "fields": {
+      "owner": 1,
+      "data": {},
+      "name": "A Client Here",
+      "slug": "my-client"
+    },
+    "model": "client.client",
+    "pk": 1
+  },
+  {
+    "fields": {
       "project": 1,
-      
-      "video_url": "https://s3-eu-west-1.amazonaws.com/rosstest1234/20856655.ogg",
+      "role": 1,
+      "is_project_owner": true,
+      "data": {},
+      "user": 1
+    },
+    "model": "project.projectcollaborators",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "name": "Version 1",
+      "video_url": "https://s3-eu-west-1.amazonaws.com/dev-revision/20856655.ogg",
+      "video_type": 3,
+      "project": 1,
       "data": {
         "comments": [
           {
-            "pk": 1,
-            "uuid": "29fe5b9a-d27e-47eb-b30b-28a146a7a22b",
             "comment": "My first comment",
-            "progress": 3.233,
+            "uuid": "29fe5b9a-d27e-47eb-b30b-28a146a7a22b",
+            "comment_type": "comment",
+            "comment_by": "RC",
             "date_of": "2014-09-04T12:42:44",
-            "comment_type": "comment",
-            "comment_by": "RC"
+            "pk": 1,
+            "progress": 3.233
           },
           {
-            "pk": 2,
-            "uuid": "6a6f05a7-ca18-45db-b548-58471b879a2c",
             "comment": "My second comment",
-            "progress": 5.333,
-            "date_of": "2014-09-04T12:43:20",
+            "uuid": "6a6f05a7-ca18-45db-b548-58471b879a2c",
             "comment_type": "comment",
-            "comment_by": "KC"
+            "comment_by": "KC",
+            "date_of": "2014-09-04T12:43:20",
+            "pk": 2,
+            "progress": 5.333
           },
           {
-            "pk": 3,
-            "uuid": "27eff025-2a24-44b8-b79c-80da82e832f1",
             "comment": "My third comment",
-            "progress": 15.273,
-            "date_of": "2014-09-04T12:43:47",
+            "uuid": "27eff025-2a24-44b8-b79c-80da82e832f1",
             "comment_type": "subtitle",
-            "comment_by": "MP"
+            "comment_by": "MP",
+            "date_of": "2014-09-04T12:43:47",
+            "pk": 3,
+            "progress": 15.273
           },
           {
-            "pk": 4,
-            "uuid": "676bc3c9-e4b9-4ce3-bd71-3bea05772a9e",
             "comment": "My fourth comment",
-            "progress": 25.273,
-            "date_of": "2014-09-04T12:44:11",
+            "uuid": "676bc3c9-e4b9-4ce3-bd71-3bea05772a9e",
             "comment_type": "sketch",
-            "comment_by": "RC"
+            "comment_by": "RC",
+            "date_of": "2014-09-04T12:44:11",
+            "pk": 4,
+            "progress": 25.273
           }
         ]
       },
-      "slug": "75d4d8ee0f654200998bd6a1e5696358",
-      "video_type": 3,
-      "name": "Version 1"
+      "slug": "75d4d8ee0f654200998bd6a1e5696358"
     },
     "model": "project.video",
     "pk": 1

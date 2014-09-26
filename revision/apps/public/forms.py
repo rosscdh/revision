@@ -89,7 +89,7 @@ class SignUpForm(forms.Form):
                 Field('email'),
                 Field('password'),
                 Field('password_confirm'),
-                Field('t_and_c', template='public/bootstrap3/t_and_c.html'),
+                Field('t_and_c', template='public/terms.html'),
                 Field('mpid'),
             ),
             ButtonHolder(
