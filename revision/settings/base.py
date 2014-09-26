@@ -129,9 +129,9 @@ DATABASES = {
 }
 
 # Cache
-CACHES = {
-    'default': django_cache_url.config()
-}
+# CACHES = {
+#     'default': django_cache_url.config()
+# }
 
 # Sessions
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
@@ -215,6 +215,7 @@ PIPELINE_JS = {
     },
     'project_list': {
         'source_filenames': (
+            'js/resources/project_resource.js',
             'js/project_list.jsx',
         ),
         'output_filename': 'js/project_list.js',

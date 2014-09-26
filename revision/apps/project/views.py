@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from django.views.generic import (DetailView,
+from django.views.generic import (CreateView,
+                                  DetailView,
                                   ListView,)
 
 from django.views.generic.edit import FormMixin
@@ -34,6 +35,11 @@ class ProjectListView(ListView,
     @property
     def project_json(self):
         return JSONRenderer().render(ProjectSerializer(self.get_queryset(), many=True).data)
+
+
+class ProjectCreateView(CreateView):
+    model = Project
+    form_class = ProjectForm
 
 
 class ProjectDetailView(DetailView):

@@ -132,9 +132,8 @@ var NoResultsInterface = React.createClass({displayName: 'NoResultsInterface',
 
 var CreateMatterButton = React.createClass({displayName: 'CreateMatterButton',
     render: function() {
-        var create_url = Links.create_url;
         return (
-            React.DOM.a({href: create_url, 'data-toggle': "modal", 'data-target': "#modal-project-create", className: "btn btn-success btn-embossed pull-right"}, React.DOM.i({className: "fui-plus"}), " New Project")
+            React.DOM.a({'data-toggle': "modal", 'data-target': "#modal-project-create", className: "btn btn-success btn-embossed pull-right"}, React.DOM.i({className: "fui-plus"}), " New Project")
         );
     },
 });

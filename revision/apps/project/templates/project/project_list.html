@@ -42,6 +42,17 @@ var Links = {
     'create_url': "{% url 'project:create' %}",
     'edit_url': null,
 };
+
+
+$('form#create-project-form').on('submit', function ( e ) {
+  e.preventDefault();
+  var form = $(this);
+
+  ProjectResource.create( form.serialize() ).defer().done(function ( data ) {
+    console.log(data)
+  });
+});
+
 </script>
 {% compressed_js 'project_list' %}
 {% endblock js %}

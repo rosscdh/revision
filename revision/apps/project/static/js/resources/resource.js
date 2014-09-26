@@ -9,7 +9,7 @@ var Resource = {
   base_url: function () {
     return '/api/v1/'
   },
-  process: function (url, method, data, promise) {
+  process: function (url, method, data) {
     var self = this;
 
     this._promise = $.ajax({
@@ -21,6 +21,7 @@ var Resource = {
                             'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
                         }
                     });
+
     return this;
   },
   list: function () {

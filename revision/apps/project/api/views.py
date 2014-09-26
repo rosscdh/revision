@@ -4,7 +4,11 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status as http_status
 
-from ..models import Project, Video
+from revision.apps.client.models import Client
+
+from ..models import (Project,
+                      Video,
+                      ProjectCollaborators)
 from .serializers import (ProjectSerializer,
                           VideoSerializer,
                           CommentSerializer,)
@@ -16,6 +20,18 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     lookup_field = 'slug'
+
+    def pre_save(self, obj):
+        client_name = self.request.POST.get('client', None)
+        if client_name:
+            client, is_new = Client.objects.get_or_create(name=client_name, owner=self.request.user)
+            obj.client = client
+
+        return super(ProjectViewSet, self).pre_save(obj=obj)
+
+    def post_save(self, obj, created):
+        collaborator, is_new = ProjectCollaborators.objects.get_or_create(user=self.request.user, project=obj)
+        return super(ProjectViewSet, self).post_save(obj, created=created)
 
 
 class VideoViewSet(viewsets.ModelViewSet):
