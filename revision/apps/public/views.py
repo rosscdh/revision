@@ -3,6 +3,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, RedirectView, FormView
 
+from revision.apps.me.mailers import ValidateEmailMailer
+
 from .forms import SignUpForm, SignInForm
 from .mixins import (UserNotFoundException,
                      UserInactiveException)
@@ -108,15 +110,15 @@ class HomePageView(StartView):
 
 
 class DisclaimerView(TemplateView):
-    template_name = 'legal/disclaimer.html'
+    template_name = 'public/disclaimer.html'
 
 
 class PrivacyView(TemplateView):
-    template_name = 'legal/privacy.html'
+    template_name = 'public/privacy.html'
 
 
 class TermsView(TemplateView):
-    template_name = 'legal/terms.html'
+    template_name = 'public/terms.html'
 
 
 class LoginErrorView(TemplateView):

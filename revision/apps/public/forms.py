@@ -61,10 +61,10 @@ class SignUpForm(forms.Form):
     )
     t_and_c = forms.BooleanField(
         error_messages={
-            'required': "You must agree to the LawPal Terms and Conditions."
+            'required': "You must agree to the Terms and Conditions."
         },
         initial=False,
-        label='I agree to the LawPal Terms and Conditions.',
+        label='I agree to the Terms and Conditions.',
         required=True
     )
 
@@ -89,7 +89,7 @@ class SignUpForm(forms.Form):
                 Field('email'),
                 Field('password'),
                 Field('password_confirm'),
-                Field('t_and_c', template='public/terms.html'),
+                Field('t_and_c', template='partials/t_and_c.html'),
                 Field('mpid'),
             ),
             ButtonHolder(
@@ -100,7 +100,7 @@ class SignUpForm(forms.Form):
         super(SignUpForm, self).__init__(*args, **kwargs)
 
         # Override the label with a link to the terms (can't go higher as the urls aren't loaded yet)
-        self.fields['t_and_c'].label = 'I agree to the LawPal <a href="%s" target="_blank">Terms and Conditions</a>.' % reverse_lazy('public:terms')
+        self.fields['t_and_c'].label = 'I agree to the <a href="%s" target="_blank">Terms and Conditions</a>.' % reverse_lazy('public:terms')
 
     def clean_username(self):
         final_username = self.data.get('email').split('@')[0]

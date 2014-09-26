@@ -10,7 +10,7 @@ from parsley.decorators import parsleyfy
 @parsleyfy
 class ProjectForm(forms.ModelForm):
 
-    client_name = forms.CharField(
+    client = forms.CharField(
         error_messages={
             'required': "Client name can not be blank."
         },
