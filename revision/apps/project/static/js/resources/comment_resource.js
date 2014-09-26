@@ -18,6 +18,10 @@ var CommentResource = Resource.createClass({
     var uri = this.base_url() + comment_pk + '/';
     return this.process( uri, 'GET' );
   },
+  update: function ( pk, kwargs ) {
+    var uri = this.base_url() + pk + '/';
+    return this.process( uri, 'PATCH', kwargs );
+  },
   destroy: function ( comment_pk ) {
     var uri = this.base_url() + comment_pk + '/';
     return this.process( uri, 'DELETE', {'is_deleted': true});

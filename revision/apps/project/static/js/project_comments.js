@@ -96,20 +96,31 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
 });
 
 var SubtitleForm = React.createClass({displayName: 'SubtitleForm',
+    getInitialState: function () {
+        console.log(this.props.comment.secs + 'HERE')
+        return {
+            'secs': this.props.comment.secs || 4
+        }
+    },
     handleSubmit: function ( event ) {
         event.preventDefault();
         var self = this;
 
-        CommentResource.edit().defer().done(function ( data ) {
+        var comment_pk = this.props.comment.pk;
+        var data = {
+            'secs': parseInt(this.refs.secs.getDOMNode().value.trim()),
+        };
 
+        CommentResource.update( comment_pk, data ).defer().done(function ( data ) {
+            console.log(data)
         });
         return false;
     },
     render: function () {
-        return (React.DOM.form({onSubmit: this.handleSubmit, 'data-parsley-validate': true}, 
+        return (React.DOM.form({'data-parsley-validate': true}, 
             React.DOM.div({className: "input-group"}, 
                 React.DOM.label({htmlFor: ""}, "Show for:"), 
-                React.DOM.input({type: "input", ref: "secs", name: "secs", value: "3", 'data-parsley-length': "[1, 5]", 'data-parsley-group': "subtitle", 'data-parsley-required': "true", 'data-parsley-type': "integer", type: "number"}), 
+                React.DOM.input({type: "input", ref: "secs", onChange: this.handleSubmit, defaultValue: this.state.secs, 'data-parsley-group': "subtitle-form", 'data-parsley-required': "true", 'data-parsley-type': "integer"}), 
                 React.DOM.span({class: "input-group-addon"}, "secs")
             )
         ));
@@ -130,6 +141,26 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
 
         });
     },
+    form: function ( comment ) {
+        var comment_type = comment.comment_type.toLowerCase();
+
+        if ( this.props.show_form === false ) {
+            return null;
+        }
+
+        if ( comment_type === 'comment' ) {
+            return null;
+
+        } else if ( comment_type === 'sketch' ) {
+            return null;
+
+        } else {
+            // subtitle
+            return SubtitleForm({comment: this.props.comment})
+        }
+
+        return null;
+    },
     render: function () {
         var comment = this.props.comment;
         var comment_type = comment.comment_type.toLowerCase();
@@ -137,17 +168,13 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
         var timestamp = TimestampView({onSeekTo: this.props.onSeekTo, progress: comment.progress})
         var date_of = moment(comment.date_of).fromNow();
         var type_className = 'label label-warning';
-        var form = null;
+        var form = this.form(comment);
 
         if ( comment_type === 'comment' ) {
             type_className = 'label label-success';
 
         } else if ( comment_type === 'sketch' ) {
             type_className = 'label label-info';
-
-        } else {
-            // subtitle
-            form = SubtitleForm({comment: comment})
         }
 
         return (
@@ -175,8 +202,11 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
 var CommentListView = React.createClass({displayName: 'CommentListView',
     render: function () {
         var self = this;
+        var show_comment_form = (this.props.show_form !== undefined) ? this.props.show_form : true;
+
         commentNodes = this.props.comments.map(function (comment) {
             return CommentItemView({key: comment.pk, 
+                                    show_form: show_comment_form, 
                                     onVideoUpdate: self.props.onVideoUpdate, 
                                     onSeekTo: self.props.onSeekTo, 
                                     comment: comment})

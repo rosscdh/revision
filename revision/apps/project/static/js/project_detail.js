@@ -32,8 +32,8 @@ var VersionView = React.createClass({displayName: 'VersionView',
             classNames = 'label label-info'
         }
 
-        return (React.DOM.span(null, 
-                React.DOM.a({href: this.props.version.url}, React.DOM.span({className: classNames}, this.props.version.name))
+        return (React.DOM.ul({className: "versions list-unstyled"}, 
+                React.DOM.li(null, React.DOM.a({href: this.props.version.url}, React.DOM.span({className: classNames}, this.props.version.name)))
             ));
     }
 });
@@ -85,7 +85,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             //
             // Capture Events
             //
-            api.conf.debug = true;
+            api.conf.debug = false;
             api.conf.engine = 'html5';
             api.conf.preload = 'auto';
             api.conf.keyboard = false;

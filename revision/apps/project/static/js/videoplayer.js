@@ -8,8 +8,6 @@ var FlowPlayerView = React.createClass({displayName: 'FlowPlayerView',
     render: function () {
         var video_url = this.props.video.video_url;
         var video_type = this.props.video.video_type;
-        console.log(video_type)
-        console.log('fds')
         var video_subtitles_url = this.props.video.video_subtitles_url;
         return (
             React.DOM.div({className: "flowplayer"}, 

@@ -69,7 +69,7 @@ class VideoCommentDetailEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
     @property
     def pk(self):
-        return int(self.kwargs.get('pk')) ## minus 1 to account for list index
+        return int(self.kwargs.get('pk')) - 1 ## minus 1 to account for list index
 
     def retrieve(self, request, **kwargs):
         self.object = self.get_object()
@@ -86,6 +86,7 @@ class VideoCommentDetailEndpoint(generics.RetrieveUpdateDestroyAPIView):
         data.update({
             'comment': request.DATA.get('comment', data.get('comment')),  # allow update of only is_deleted items without changing comment
             'is_deleted': request.DATA.get('is_deleted', data.get('is_deleted', False)),  # allow update of is_deleted items
+            'secs': int(self.request.DATA.get('secs', 0)),
         })
         comment = CommentSerializer(data, data=data)
 

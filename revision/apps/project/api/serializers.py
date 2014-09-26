@@ -32,11 +32,14 @@ class CommentSerializer(serializers.Serializer):
     comment_by = serializers.CharField()
     date_of = CustomDateTimeField(default=_get_date_now, read_only=True, format='iso-8601')
     progress = serializers.DecimalField(max_digits=10, decimal_places=6)
+
+    secs = serializers.IntegerField(required=False, default=3)
+
     is_deleted = serializers.BooleanField(default=False)
 
 
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
-    comments = serializers.Field(source='comments_by_id_reversed')
+    comments = serializers.SerializerMethodField('get_comments')
     video_type = serializers.Field(source='display_type')
     video_subtitles_url = serializers.Field(source='subtitles_url')
     video_view_url = serializers.Field(source='get_absolute_url')
@@ -46,6 +49,9 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
         model = Video
         lookup_field = 'slug'
         exclude = ('data',)
+
+    def get_comments(self, obj):
+        return CommentSerializer(obj.comments_by_id_reversed, many=True).data
 
 
 class VideoSerializerLite(VideoSerializer):

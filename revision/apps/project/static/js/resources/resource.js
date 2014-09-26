@@ -32,6 +32,9 @@ var Resource = {
   detail: function () {
     return null;
   },
+  update: function () {
+    return null;
+  },
   destroy: function () {
     return null;
   },

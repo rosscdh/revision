@@ -2,8 +2,10 @@
 
 {% block page_title %}My Test Project{% endblock %}
 
-{% block jumbo %}
+{% block content %}
 {% csrf_token %}
+<br/><br/>
+<h2>{{ project.name }}:Chronicle</h2>
 <div id="project-detail-chronicle"></div>
 {% endblock %}
 
@@ -17,8 +19,9 @@
 .control-type-selector {
     width:120px;
 }
-.input-lg[name=comment] {
+.input-lg[name=q] {
     height:70px;
+    width:440px;
 }
 </style>
 {% endblock css %}

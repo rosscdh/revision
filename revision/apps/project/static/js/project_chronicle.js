@@ -79,7 +79,9 @@ var ChronicleCommentsBase = React.createClass({displayName: 'ChronicleCommentsBa
     render: function () {
         var searchForm = SearchForm({onSearch: this.onSearch})
         var flowPlayer = FlowPlayerView({video: this.state.video})
+        var show_comment_form = false;
         var commentsDetail = CommentListView({comments: this.state.comments, 
+                                              show_form: show_comment_form, 
                                               onVideoUpdate: this.onVideoUpdate, 
                                               onSeekTo: this.onSeekTo})
         return (React.DOM.div({className: "row"}, 

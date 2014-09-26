@@ -53,7 +53,10 @@ class VideoSubtitleView(ProjectDetailView):
         for i, s in enumerate(subtitles):
             progress = float(s.get('progress'))
             subtitle_start_progress = Video.secs_to_stamp(progress)
-            subtitle_end_progress = Video.secs_to_stamp(progress + 4)  # delay 4 seconds @TODO make this configurable
+
+            delay_secs = int(s.get('secs', 4))
+            
+            subtitle_end_progress = Video.secs_to_stamp(progress + delay_secs)  # delay 4 seconds @TODO make this configurable
             subtitles[i]['subtitle_range'] = mark_safe('%s --> %s' % (subtitle_start_progress, subtitle_end_progress))
 
         return subtitles
