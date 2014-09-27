@@ -9,16 +9,22 @@ var TitleView = React.createClass({
     render: function () {
         var name = this.props.project.name;
         var started = this.props.project.date_created;
-        var versionNodes = this.props.project.versions.map(function ( version, index ) {
-            return <VersionView key={index} version={version} />
-        });
-        return (<div className="row">
-            <h2>{name} <small>started: {started}</small></h2>
-            <h4>Version: <small>{versionNodes}</small></h4>
-            <h4><a href={this.props.links.chronicle} className="btn btn-primary pull-right">Chronicle</a></h4>
-            <br/>
-            <br/>
-        </div>);
+        if ( this.props.project.versions.length === 0 ) {
+            return (<span>
+                &nbsp;
+            </span>);
+        } else {
+            var versionNodes = this.props.project.versions.map(function ( version, index ) {
+                return <VersionView key={index} version={version} />
+            });
+            return (<div className="row">
+                <h2>{name} <small>started: {started}</small></h2>
+                <h4>Version: <small>{versionNodes}</small></h4>
+                <h4><a href={this.props.links.chronicle} className="btn btn-primary pull-right">Chronicle</a></h4>
+                <br/>
+                <br/>
+            </div>);
+        }
     }
 });
 
@@ -61,8 +67,6 @@ var BaseProjectDetailView = React.createClass({
         }
     },
     handleVideoUpdate: function ( video ) {
-        console.log(video);
-        console.log(video.comments);
         this.setState({
             'video': video,
             'comments': video.comments || [],
@@ -165,7 +169,15 @@ var BaseProjectDetailView = React.createClass({
         });
 
     },
-    render: function () {
+    renderNoVideoUploaderPad: function () {
+        return (<div className="jumbotron">
+                <div className="container">
+                    <h2>Upload first video<br/><small>Please provide the first video for this project</small></h2>
+                    ...
+                </div>
+            </div>);
+    },
+    renderVideoPlayer: function () {
         var createVideoView = <CreateVideoView />
         var formVideoModal = <VideoFormModal onVideoUpdate={this.handleVideoUpdate} />
 
@@ -201,7 +213,14 @@ var BaseProjectDetailView = React.createClass({
             </div>
             {formVideoModal}
         </span>);
-    }
+    },
+    render: function () {
+        if ( this.state.project.versions.length > 0 ) {
+            return this.renderVideoPlayer();
+        } else {
+            return this.renderNoVideoUploaderPad();
+        }
+    },
 });
 
 

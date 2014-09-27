@@ -9,16 +9,22 @@ var TitleView = React.createClass({displayName: 'TitleView',
     render: function () {
         var name = this.props.project.name;
         var started = this.props.project.date_created;
-        var versionNodes = this.props.project.versions.map(function ( version, index ) {
-            return VersionView({key: index, version: version})
-        });
-        return (React.DOM.div({className: "row"}, 
-            React.DOM.h2(null, name, " ", React.DOM.small(null, "started: ", started)), 
-            React.DOM.h4(null, "Version: ", React.DOM.small(null, versionNodes)), 
-            React.DOM.h4(null, React.DOM.a({href: this.props.links.chronicle, className: "btn btn-primary pull-right"}, "Chronicle")), 
-            React.DOM.br(null), 
-            React.DOM.br(null)
-        ));
+        if ( this.props.project.versions.length === 0 ) {
+            return (React.DOM.span(null, 
+                " "
+            ));
+        } else {
+            var versionNodes = this.props.project.versions.map(function ( version, index ) {
+                return VersionView({key: index, version: version})
+            });
+            return (React.DOM.div({className: "row"}, 
+                React.DOM.h2(null, name, " ", React.DOM.small(null, "started: ", started)), 
+                React.DOM.h4(null, "Version: ", React.DOM.small(null, versionNodes)), 
+                React.DOM.h4(null, React.DOM.a({href: this.props.links.chronicle, className: "btn btn-primary pull-right"}, "Chronicle")), 
+                React.DOM.br(null), 
+                React.DOM.br(null)
+            ));
+        }
     }
 });
 
@@ -61,8 +67,6 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
         }
     },
     handleVideoUpdate: function ( video ) {
-        console.log(video);
-        console.log(video.comments);
         this.setState({
             'video': video,
             'comments': video.comments || [],
@@ -165,7 +169,15 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
         });
 
     },
-    render: function () {
+    renderNoVideoUploaderPad: function () {
+        return (React.DOM.div({className: "jumbotron"}, 
+                React.DOM.div({className: "container"}, 
+                    React.DOM.h2(null, "Upload first video", React.DOM.br(null), React.DOM.small(null, "Please provide the first video for this project")), 
+                    "..."
+                )
+            ));
+    },
+    renderVideoPlayer: function () {
         var createVideoView = CreateVideoView(null)
         var formVideoModal = VideoFormModal({onVideoUpdate: this.handleVideoUpdate})
 
@@ -201,7 +213,14 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             ), 
             formVideoModal
         ));
-    }
+    },
+    render: function () {
+        if ( this.state.project.versions.length > 0 ) {
+            return this.renderVideoPlayer();
+        } else {
+            return this.renderNoVideoUploaderPad();
+        }
+    },
 });
 
 
