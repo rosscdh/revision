@@ -69,6 +69,11 @@ class ProjectUploadVideoEndpoint(generics.CreateAPIView):
 
         return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
 
+    def post_save(self, obj, created):
+        obj.video_url = obj.video.url
+        obj.save(update_fields=['video_url'])
+        return super(ProjectUploadVideoEndpoint, self).post_save(obj, created=created)
+
 
 class VideoViewSet(viewsets.ModelViewSet):
     """
