@@ -19,6 +19,7 @@ unipath
 dj-database-url
 dj-email-url
 django-cache-url
+decorator
 
 # Database
 psycopg2
@@ -39,6 +40,7 @@ raven
 
 # Storage
 django-storages
+boto
 
 # misc
 PyReact

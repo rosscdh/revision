@@ -170,10 +170,11 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
 
     },
     renderNoVideoUploaderPad: function () {
+        var VideoUploader = VideoUploaderView({project: this.state.project})
         return (React.DOM.div({className: "jumbotron"}, 
                 React.DOM.div({className: "container"}, 
                     React.DOM.h2(null, "Upload first video", React.DOM.br(null), React.DOM.small(null, "Please provide the first video for this project")), 
-                    "..."
+                    VideoUploader
                 )
             ));
     },

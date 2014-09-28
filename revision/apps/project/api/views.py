@@ -4,6 +4,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status as http_status
 
+from revision.decorators import (mutable_request, valid_request_filesize)
+
 from revision.apps.client.models import Client
 
 from ..models import (Project,
@@ -32,6 +34,40 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def post_save(self, obj, created):
         collaborator, is_new = ProjectCollaborators.objects.get_or_create(user=self.request.user, project=obj)
         return super(ProjectViewSet, self).post_save(obj, created=created)
+
+
+class ProjectUploadVideoEndpoint(generics.CreateAPIView):
+    """
+    Upload a video to a project
+    """
+    queryset = Project.objects.all()
+    serializer_class = VideoSerializer
+    lookup_field = 'slug'
+
+    @mutable_request
+    @valid_request_filesize
+    def create(self, request, **kwargs):
+        self.project = self.get_object()
+        project = ProjectSerializer(self.project).data
+        request_data = request.DATA.copy()
+
+        request_data.update({
+            'project': project.get('url'),
+            'name': request.FILES.get('video').name,
+        })
+
+        serializer = self.get_serializer(data=request_data, files=request.FILES)
+
+        if serializer.is_valid():
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=True)
+            self.post_save(self.object, created=True)
+
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=http_status.HTTP_201_CREATED,
+                            headers=headers)
+
+        return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
 
 
 class VideoViewSet(viewsets.ModelViewSet):

@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 
 HOTELENERGIEBALLMOTERSCHADE.mp4
+debug_toolbar_user_panel
 
 local_settings.py
 

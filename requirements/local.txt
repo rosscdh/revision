@@ -1,8 +1,11 @@
 -r base.txt
 
-django-debug-toolbar
+#django-debug-toolbar
+-e git+https://github.com/django-debug-toolbar/django-debug-toolbar.git#egg=django-debug-toolbar
 django-debug-toolbar-template-timings
--e git+https://github.com/playfire/django-debug-toolbar-user-panel.git@29a163dc985c4b173ead57b09b3cfdd6ca84e76f#egg=django_debug_toolbar_user_panel-dev
+#-e git+https://github.com/playfire/django-debug-toolbar-user-panel.git@29a163dc985c4b173ead57b09b3cfdd6ca84e76f#egg=django_debug_toolbar_user_panel-dev
+-e git+https://github.com/playfire/django-debug-toolbar-user-panel.git#egg=django-debug-toolbar-user-panel
+
 
 # testing
 coverage

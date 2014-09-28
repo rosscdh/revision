@@ -81,12 +81,17 @@ ul.versions{
   display: inline-block;
   padding:0px 5px;
 }
+.progress-bar{
+  width:0%;
+}
 </style>
+{% compressed_css 'uploader' %}
 {% endblock css %}
 
 {% block js %}
 
 {% compressed_js 'resources' %}
+{% compressed_js 'uploader' %}
 
 <script>
 'use strict';
@@ -101,6 +106,7 @@ var Video = {{ view.video_json|safe|default:'{}' }};
 
 var Links = {
   'chronicle': "{% url 'project:chronicle' slug=project.slug %}",
+  'upload_video': "{% url 'project_upload_video' slug=project.slug %}",
 };
 
 var User = {
@@ -115,11 +121,10 @@ var User = {
 CollaboratorResource.params.slug = Project.slug;
 VideoResource.params.video_slug = '{{ view.current_video.slug }}';
 CommentResource.params.video_slug = '{{ view.current_video.slug }}';
+
 </script>
 
 {% compressed_js 'project' %}
-
-
 {% endblock js %}
 
 {% block footer %}

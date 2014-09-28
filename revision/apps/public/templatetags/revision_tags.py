@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import template
 from django.conf import settings
+from django.db.utils import OperationalError
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
@@ -11,7 +12,13 @@ logger = logging.getLogger('django.request')
 
 register = template.Library()
 
-CURRENT_SITE = Site.objects.get(pk=settings.SITE_ID)
+try:
+    CURRENT_SITE = Site.objects.get(pk=settings.SITE_ID)
+except OperationalError:
+    """
+    Allow for no tables created yet when running syncdb
+    """
+    pass
 
 
 def _DOMAIN_WITH_END_SLASH():

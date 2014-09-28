@@ -134,8 +134,8 @@ DATABASES = {
 # }
 
 # Sessions
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
+# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# SESSION_CACHE_ALIAS = "default"
 
 # Email
 DEFAULT_FROM_EMAIL = env('FROM_EMAIL')
@@ -179,18 +179,18 @@ STATICFILES_FINDERS = (
     # 'pipeline.finders.CachedFileFinder',
 )
 
-# PIPELINE_CSS = {
-#   'core': {
-#         'source_filenames': (
-#             'css/bootstrap.css',
-#             'fonts/pe-7s/css/pe-icon-7-stroke.css',
-#         ),
-#         'output_filename': 'css/application.css',
-#         'extra_context': {
-#             'media': 'screen,projection',
-#         },
-#   }
-# }
+PIPELINE_CSS = {
+    'uploader': {
+        'source_filenames': (
+            'js/uploader/css/jquery.fileupload.css',
+        ),
+        'output_filename': 'js/dist/uploader.css',
+        'extra_context': {
+            'media': 'screen,projection',
+        },
+    }
+}
+
 PIPELINE_JS = {
     'react': {
         'source_filenames': (
@@ -237,6 +237,22 @@ PIPELINE_JS = {
             'js/project_chronicle.jsx',
         ),
         'output_filename': 'js/dist/chronicle.js',
+    },
+    'uploader': {
+        'source_filenames': (
+            'js/uploader/js/vendor/jquery.ui.widget.js',
+            'js/uploader/js/jquery.iframe-transport.js',
+            'js/uploader/js/jquery.fileupload.js',
+            # 'js/uploader/js/jquery.fileupload-process.js',
+            # 'js/uploader/js/jquery.fileupload-image.js',
+            # 'js/uploader/js/jquery.fileupload-audio.js',
+            # 'js/uploader/js/jquery.fileupload-video.js',
+            # 'js/uploader/js/jquery.fileupload-validate.js',
+            # 'js/uploader/js/jquery.fileupload-ui.js',
+            # 'js/uploader/js/jquery.fileupload-jquery-ui.js',
+            'js/videouploader.jsx',
+        ),
+        'output_filename': 'js/dist/uploader.js',
     }
 }
 
@@ -324,7 +340,11 @@ REST_FRAMEWORK = {
 # AWS
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME", 'dev-revision')
+
+AWS_ACCESS_KEY_ID = 'AKIAILCDLSICVXLIOPKA'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'dev-revision'
 
 AWS_HEADERS = {
     'Cache-Control': 'max-age=86400',
