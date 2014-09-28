@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
+
 from rest_framework import viewsets
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status as http_status
+from rest_framework.renderers import StaticHTMLRenderer
 
 from revision.decorators import (mutable_request, valid_request_filesize)
 
@@ -14,6 +18,10 @@ from ..models import (Project,
 from .serializers import (ProjectSerializer,
                           VideoSerializer,
                           CommentSerializer,)
+
+import base64
+import hmac
+import sha
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -180,3 +188,16 @@ class VideoCommentDetailEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
         else:
             return Response(status=http_status.HTTP_400_BAD_REQUEST, data={'errors': comment.errors})
+
+
+class S3SignatureEndpoint(APIView):
+    """
+    Provide a signed key for the sending object
+    """
+    renderer_classes = (StaticHTMLRenderer,)
+
+    def get(self, request, **kwargs):
+        to_sign = str(request.GET.get('to_sign'))
+        signature = base64.b64encode(hmac.new(settings.AWS_SECRET_ACCESS_KEY, to_sign, sha).digest())
+
+        return Response(signature, status=http_status.HTTP_200_OK)

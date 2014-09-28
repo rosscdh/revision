@@ -170,7 +170,8 @@ var BaseProjectDetailView = React.createClass({
 
     },
     renderNoVideoUploaderPad: function () {
-        var VideoUploader = <VideoUploaderView project={this.state.project} />
+        var VideoUploader = <VideoUploaderView uploader_config={UploaderConfig}
+                                               project={this.state.project} />
         return (<div className="jumbotron">
                 <div className="container">
                     <h2>Upload first video<br/><small>Please provide the first video for this project</small></h2>

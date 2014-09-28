@@ -1,4 +1,4 @@
-{% extends 'project/base.html' %}{% load compressed %}
+{% extends 'project/base.html' %}{% load compressed revision_tags %}
 
 {% block page_title %}{{ project.name }}{% endblock %}
 
@@ -18,7 +18,7 @@
     </div>
 
 </div>
-
+HERe:{{ GLOBALS }}
 <div id="modal-keyboard-help" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modal-keyboard-help" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -107,6 +107,14 @@ var Video = {{ view.video_json|safe|default:'{}' }};
 var Links = {
   'chronicle': "{% url 'project:chronicle' slug=project.slug %}",
   'upload_video': "{% url 'project_upload_video' slug=project.slug %}",
+};
+
+var UploaderConfig = {
+   signerUrl: "{% url 's3signature' %}",
+   aws_key: '{{ AWS_ACCESS_KEY_ID }}',
+   bucket: '{{ AWS_STORAGE_BUCKET_NAME }}',
+   aws_url: 'https://s3-eu-west-1.amazonaws.com',
+   aws_path: 'uploaded_video/'
 };
 
 var User = {

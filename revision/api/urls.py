@@ -5,7 +5,8 @@ from rest_framework import routers
 
 from revision.apps.project.api.views import (ProjectViewSet,
                                              VideoViewSet,)
-from revision.apps.project.api.views import (ProjectUploadVideoEndpoint,
+from revision.apps.project.api.views import (S3SignatureEndpoint,
+                                             ProjectUploadVideoEndpoint,
                                              VideoCommentsEndpoint,
                                              VideoCommentDetailEndpoint,)
 from revision.apps.me.api.views import (UserProfileViewSet,
@@ -22,6 +23,8 @@ router.register(r'videos', VideoViewSet)
 
 
 urlpatterns = patterns('',
+
+    url(r'^sign/s3/$', S3SignatureEndpoint.as_view(), name='s3signature'),
 
     url(r'^projects/(?P<slug>[\d\w-]+)/collaborators/((?P<email>.*)/)?$', CollaboratorEndpoint.as_view(), name='project_collaborators'),
     url(r'^projects/(?P<slug>[\d\w-]+)/videos/upload/$', ProjectUploadVideoEndpoint.as_view(), name='project_upload_video'),

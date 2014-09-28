@@ -2,68 +2,41 @@
 'use strict';
 
 var VideoUploaderView = React.createClass({displayName: 'VideoUploaderView',
+    getInitialState: function() {
+        return {
+            'uploader': new Evaporate(this.props.uploader_config),
+        }
+    },
     componentDidMount: function () {
         var self = this;
+    },
+    handleNewFile: function ( event ) {
+        event.preventDefault();
 
-        // var uploadButton = $('<button/>')
-        //     .addClass('btn btn-primary')
-        //     .prop('disabled', true)
-        //     .text('Processing...')
-        //     .on('click', function () {
-        //         var $this = $(this),
-        //             data = $this.data();
-        //         $this
-        //             .off('click')
-        //             .text('Abort')
-        //             .on('click', function () {
-        //                 $this.remove();
-        //                 data.abort();
-        //             });
-        //         data.submit().always(function () {
-        //             $this.remove();
-        //         });
-        //     });
+        var self = this;
+        var config = this.props.uploader_config;
+        var file = event.target.files[0];
 
-        $(this.refs.fileupload.getDOMNode()).fileupload({
-            url: Links.upload_video,
-            dataType: 'json',
-            //autoUpload: true,
-            acceptFileTypes: /(\.|\/)(avi|mov|ogg|mp4)$/i,
-            maxFileSize: 300000000, // 300 MB
-            // Enable image resizing, except for Android and Opera,
-            // which actually support image resizing, but fail to
-            // send Blob objects via XHR requests:
-            // disableImageResize: /Android(?!.*Chrome)|Opera/
-            //     .test(window.navigator.userAgent),
-            // previewMaxWidth: 100,
-            // previewMaxHeight: 100,
-            // previewCrop: true
-            formData: function (form) {
-                return $.merge(form.serializeArray(), [{"name": "csrfmiddlewaretoken", "value": $('input[name=csrfmiddlewaretoken]').val()}]);
+        self.state.uploader.add({
+            name: config.aws_path + file.name,
+            file: file,
+            progress: function ( progress ) {
+                // console.log('progress' + progress);
+                var percent = Math.round(progress * 100, 2)
+                $('div#progress .progress-bar').width(percent+'%');
             },
-        }).on('fileuploadadd', function (e, data) {
-
-        }).on('fileuploadprocessalways', function (e, data) {
-
-        }).on('fileuploadprogressall', function (e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress .progress-bar').css(
-                'width',
-                progress + '%'
-            );
-        }).on('fileuploaddone', function (e, data) {
-
-        }).on('fileuploadfail', function (e, data) {
+            complete: function () {
+console.log('complete');
+            },
         });
-        // }).prop('disabled', !$.support.fileInput)
-        //     .parent().addClass($.support.fileInput ? undefined : 'disabled');
     },
     render: function () {
+        console.log(this.state.uploader)
         return (React.DOM.span(null, 
             React.DOM.span({className: "btn btn-success fileinput-button"}, 
                 React.DOM.i({className: "glyphicon glyphicon-plus"}), 
                 React.DOM.span(null, "Add file"), 
-                React.DOM.input({id: "fileupload", data: "blueimp-fileupload", ref: "fileupload", type: "file", name: "video"})
+                React.DOM.input({id: "fileupload", onChange: this.handleNewFile, ref: "fileupload", type: "file", name: "video"})
             ), 
             React.DOM.br(null), 
             React.DOM.br(null), 
