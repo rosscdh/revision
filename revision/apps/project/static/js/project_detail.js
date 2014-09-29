@@ -14,7 +14,10 @@ var TitleView = React.createClass({displayName: 'TitleView',
                 " "
             ));
         } else {
+            var num_versions = this.props.project.versions.length;
             var versionNodes = this.props.project.versions.map(function ( version, index ) {
+                // set the v object
+                version.ver = 'v{version}'.assign({'version': num_versions - index});
                 return VersionView({key: index, version: version})
             });
             return (React.DOM.div({className: "row"}, 
@@ -36,7 +39,7 @@ var VersionView = React.createClass({displayName: 'VersionView',
         }
 
         return (React.DOM.ul({className: "versions list-unstyled"}, 
-                React.DOM.li(null, React.DOM.a({href: this.props.version.url}, React.DOM.span({className: classNames}, this.props.version.name)))
+                React.DOM.li(null, React.DOM.a({href: this.props.version.url}, React.DOM.span({className: classNames}, this.props.version.name, " (", this.props.version.ver, ")")))
             ));
     }
 });

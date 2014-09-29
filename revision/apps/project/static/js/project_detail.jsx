@@ -14,7 +14,10 @@ var TitleView = React.createClass({
                 &nbsp;
             </span>);
         } else {
+            var num_versions = this.props.project.versions.length;
             var versionNodes = this.props.project.versions.map(function ( version, index ) {
+                // set the v object
+                version.ver = 'v{version}'.assign({'version': num_versions - index});
                 return <VersionView key={index} version={version} />
             });
             return (<div className="row">
@@ -36,7 +39,7 @@ var VersionView = React.createClass({
         }
 
         return (<ul className="versions list-unstyled">
-                <li><a href={this.props.version.url}><span className={classNames}>{this.props.version.name}</span></a></li>
+                <li><a href={this.props.version.url}><span className={classNames}>{this.props.version.name} ({this.props.version.ver})</span></a></li>
             </ul>);
     }
 });
