@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from rest_framework import serializers
 
-from revision.apps.project.models import ProjectCollaborators
+from revision.apps.project.models import ProjectCollaborator
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,4 +22,4 @@ class CollaboratorSerializer(serializers.Serializer):
     user_class = serializers.Field(source='role_name')
 
     class Meta:
-        model = ProjectCollaborators
+        model = ProjectCollaborator

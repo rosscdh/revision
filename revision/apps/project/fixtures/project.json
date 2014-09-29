@@ -28,7 +28,7 @@
       "data": {},
       "user": 1
     },
-    "model": "project.projectcollaborators",
+    "model": "project.projectcollaborator",
     "pk": 1
   },
   {

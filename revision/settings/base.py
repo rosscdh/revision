@@ -138,6 +138,9 @@ DATABASES = {
 # SESSION_CACHE_ALIAS = "default"
 
 # Email
+DEFAULT_FROM = (
+ ("Revision Support", 'support@revision.com'),
+)
 #DEFAULT_FROM_EMAIL = env('FROM_EMAIL')
 DEFAULT_FROM_EMAIL = "no-reply@example.com"
 

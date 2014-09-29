@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='ProjectCollaborators',
+            name='ProjectCollaborator',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('is_project_owner', models.BooleanField(default=False, db_index=True)),
@@ -65,7 +65,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='collaborators',
-            field=models.ManyToManyField(to=settings.AUTH_USER_MODEL, through='project.ProjectCollaborators'),
+            field=models.ManyToManyField(to=settings.AUTH_USER_MODEL, through='project.ProjectCollaborator'),
             preserve_default=True,
         ),
     ]

@@ -60,7 +60,7 @@ ROLES = get_namedtuple_choices('ROLES', (
 ))
 
 
-class ProjectCollaborators(models.Model):
+class ProjectCollaborator(models.Model):
     """
     Model to store the Users permissions with regards to a project
     """
@@ -102,7 +102,7 @@ class ProjectCollaborators(models.Model):
     @permissions.setter
     def permissions(self, value):
         if type(value) not in [dict] and len(value.keys()) > 0:
-            raise Exception('ProjectCollaborators.permissions must be a dict of permissions %s' %
+            raise Exception('ProjectCollaborator.permissions must be a dict of permissions %s' %
                             self.default_permissions())
         self.data['permissions'] = self.clean_permissions(**value)
 
@@ -119,6 +119,9 @@ class ProjectCollaborators(models.Model):
                 kwargs_to_test.pop(permission)
                 # @TODO ? need to check for boolean value?
         return kwargs_to_test
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.user.get_full_name(), self.project.name)
 
     def default_permissions(self, user_class=None):
         """

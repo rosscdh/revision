@@ -14,7 +14,7 @@ from revision.apps.client.models import Client
 
 from ..models import (Project,
                       Video,
-                      ProjectCollaborators)
+                      ProjectCollaborator)
 from .serializers import (ProjectSerializer,
                           VideoSerializer,
                           CommentSerializer,)
@@ -41,7 +41,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return super(ProjectViewSet, self).pre_save(obj=obj)
 
     def post_save(self, obj, created):
-        collaborator, is_new = ProjectCollaborators.objects.get_or_create(user=self.request.user, project=obj)
+        collaborator, is_new = ProjectCollaborator.objects.get_or_create(user=self.request.user, project=obj)
         return super(ProjectViewSet, self).post_save(obj, created=created)
 
 

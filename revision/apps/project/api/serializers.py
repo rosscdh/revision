@@ -87,4 +87,4 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         return obj.get_absolute_url()
 
     def get_collaborators(self, obj):
-        return CollaboratorSerializer(obj.projectcollaborators_set.all(), many=True).data
+        return CollaboratorSerializer(obj.projectcollaborator_set.all(), many=True).data

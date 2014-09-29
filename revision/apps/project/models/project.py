@@ -15,12 +15,15 @@ class Project(models.Model):
                                         auto_now_add=True,
                                         db_index=True)
     collaborators = models.ManyToManyField('auth.User',
-                                           through='project.ProjectCollaborators',
+                                           through='project.ProjectCollaborator',
                                            through_fields=('project', 'user'))
 
     client = models.ForeignKey('client.Client', null=True, blank=True)
 
     data = JSONField(default={})
+
+    def __unicode__(self):
+        return u'%s' % self.name
 
     def get_absolute_url(self):
         return reverse_lazy('project:detail', kwargs={'slug': self.slug})

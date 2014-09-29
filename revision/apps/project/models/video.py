@@ -77,6 +77,9 @@ class Video(VideoCommentsMixin,
     def display_type(self):
         return self.VIDEO_TYPES.get_desc_by_value(self.video_type)
 
+    def __unicode__(self):
+        return u'%s' % self.name
+
     def subtitles_url(self):
         return reverse_lazy('project:video_subtitles_url', kwargs={'slug': self.project.slug, 'version_slug': self.slug})
 

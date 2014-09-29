@@ -85,6 +85,6 @@ class EnsureCollaboratorService(object):
             if update_fields:
                 user.save(update_fields=update_fields)
 
-        collaborator, collaborator_is_new = self.project.projectcollaborators_set.get_or_create(project=self.project, user=user)
+        collaborator, collaborator_is_new = self.project.projectcollaborator_set.get_or_create(project=self.project, user=user)
 
         return is_new, user, profile, collaborator, collaborator_is_new
