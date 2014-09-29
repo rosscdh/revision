@@ -59,6 +59,7 @@ var BaseProjectDetailView = React.createClass({
             'project': Project || {},
             'comments': Video.comments || [],
             'current_type': 'Comment',
+            'messages': [],
             'progress': 0,
             'flowplayer': null,
         }
@@ -176,8 +177,20 @@ var BaseProjectDetailView = React.createClass({
                 </div>
             </div>);
     },
+    onMessage: function ( messages ) {
+        var self = this;
+        this.setState({
+            'messages': messages,
+        });
+        // reset messages after a time period
+        // $.delay( 5200, function ( a ) {
+        //     $('.messages').fadeOut( 'slow' );
+        // });
+    },
     renderVideoPlayer: function () {
-        var createVideoView = <CreateVideoView project={this.state.project} />
+        var messagesView = <Messages messages={this.state.messages} />
+
+        var createVideoView = <CreateVideoView onMessage={this.onMessage} project={this.state.project} />
 
         var Title = <TitleView project={this.state.project}
                                links={this.state.links} />
@@ -198,6 +211,7 @@ var BaseProjectDetailView = React.createClass({
                 <div className="container">
                     {Title}
                     {createVideoView}
+                    {messagesView}
                     <div className="row">
                         <div className="col-xs-8">
                         {FlowPlayer}

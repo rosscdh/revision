@@ -31,7 +31,12 @@ var VideoUploaderView = React.createClass({displayName: 'VideoUploaderView',
         console.log(file);
 
         if ( this.validVideoFile( file ) !== true ) {
-            alert('Error');
+
+            this.props.onMessage([{
+                'message': 'Could not upload {file_name} because its not a recognised video file. It appears to be {type} but needs to be video/mp4|mov|avi.'.assign({'file_name': file.name, 'type': file.type}),
+                'type': 'warning'
+            }]);
+
         } else { // validVideoFile
 
             var progress = $('div#progress');

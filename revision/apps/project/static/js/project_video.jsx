@@ -17,7 +17,7 @@ var CreateVideoView = React.createClass({
         window.location = Links.chronicle;
     },
     render: function () {
-        var VideoUploader = <VideoUploaderView uploader_config={UploaderConfig}
+        var VideoUploader = <VideoUploaderView onMessage={this.props.onMessage} uploader_config={UploaderConfig}
                                                project={this.props.project} />
         return (<span>
             <span onClick={this.handleChronicleClick} className="btn btn-primary btn-small pull-right">
