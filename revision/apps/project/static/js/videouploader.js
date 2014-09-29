@@ -24,6 +24,8 @@ var VideoUploaderView = React.createClass({displayName: 'VideoUploaderView',
     handleNewFile: function ( event ) {
         event.preventDefault();
 
+        this.props.onMessage( [] ); // reset
+
         var self = this;
         var config = this.props.uploader_config;
         var file = event.target.files[0];
