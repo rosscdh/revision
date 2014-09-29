@@ -10,7 +10,6 @@ Vagrant.configure("2") do |config|
     end
     config.vm.provider "parallels" do |p, override|
         override.vm.box = 'parallels/ubuntu-12.04'
-        p.update_guest_tools = true
         p.memory = 1024
     end
 end
