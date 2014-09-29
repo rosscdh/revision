@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import template
 from django.conf import settings
-from django.db.utils import OperationalError
+from django.db.utils import OperationalError, ProgrammingError
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
@@ -14,7 +14,7 @@ register = template.Library()
 
 try:
     CURRENT_SITE = Site.objects.get(pk=settings.SITE_ID)
-except OperationalError:
+except (OperationalError, ProgrammingError):
     """
     Allow for no tables created yet when running syncdb
     """
