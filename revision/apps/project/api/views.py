@@ -64,7 +64,6 @@ class ProjectUploadVideoEndpoint(generics.CreateAPIView):
             'project': project.get('url'),
             'video_url': urllib2.unquote(request_data.get('video_url'))
         })
-
         serializer = self.get_serializer(data=request_data, files=request.FILES)
 
         if serializer.is_valid():
@@ -78,10 +77,19 @@ class ProjectUploadVideoEndpoint(generics.CreateAPIView):
 
         return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
 
-    # def post_save(self, obj, created):
-    #     obj.video_url = obj.video.url
-    #     obj.save(update_fields=['video_url'])
-    #     return super(ProjectUploadVideoEndpoint, self).post_save(obj, created=created)
+    def post_save(self, obj, created):
+        """
+        extract just the s3 key name from the url
+        """
+        # arse into parts
+        video_url_parts = urllib2.urlparse.urlparse(obj.video_url)
+        # remove the bucket name
+        video_url_path = video_url_parts.path.replace('/%s/' % settings.AWS_STORAGE_BUCKET_NAME, '')
+
+        self.object.video = video_url_path  # save the s3 url path to file object
+        obj.save(update_fields=['video'])
+
+        return super(ProjectUploadVideoEndpoint, self).post_save(obj, created=created)
 
 
 class VideoViewSet(viewsets.ModelViewSet):
