@@ -13,4 +13,8 @@ var VideoResource = Resource.createClass({
         var uri = this.base_url();
         return this.process( uri, 'GET' );
     },
+    destroy: function ( pk ) {
+        var uri = this.base_url({video_slug: pk });
+        return this.process( uri, 'DELETE', {'is_deleted': true});
+    },
 });

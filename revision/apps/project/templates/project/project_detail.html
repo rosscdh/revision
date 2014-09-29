@@ -12,13 +12,13 @@
     <div id="project-detail-collaborators" class="col-md-4"></div>
 
     <div class="col-md-4">
-      <h2>Save</h2>
+      <h2>Export</h2>
       <p>Export the project to dropbox, this will export the video, a Final Cut Pro XML file as well as an activity stream document (activity.html) which allows you to search comments</p>
       <p><a class="btn btn-primary" href="#" role="button">Export &raquo;</a></p>
     </div>
 
 </div>
-HERe:{{ GLOBALS }}
+
 <div id="modal-keyboard-help" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modal-keyboard-help" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -77,12 +77,42 @@ HERe:{{ GLOBALS }}
 .input-lg[name=comment] {
     height:70px;
 }
+div.comment-list{
+  background-color:#fff;
+  overflow-y: scroll;
+  height:515px;
+}
 ul.versions{
   display: inline-block;
   padding:0px 5px;
 }
 .progress-bar{
   width:0%;
+}
+/*Blue imp*/
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+}
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+}
+
+/* Fixes for IE < 8 */
+@media screen\9 {
+  .fileinput-button input {
+    filter: alpha(opacity=0);
+    font-size: 100%;
+    height: 100%;
+  }
 }
 </style>
 {% compressed_css 'uploader' %}
@@ -126,7 +156,7 @@ var User = {
 /**
 * Setup resource slugs
 **/
-CollaboratorResource.params.slug = Project.slug;
+ProjectVideoResource.params.slug = CollaboratorResource.params.slug = Project.slug;
 VideoResource.params.video_slug = '{{ view.current_video.slug }}';
 CommentResource.params.video_slug = '{{ view.current_video.slug }}';
 

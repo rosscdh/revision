@@ -19,10 +19,7 @@ var TitleView = React.createClass({displayName: 'TitleView',
             });
             return (React.DOM.div({className: "row"}, 
                 React.DOM.h2(null, name, " ", React.DOM.small(null, "started: ", started)), 
-                React.DOM.h4(null, "Version: ", React.DOM.small(null, versionNodes)), 
-                React.DOM.h4(null, React.DOM.a({href: this.props.links.chronicle, className: "btn btn-primary pull-right"}, "Chronicle")), 
-                React.DOM.br(null), 
-                React.DOM.br(null)
+                React.DOM.h4(null, "Version: ", React.DOM.small(null, versionNodes))
             ));
         }
     }
@@ -180,8 +177,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             ));
     },
     renderVideoPlayer: function () {
-        var createVideoView = CreateVideoView(null)
-        var formVideoModal = VideoFormModal({onVideoUpdate: this.handleVideoUpdate})
+        var createVideoView = CreateVideoView({project: this.state.project})
 
         var Title = TitleView({project: this.state.project, 
                                links: this.state.links})
@@ -200,20 +196,19 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
         return (React.DOM.span(null, 
             React.DOM.div({className: "jumbotron"}, 
                 React.DOM.div({className: "container"}, 
-                    createVideoView, 
                     Title, 
-                    FlowPlayer, 
+                    createVideoView, 
                     React.DOM.div({className: "row"}, 
+                        React.DOM.div({className: "col-xs-8"}, 
+                        FlowPlayer, 
                         CommentForm
+                        ), 
+                        React.DOM.div({className: "col-xs-4 comment-list"}, 
+                            CommentList
+                        )
                     )
                 )
-            ), 
-            React.DOM.div({className: "container"}, 
-                React.DOM.div({className: "row"}, 
-                    CommentList
-                )
-            ), 
-            formVideoModal
+            )
         ));
     },
     render: function () {

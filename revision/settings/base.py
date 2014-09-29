@@ -138,7 +138,8 @@ DATABASES = {
 # SESSION_CACHE_ALIAS = "default"
 
 # Email
-DEFAULT_FROM_EMAIL = env('FROM_EMAIL')
+#DEFAULT_FROM_EMAIL = env('FROM_EMAIL')
+DEFAULT_FROM_EMAIL = "no-reply@example.com"
 
 email_config = dj_email_url.config()
 EMAIL_FILE_PATH = email_config['EMAIL_FILE_PATH']

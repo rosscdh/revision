@@ -19,6 +19,7 @@ from .serializers import (ProjectSerializer,
                           VideoSerializer,
                           CommentSerializer,)
 
+import urllib2
 import base64
 import hmac
 import sha
@@ -61,7 +62,7 @@ class ProjectUploadVideoEndpoint(generics.CreateAPIView):
 
         request_data.update({
             'project': project.get('url'),
-            'name': request.FILES.get('video').name,
+            'video_url': urllib2.unquote(request_data.get('video_url'))
         })
 
         serializer = self.get_serializer(data=request_data, files=request.FILES)
@@ -77,10 +78,10 @@ class ProjectUploadVideoEndpoint(generics.CreateAPIView):
 
         return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
 
-    def post_save(self, obj, created):
-        obj.video_url = obj.video.url
-        obj.save(update_fields=['video_url'])
-        return super(ProjectUploadVideoEndpoint, self).post_save(obj, created=created)
+    # def post_save(self, obj, created):
+    #     obj.video_url = obj.video.url
+    #     obj.save(update_fields=['video_url'])
+    #     return super(ProjectUploadVideoEndpoint, self).post_save(obj, created=created)
 
 
 class VideoViewSet(viewsets.ModelViewSet):

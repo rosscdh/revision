@@ -23,3 +23,7 @@ def ensure_project_slug(sender, instance, **kwargs):
             final_slug = slugify(slug)
 
         instance.slug = final_slug
+
+
+def transcode_original_video(sender, instance, **kwargs):
+    pass

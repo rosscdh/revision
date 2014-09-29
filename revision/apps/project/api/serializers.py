@@ -39,11 +39,12 @@ class CommentSerializer(serializers.Serializer):
 
 
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
+    slug = serializers.Field(source='slug')
     comments = serializers.SerializerMethodField('get_comments')
     video_type = serializers.Field(source='display_type')
     video_subtitles_url = serializers.Field(source='subtitles_url')
     video_view_url = serializers.Field(source='get_absolute_url')
-    video_url = serializers.Field(source='video_url')
+    video_url = serializers.URLField()
 
     class Meta:
         model = Video
@@ -79,7 +80,7 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_client(self, obj):
         return {
-            'name': 'Client Name here'
+            'name': obj.client.name
         }
 
     def get_detail_url(self, obj):

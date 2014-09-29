@@ -20,9 +20,6 @@ var TitleView = React.createClass({
             return (<div className="row">
                 <h2>{name} <small>started: {started}</small></h2>
                 <h4>Version: <small>{versionNodes}</small></h4>
-                <h4><a href={this.props.links.chronicle} className="btn btn-primary pull-right">Chronicle</a></h4>
-                <br/>
-                <br/>
             </div>);
         }
     }
@@ -180,8 +177,7 @@ var BaseProjectDetailView = React.createClass({
             </div>);
     },
     renderVideoPlayer: function () {
-        var createVideoView = <CreateVideoView />
-        var formVideoModal = <VideoFormModal onVideoUpdate={this.handleVideoUpdate} />
+        var createVideoView = <CreateVideoView project={this.state.project} />
 
         var Title = <TitleView project={this.state.project}
                                links={this.state.links} />
@@ -200,20 +196,19 @@ var BaseProjectDetailView = React.createClass({
         return (<span>
             <div className="jumbotron">
                 <div className="container">
-                    {createVideoView}
                     {Title}
-                    {FlowPlayer}
+                    {createVideoView}
                     <div className="row">
+                        <div className="col-xs-8">
+                        {FlowPlayer}
                         {CommentForm}
+                        </div>
+                        <div className="col-xs-4 comment-list">
+                            {CommentList}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="container">
-                <div className="row">
-                    {CommentList}
-                </div>
-            </div>
-            {formVideoModal}
         </span>);
     },
     render: function () {
