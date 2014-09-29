@@ -8,7 +8,7 @@
 var TitleView = React.createClass({
     render: function () {
         var name = this.props.project.name;
-        var started = this.props.project.date_created;
+        var started = moment(this.props.project.date_created).format('LLL');;
         if ( this.props.project.versions.length === 0 ) {
             return (<span>
                 &nbsp;
@@ -21,7 +21,7 @@ var TitleView = React.createClass({
                 return <VersionView key={index} version={version} />
             });
             return (<div className="row">
-                <h2>{name} <small>started: {started}</small></h2>
+                <h2>{name} <small>:{started}</small></h2>
                 <h4>Version: <small>{versionNodes}</small></h4>
             </div>);
         }
@@ -31,7 +31,7 @@ var TitleView = React.createClass({
 // version indicator view
 var VersionView = React.createClass({
     render: function () {
-        var is_current = this.props.version.is_current;
+        var is_current = this.props.version.slug == Video.slug;
         var classNames = null;
 
         if ( is_current === true ) {

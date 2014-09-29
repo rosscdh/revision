@@ -59,7 +59,7 @@ class VideoSerializerLite(VideoSerializer):
     url = serializers.Field(source='get_absolute_url')
 
     class Meta(VideoSerializer.Meta):
-        fields = ('name', 'url', 'video_url', 'video_subtitles_url',)
+        fields = ('name', 'slug', 'url', 'video_url', 'video_subtitles_url',)
 
 
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
