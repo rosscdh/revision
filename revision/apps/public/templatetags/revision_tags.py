@@ -22,7 +22,7 @@ except (OperationalError, ProgrammingError):
 
 
 def _DOMAIN_WITH_END_SLASH():
-    return CURRENT_SITE.domain if CURRENT_SITE.domain[-1] == '/' else '%s/' % CURRENT_SITE.domain
+    return '%s/' % (CURRENT_SITE.domain.rstrip('/'))
 
 
 @register.simple_tag
