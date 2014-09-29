@@ -42,6 +42,9 @@ var Resource = {
   defer: function () {
 
     return this._promise.done( function ( data ) {
+        if ( data === undefined ) {
+          return {};
+        }
 
         if ( data.responseText === undefined ) {
 

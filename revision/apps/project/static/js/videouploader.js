@@ -2,72 +2,99 @@
 'use strict';
 
 var VideoUploaderView = React.createClass({displayName: 'VideoUploaderView',
+    getInitialState: function() {
+        return {
+            'uploader': new Evaporate(this.props.uploader_config),
+            'states': ['base', 'preview', 'uploading', 'canceled', 'done'],
+            'current_state': 'base',
+        }
+    },
     componentDidMount: function () {
         var self = this;
+    },
+    validVideoFile: function ( file ) {
+        if ( file !== undefined ) {
+            var types = file.type.split('/');
+            if ( types[0] === 'video' ) {
+                return true;
+            }
+        }
+        return false;
+    },
+    handleNewFile: function ( event ) {
+        event.preventDefault();
 
-        // var uploadButton = $('<button/>')
-        //     .addClass('btn btn-primary')
-        //     .prop('disabled', true)
-        //     .text('Processing...')
-        //     .on('click', function () {
-        //         var $this = $(this),
-        //             data = $this.data();
-        //         $this
-        //             .off('click')
-        //             .text('Abort')
-        //             .on('click', function () {
-        //                 $this.remove();
-        //                 data.abort();
-        //             });
-        //         data.submit().always(function () {
-        //             $this.remove();
-        //         });
-        //     });
+        var self = this;
+        var config = this.props.uploader_config;
+        var file = event.target.files[0];
 
-        $(this.refs.fileupload.getDOMNode()).fileupload({
-            url: Links.upload_video,
-            dataType: 'json',
-            //autoUpload: true,
-            acceptFileTypes: /(\.|\/)(avi|mov|ogg|mp4)$/i,
-            maxFileSize: 300000000, // 300 MB
-            // Enable image resizing, except for Android and Opera,
-            // which actually support image resizing, but fail to
-            // send Blob objects via XHR requests:
-            // disableImageResize: /Android(?!.*Chrome)|Opera/
-            //     .test(window.navigator.userAgent),
-            // previewMaxWidth: 100,
-            // previewMaxHeight: 100,
-            // previewCrop: true
-            formData: function (form) {
-                return $.merge(form.serializeArray(), [{"name": "csrfmiddlewaretoken", "value": $('input[name=csrfmiddlewaretoken]').val()}]);
-            },
-        }).on('fileuploadadd', function (e, data) {
+        console.log(file);
 
-        }).on('fileuploadprocessalways', function (e, data) {
+        if ( this.validVideoFile( file ) !== true ) {
+            alert('Error');
+        } else { // validVideoFile
 
-        }).on('fileuploadprogressall', function (e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress .progress-bar').css(
-                'width',
-                progress + '%'
-            );
-        }).on('fileuploaddone', function (e, data) {
+            var progress = $('div#progress');
+            var progress_bar = progress.find('div.progress-bar');
+            var progress_conversion = $('div#progress-conversion');
+            var progress_conversion_bar = progress_conversion.find('div.progress-bar');
 
-        }).on('fileuploadfail', function (e, data) {
-        });
-        // }).prop('disabled', !$.support.fileInput)
-        //     .parent().addClass($.support.fileInput ? undefined : 'disabled');
+            progress.removeClass('hide');
+            progress_bar.width('0%');
+
+            progress_conversion.addClass('hide');
+            progress_conversion_bar.width('0%');
+
+            self.state.uploader.add({
+                name: config.aws_path + file.name,
+                file: file,
+                xAmzHeadersAtInitiate: {
+                    //'Cache-Control': 'max-age=86400',
+                    'x-amz-acl': 'public-read',
+                },
+                progress: function ( progress_count ) {
+                    console.log('progress:' + progress_count);
+                    var percent = Math.round(progress_count * 100)
+
+                    progress_bar.width(percent+'%');
+                },
+                complete: function ( data ) {
+                    // post the new video event
+                    var response = $(data.responseText);
+                    var location = response.find('Location');
+                    // video_url
+
+                    var video_object = {
+                        name: file.name,
+                        video_url: location.text(),
+                        video_type: file.type,
+                    };
+
+                    ProjectVideoResource.create( video_object ).defer().done(function ( data ) {
+                        // progress.addClass('hide');
+                        // progress_bar.width('0%');
+
+                        // progress_conversion.removeClass('hide');
+                        // progress_conversion_bar.width('0%');
+                        window.location = data.video_view_url;
+                    });
+                },
+            });
+        } // end validVideoFile
     },
     render: function () {
         return (React.DOM.span(null, 
-            React.DOM.span({className: "btn btn-success fileinput-button"}, 
+            React.DOM.span({className: "btn btn-success btn-small fileinput-button"}, 
                 React.DOM.i({className: "glyphicon glyphicon-plus"}), 
-                React.DOM.span(null, "Add file"), 
-                React.DOM.input({id: "fileupload", data: "blueimp-fileupload", ref: "fileupload", type: "file", name: "video"})
+                React.DOM.span(null, "New Video"), 
+                React.DOM.input({id: "fileupload", onChange: this.handleNewFile, ref: "fileupload", type: "file", name: "video"})
             ), 
             React.DOM.br(null), 
             React.DOM.br(null), 
-            React.DOM.div({id: "progress", className: "progress"}, 
+            React.DOM.div({id: "progress", className: "progress hide"}, 
+                React.DOM.div({className: "progress-bar progress-bar-success"})
+            ), 
+            React.DOM.div({id: "progress-conversion", className: "progress hide"}, 
                 React.DOM.div({className: "progress-bar progress-bar-success"})
             ), 
             React.DOM.div({id: "files", className: "files"})

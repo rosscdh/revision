@@ -4,62 +4,32 @@
 * Video controls
 *
 */
-var VideoFormModal = React.createClass({
-    getInitialState: function () {
-        return {
-            'project': Project,
-            'available_types': ['Comment', 'Subtitle', 'Sketch']
-        }
-    },
-    onSubmitForm: function ( event ) {
-        var self = this;
-        if ( $(event.target).parsley().isValid() === true ) {
-            var post_params = {
-                'project': this.state.project.url,
-                'name': this.refs.name.getDOMNode().value.trim(),
-                'video_url': this.refs.video_url.getDOMNode().value.trim(),
-            };
-
-            VideoResource.create( post_params ).defer().done(function ( video_data ) {
-
-                // self.props.onVideoUpdate( video_data );
-                // $( '#modal-new-video' ).modal('hide');
-                document.location = video_data.video_view_url;
-
-            });
-        }
-        return false;
-    },
-    render: function () {
-
-        return (
-        <div id="modal-new-video" className="modal fade bs-example-modal-lg" tabIndex="-1" role="dialog" aria-labelledby="modal-new-video-help" aria-hidden="true">
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-                <div className="modal-header">
-                    <button type="button" className="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span className="sr-only">Close</span></button>
-                    <h4 className="modal-title" id="myModalLabel">New Version</h4>
-                </div>
-                <div className="modal-body">
-                    <div className="row">
-                        <form onSubmit={this.onSubmitForm} data-parsley-validate>
-                            <label htmlFor="id_name">Name:</label><input ref="name" data-parsley-maxlength="255" data-parsley-required="true" data-parsley-required-message="This field is required." id="id_name" maxLength="255" name="name" type="text" />
-                            <label htmlFor="id_video_url">Video url:</label><input ref="video_url" data-parsley-maxlength="200" data-parsley-required="true" data-parsley-required-message="This field is required." data-parsley-type="url" data-parsley-type-url-message="Enter a valid URL." id="id_video_url" maxLength="200" name="video_url" type="url" />
-                            <input type="submit" value="Create" />
-                        </form>
-                    </div>
-                </div>
-            </div>
-          </div>
-        </div>
-        );
-    }
-});
 
 var CreateVideoView = React.createClass({
+    handleDeleteVideo: function ( event ) {
+
+        VideoResource.destroy( Video.slug ).defer().done(function ( data ) {
+            window.location = Project.detail_url;
+        });
+
+    },
+    handleChronicleClick: function ( event ) {
+        window.location = Links.chronicle;
+    },
     render: function () {
+        var VideoUploader = <VideoUploaderView uploader_config={UploaderConfig}
+                                               project={this.props.project} />
         return (<span>
-            <a href="#" className="btn btn-success" data-toggle="modal" data-target="#modal-new-video">New Video</a>
+            <span onClick={this.handleChronicleClick} className="btn btn-primary btn-small pull-right">
+                <i className="glyphicon glyphicon-road"></i>
+                <span>Activity Chronicle</span>
+            </span>
+
+            <span onClick={this.handleDeleteVideo} className="btn btn-danger btn-small">
+                <i className="glyphicon glyphicon-remove"></i>
+                <span>Delete Video</span>
+            </span>&nbsp;
+            {VideoUploader}
         </span>);
     }
 });

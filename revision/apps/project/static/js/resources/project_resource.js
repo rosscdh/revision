@@ -14,3 +14,14 @@ var ProjectResource = Resource.createClass({
         return this.process( uri, 'GET' );
     },
 });
+
+var ProjectVideoResource = Resource.createClass({
+    uri: '/api/v1/projects/{slug}/videos/upload/',
+    base_url: function ( params ) {
+        return this.uri.assign(params || this.params);
+    },
+    create: function ( form_data ) {
+        var uri = this.base_url();
+        return this.process( uri, 'POST', form_data );
+    },
+});

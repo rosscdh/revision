@@ -138,7 +138,8 @@ DATABASES = {
 # SESSION_CACHE_ALIAS = "default"
 
 # Email
-DEFAULT_FROM_EMAIL = env('FROM_EMAIL')
+#DEFAULT_FROM_EMAIL = env('FROM_EMAIL')
+DEFAULT_FROM_EMAIL = "no-reply@example.com"
 
 email_config = dj_email_url.config()
 EMAIL_FILE_PATH = email_config['EMAIL_FILE_PATH']
@@ -179,16 +180,28 @@ STATICFILES_FINDERS = (
     # 'pipeline.finders.CachedFileFinder',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.request',
+    'revision.context_processors.GLOBALS',
+)
+
 PIPELINE_CSS = {
-    'uploader': {
-        'source_filenames': (
-            'js/uploader/css/jquery.fileupload.css',
-        ),
-        'output_filename': 'js/dist/uploader.css',
-        'extra_context': {
-            'media': 'screen,projection',
-        },
-    }
+    # 'uploader': {
+    #     'source_filenames': (
+    #         'js/uploader/css/jquery.fileupload.css',
+    #     ),
+    #     'output_filename': 'js/dist/uploader.css',
+    #     'extra_context': {
+    #         'media': 'screen,projection',
+    #     },
+    # }
 }
 
 PIPELINE_JS = {
@@ -240,16 +253,7 @@ PIPELINE_JS = {
     },
     'uploader': {
         'source_filenames': (
-            'js/uploader/js/vendor/jquery.ui.widget.js',
-            'js/uploader/js/jquery.iframe-transport.js',
-            'js/uploader/js/jquery.fileupload.js',
-            # 'js/uploader/js/jquery.fileupload-process.js',
-            # 'js/uploader/js/jquery.fileupload-image.js',
-            # 'js/uploader/js/jquery.fileupload-audio.js',
-            # 'js/uploader/js/jquery.fileupload-video.js',
-            # 'js/uploader/js/jquery.fileupload-validate.js',
-            # 'js/uploader/js/jquery.fileupload-ui.js',
-            # 'js/uploader/js/jquery.fileupload-jquery-ui.js',
+            'uploader/js/evaporate-0.0.2.js',
             'js/videouploader.jsx',
         ),
         'output_filename': 'js/dist/uploader.js',

@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
+
 from rest_framework import viewsets
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status as http_status
+from rest_framework.renderers import StaticHTMLRenderer
 
 from revision.decorators import (mutable_request, valid_request_filesize)
 
@@ -14,6 +18,11 @@ from ..models import (Project,
 from .serializers import (ProjectSerializer,
                           VideoSerializer,
                           CommentSerializer,)
+
+import urllib2
+import base64
+import hmac
+import sha
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -53,7 +62,7 @@ class ProjectUploadVideoEndpoint(generics.CreateAPIView):
 
         request_data.update({
             'project': project.get('url'),
-            'name': request.FILES.get('video').name,
+            'video_url': urllib2.unquote(request_data.get('video_url'))
         })
 
         serializer = self.get_serializer(data=request_data, files=request.FILES)
@@ -69,10 +78,10 @@ class ProjectUploadVideoEndpoint(generics.CreateAPIView):
 
         return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
 
-    def post_save(self, obj, created):
-        obj.video_url = obj.video.url
-        obj.save(update_fields=['video_url'])
-        return super(ProjectUploadVideoEndpoint, self).post_save(obj, created=created)
+    # def post_save(self, obj, created):
+    #     obj.video_url = obj.video.url
+    #     obj.save(update_fields=['video_url'])
+    #     return super(ProjectUploadVideoEndpoint, self).post_save(obj, created=created)
 
 
 class VideoViewSet(viewsets.ModelViewSet):
@@ -180,3 +189,16 @@ class VideoCommentDetailEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
         else:
             return Response(status=http_status.HTTP_400_BAD_REQUEST, data={'errors': comment.errors})
+
+
+class S3SignatureEndpoint(APIView):
+    """
+    Provide a signed key for the sending object
+    """
+    renderer_classes = (StaticHTMLRenderer,)
+
+    def get(self, request, **kwargs):
+        to_sign = str(request.GET.get('to_sign'))
+        signature = base64.b64encode(hmac.new(settings.AWS_SECRET_ACCESS_KEY, to_sign, sha).digest())
+
+        return Response(signature, status=http_status.HTTP_200_OK)

@@ -90,7 +90,6 @@ class SignUpForm(forms.Form):
                 Field('password'),
                 Field('password_confirm'),
                 Field('t_and_c', template='partials/t_and_c.html'),
-                Field('mpid'),
             ),
             ButtonHolder(
                 Submit('submit', 'Create Account')
