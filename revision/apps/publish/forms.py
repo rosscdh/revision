@@ -13,7 +13,8 @@ from .models import Published
 
 @parsleyfy
 class VideoSettingsForm(forms.ModelForm):
-    is_published = forms.BooleanField(initial=True)
+    is_published = forms.BooleanField(initial=True, required=False)
+
     payment = forms.DecimalField(label='Pay Amount',
                                  help_text='Enter an amount subscribers should pay to view this video. 0.00 will be free-to-view',
                                  initial=0.00)
@@ -22,11 +23,12 @@ class VideoSettingsForm(forms.ModelForm):
         model = Published
         exclude = ('video', 'data',)
 
-    def __init__(self, publish, **kwargs):
-        self.object = publish
-        self.video = publish.video
+    def __init__(self, **kwargs):
+        super(VideoSettingsForm, self).__init__(**kwargs)
 
-        link = ABSOLUTE_BASE_URL(path=publish.get_absolute_url())
+        self.video = self.instance.video
+
+        link = ABSOLUTE_BASE_URL(path=self.instance.get_absolute_url())
 
         self.helper = FormHelper()
 
@@ -47,8 +49,8 @@ class VideoSettingsForm(forms.ModelForm):
                 ),
             ),
             ButtonHolder(
-                Submit('submit', 'Save changes', css_class='btn btn-primary btn-lg'),
+                Submit('submit', 'Save', css_class='btn btn-primary btn-lg'),
                 css_class='form-group'
             )
         )
-        super(VideoSettingsForm, self).__init__(**kwargs)
+        
