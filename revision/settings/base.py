@@ -7,7 +7,6 @@ import django_cache_url
 from unipath import FSPath as Path
 from django.core.exceptions import ImproperlyConfigured
 
-
 # Helper for env vars
 def env(var, default=None):
     try:
@@ -85,8 +84,8 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'braces',
     'parsley',
-    # 'payments',
     'storages',
+    'payments',
     'pipeline',
     'crispy_forms',
     'password_reset',
@@ -288,12 +287,12 @@ STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_4TQt1KQ0HqJzsm4
 STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_test_4TQtMXsWeYaQHIsSoII3rrMc")
 PAYMENTS_INVOICE_FROM_EMAIL = 'founders@revision.com'
 PAYMENTS_PLANS = {
-    "subscribe": {
-        "stripe_plan_id": "subscribe",
+    "early-bird-monthly": {
+        "stripe_plan_id": "early-bird-monthly",
         "name": "Subscription",
-        "description": "Get a monthly delivery of 30 Nootroo (15 silver and 15 gold).",
+        "description": "A monthly subscription to make use of revision.com",
         "features": "Get access to our exclusive members are a bunch of other really cool stuff.",
-        "price": 79.99,
+        "price": 9.99,
         "currency": "usd",
         "interval": "month"
     }

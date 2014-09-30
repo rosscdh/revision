@@ -1,0 +1,46 @@
+{% extends 'payments/base.html' %}
+
+{% block page_title %}Plans &amp; Billing — {{ block.super }}{% endblock%}
+
+{% block content %}
+    <div id="plans" class="content">
+        <div class="content-header plans-header clearfix">
+            <div class="container">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <h3>Your Plan</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="col-sm-6 col-sm-offset-3" role="main">
+                <div class="row">
+                    {% for p in object_list %}
+                        <div class="col-md-12">
+                            <div class="plan">
+                                <img src="{{ STATIC_URL }}images/icons/ticket.svg" alt="{{ p.name }}" class="plan-image big-illustration">
+                                <h3 class="plan-title">{{ p.name }}</h3>
+                                <h6 class="plan-price">${{ p.price }}/{{ p.interval }}</h6>
+                                <p class="plan-description">{{ p.description|safe}}</p>
+                                <p class="plan-features">{{ p.features|safe }}</p>
+                                {% if user.profile.subscription.plan == p.stripe_plan_id %}
+                                    <span class="btn btn-primary btn-wide"><span class="fui-check-inverted"></span>&nbsp;&nbsp;Current Plan</a>
+                                {% else %}
+                                    <a href="{% url 'me:plan-change' plan=p.stripe_plan_id %}" data-toggle="modal" data-target="#confirm-{{ p.stripe_plan_id }}" class="btn btn-primary btn-hg btn-embossed">Get this plan</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block modals %}
+    {% for p in object_list %}
+        <div class="modal" id="confirm-{{ p.stripe_plan_id }}"></div>
+    {% endfor %}
+
+    <script src="//checkout.stripe.com/checkout.js"></script>
+{% endblock %}

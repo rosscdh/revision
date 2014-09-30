@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib.auth import logout
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import FormView, ListView, UpdateView, TemplateView, RedirectView
 from django.views.generic.edit import BaseUpdateView
@@ -33,8 +33,6 @@ import json
 
 import logging
 logger = logging.getLogger('django.request')
-
-User = get_user_model()
 
 
 class ConfirmAccountView(UpdateView):
@@ -129,7 +127,7 @@ class BaseConfirmValidationRequest(RedirectView):
             pk = signing.loads(token, salt=settings.URL_ENCODE_SECRET_KEY)
         except signing.BadSignature:
             raise Http404
-        return get_object_or_404(get_user_model(), pk=pk)
+        return get_object_or_404(User, pk=pk)
 
     def save(self):
         raise NotImplementedError
@@ -265,7 +263,7 @@ class LawyerLetterheadView(UpdateView):
 
 
 class PaymentListView(ListView):
-    template_name = 'me/payment_list.html'
+    template_name = 'payments/payment_list.html'
 
     def get_queryset(self):
         try:
@@ -275,7 +273,7 @@ class PaymentListView(ListView):
 
 
 class PlanListView(TemplateView):
-    template_name = 'me/plan_list.html'
+    template_name = 'payments/plan_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(PlanListView, self).get_context_data(**kwargs)
@@ -288,7 +286,7 @@ class PlanListView(TemplateView):
 #class PlanChangeView(ModalView, AjaxFormView, FormView):
 class PlanChangeView(FormView):
     form_class = PlanChangeForm
-    template_name = 'me/plan_change.html'
+    template_name = 'payments/plan_change.html'
 
     def get_initial(self):
         return {

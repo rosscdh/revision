@@ -2,15 +2,14 @@
 from django import forms
 from django.contrib import messages
 from django.contrib.auth import logout
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.contrib.auth import get_user_model
-from django.template.defaultfilters import slugify
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import SetPasswordForm
 
 from django.contrib.auth.hashers import make_password
 
-from revision import _managed_S3BotoStorage
+#from revision.utils import _managed_S3BotoStorage
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import ButtonHolder, Div, Field, Fieldset, HTML, Layout, Submit
@@ -26,12 +25,8 @@ from payments.models import Customer
 
 from .mailers import (ValidatePasswordChangeMailer, ValidateEmailChangeMailer)
 
-import os
 import logging
 logger = logging.getLogger('django.request')
-
-
-User = get_user_model()
 
 
 class BaseAccountSettingsFields(forms.ModelForm):
@@ -405,18 +400,18 @@ class LawyerLetterheadForm(forms.Form):
         profile = self.user.profile
         data = profile.data
 
-        firm_logo = self.cleaned_data.pop('firm_logo', None)
-        if firm_logo is not None:
-            if hasattr(firm_logo, 'name'):
-                image_storage = _managed_S3BotoStorage()
-                # slugify a unique name
-                name, ext = os.path.splitext(firm_logo.name)
-                filename = slugify('%s-%s-%s' % (data.get('firm_name', self.user.username), self.user.pk, name))
-                image_name = '%s%s' % (filename, ext)
-                # save to s3
-                result = image_storage.save('firms/%s' % image_name, firm_logo)
-                # save to cleaned_data
-                self.cleaned_data['firm_logo'] = image_storage.url(name=result)
+        # firm_logo = self.cleaned_data.pop('firm_logo', None)
+        # if firm_logo is not None:
+        #     if hasattr(firm_logo, 'name'):
+        #         image_storage = _managed_S3BotoStorage()
+        #         # slugify a unique name
+        #         name, ext = os.path.splitext(firm_logo.name)
+        #         filename = slugify('%s-%s-%s' % (data.get('firm_name', self.user.username), self.user.pk, name))
+        #         image_name = '%s%s' % (filename, ext)
+        #         # save to s3
+        #         result = image_storage.save('firms/%s' % image_name, firm_logo)
+        #         # save to cleaned_data
+        #         self.cleaned_data['firm_logo'] = image_storage.url(name=result)
 
         data.update(**self.cleaned_data)
         profile.data = data

@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
+from storages.backends.s3boto import S3BotoStorage
+
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 
 from collections import namedtuple, OrderedDict
 
+import os
 import uuid
 import logging
 logger = logging.getLogger('django.request')
@@ -130,3 +136,19 @@ def get_namedtuple_choices(name, choices_tuple):
             return False
 
     return Choices._make([val for val, name, desc in choices_tuple])
+
+
+class OverwriteStorage(FileSystemStorage):
+    def get_available_name(self, name):
+        """
+        Returns a filename that's free on the target storage system, and
+        available for new content to be written to.
+        """
+        # If the filename already exists, remove it as if it was a true file system
+        if self.exists(name):
+            os.remove(os.path.join(settings.MEDIA_ROOT, name))
+        return name
+
+
+def _managed_S3BotoStorage():
+    return OverwriteStorage() if settings.PROJECT_ENVIRONMENT in ['test'] else S3BotoStorage()

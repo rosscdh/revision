@@ -13,7 +13,8 @@
 <ul class="nav nav-tabs" role="tablist">
   <li class="active"><a href="#home" role="tab" data-toggle="tab">Account Settings</a></li>
   <li><a href="#profile" role="tab" data-toggle="tab">Integrations</a></li>
-  <li><a href="#messages" role="tab" data-toggle="tab">Cancellation</a></li>
+  <li><a href="#billing" role="tab" data-toggle="tab">Billing</a></li>
+  <li><a href="#cancellation" role="tab" data-toggle="tab">Cancellation</a></li>
 </ul>
 
 <!-- Tab panes -->
@@ -57,8 +58,27 @@
 
     </div>
 
+    <div class="tab-pane fade" id="billing">
 
-    <div class="tab-pane fade" id="messages">
+        <div class="content-header notifications-header clearfix">
+            <div class="container">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <h3>Billing<br/><small>Plans &amp; Payments</small></h3>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="col-sm-6 col-sm-offset-3" role="main">
+              <ul class="list-group">
+                <li><a href="{% url 'me:plan-list' %}">Plans</a></li>
+                <li><a href="{% url 'me:payment-list' %}">Payments</a></li>
+              </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="tab-pane fade" id="cancellation">
 
         <div class="content-header notifications-header clearfix">
             <div class="container">

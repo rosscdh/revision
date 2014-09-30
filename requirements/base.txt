@@ -1,6 +1,7 @@
 Django==1.7
 django-pipeline==1.3.25
 django-stripe-payments==2.0b34
+-e git+https://github.com/rosscdh/django-stripe-payments.git@django-1.7#egg=django-stripe-payments
 django-crispy-forms
 django-braces
 django-uuidfield

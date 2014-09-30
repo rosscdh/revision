@@ -1,0 +1,98 @@
+{% extends 'modal.html' %}
+
+{% block content %}
+    {{ block.super }}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var $form = $('#subscribe-form');
+            var $errorContainer = $form.find('.form-errors');
+            var $errors = $errorContainer.find('.parsley-errors');
+
+            $backdrop = $loader = $spinner = null;
+            var startLoader = function() {
+                $backdrop = $('<div class="loader-backdrop in" />')
+                    .appendTo($(document.body));
+
+                $loader = $('<div class="loader"><div class="loader-dialog"></div></div>')
+                    .appendTo($(document.body));
+
+                $spinner = $('<div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>')
+                    .appendTo($loader.find('.loader-dialog'));
+            };
+            var stopLoader = function() {
+                $backdrop.remove();
+                $loader.remove();
+                $spinner.remove();
+
+                $backdrop = $loader = $spinner = null;
+            };
+
+            var errorHandler = function(data) {
+                stopLoader();
+
+                var payload = data.responseJSON;
+                $errorContainer.find('p').html('There was 1 error with this:');
+
+                $errors.html('').append("\<ul>\<li>" + payload['error']['message'] + "\</li>\</ul>");
+                $errorContainer.removeClass('hide');
+            };
+            var successHandler = function(data) {
+                stopLoader();
+
+                if (data['redirect']) {
+                    window.location.href = data['url'];
+                };
+            };
+
+            $form.on('submit', function(e) {
+                e.preventDefault();
+
+                $errorContainer.addClass('hide');
+
+                $elem = $form.find('input[name=stripe_token]');
+                if ($elem.val() == '') {
+                    StripeCheckout.open({
+                        allowRememberMe: false,
+                        description: '{{ object.description }}',
+                        email: '{{ user.email }}',
+                        key: '{{ GLOBALS.STRIPE_PUBLIC_KEY }}',
+                        name: '{{ object.name }}',
+                        panelLabel: 'Subscribe',
+                        token: function(token, args) {
+                            $form.find('input[name=stripe_token]').val(token.id);
+
+                            startLoader();
+
+                            $.ajax({
+                                data: $form.serialize(),
+                                dataType: 'json',
+                                headers: {
+                                    'X-CSRFToken': $form.find('input[name=csrfmiddlewaretoken]').val()
+                                },
+                                type: $form.attr('method'),
+                                url: $form.attr('action'),
+                                error: errorHandler,
+                                success: successHandler
+                            });
+                        }
+                    });
+                } else {
+                    startLoader();
+
+                    $.ajax({
+                        data: $form.serialize(),
+                        dataType: 'json',
+                        headers: {
+                            'X-CSRFToken': $form.find('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        type: $form.attr('method'),
+                        url: $form.attr('action'),
+                        error: errorHandler,
+                        success: successHandler
+                    });
+                };
+            });
+        });
+    </script>
+{% endblock %}
