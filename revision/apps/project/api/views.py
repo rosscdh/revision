@@ -152,6 +152,7 @@ class VideoCommentDetailEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
     def update(self, request, **kwargs):
         self.object = self.get_object()
+
         try:
             data = self.object.comments[self.pk]
         except IndexError:
