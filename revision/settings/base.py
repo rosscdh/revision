@@ -195,18 +195,25 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 PIPELINE_CSS = {
-    # 'uploader': {
-    #     'source_filenames': (
-    #         'js/uploader/css/jquery.fileupload.css',
-    #     ),
-    #     'output_filename': 'js/dist/uploader.css',
-    #     'extra_context': {
-    #         'media': 'screen,projection',
-    #     },
-    # }
+    'base': {
+        'source_filenames': (
+            'bootstrap/css/bootstrap.min.css',
+        ),
+        'output_filename': 'js/dist/base.css',
+        'extra_context': {
+            'media': 'screen,projection',
+        },
+    }
 }
 
 PIPELINE_JS = {
+    'base_ie_only': {
+        'source_filenames': (
+            'bootstrap/js/html5shiv.min.js',
+            'bootstrap/js/respond.min.js',
+        ),
+        'output_filename': 'js/dist/base.js'
+    },
     'react': {
         'source_filenames': (
             'js/reactjs/0.11.1/react-with-addons.js',
