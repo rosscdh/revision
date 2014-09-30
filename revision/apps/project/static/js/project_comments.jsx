@@ -204,14 +204,14 @@ var CommentListView = React.createClass({
         var self = this;
         var show_comment_form = (this.props.show_form !== undefined) ? this.props.show_form : true;
 
-        commentNodes = this.props.comments.map(function (comment) {
+        var commentNodes = this.props.comments.map(function (comment) {
             return <CommentItemView key={comment.pk}
                                     show_form={show_comment_form}
                                     onVideoUpdate={self.props.onVideoUpdate}
                                     onSeekTo={self.props.onSeekTo}
                                     comment={comment} />
         });
-
+        console.log(commentNodes.length)
         return (<span>
         <ul className="list-unstyled list-group">
             {commentNodes}

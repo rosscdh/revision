@@ -123,7 +123,7 @@ var NoResultsInterface = React.createClass({
     render: function() {
         return (
             <div className="col-md-12 text-center">
-                <h6 className="text-muted">Could not find any projects.</h6>
+                <h6 className="text-muted">No projects found</h6>
             </div>
         );
     },
@@ -198,19 +198,17 @@ var ProjectList = React.createClass({
         return (
             <section className="projects cards">
                 <header className="page-header">
-                    <h4>All Projects</h4>
-                    <div className="pull-right">
-                        {createButton}
-                        <div className="form-group pull-right">
-                            <div className="input-group search-field">
-                                <input type="text" className="form-control" placeholder="Search projects by name or client name..." name="q" autocomplete="off" onChange={this.handleSearch}/>
-                                <span className="input-group-btn">
-                                    <button type="submit" className="btn"><span className="fui-search"></span></button>
-                                </span>
-                            </div>
+                    <h2>All Projects</h2>
+                </header>
+                <div className="row">
+                    {createButton}
+                    <br/><br/>
+                    <div className="form-group">
+                        <div className="input-group col-xs-12 search-field">
+                            <input type="text" className="form-control" placeholder="Search projects by name or client name..." name="q" autocomplete="off" onChange={this.handleSearch} />
                         </div>
                     </div>
-                </header>
+                </div>
                 <div className="row">
                     {flashMessage}
                     {projectNodes}

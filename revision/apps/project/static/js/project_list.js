@@ -123,7 +123,7 @@ var NoResultsInterface = React.createClass({displayName: 'NoResultsInterface',
     render: function() {
         return (
             React.DOM.div({className: "col-md-12 text-center"}, 
-                React.DOM.h6({className: "text-muted"}, "Could not find any projects.")
+                React.DOM.h6({className: "text-muted"}, "No projects found")
             )
         );
     },
@@ -198,16 +198,14 @@ var ProjectList = React.createClass({displayName: 'ProjectList',
         return (
             React.DOM.section({className: "projects cards"}, 
                 React.DOM.header({className: "page-header"}, 
-                    React.DOM.h4(null, "All Projects"), 
-                    React.DOM.div({className: "pull-right"}, 
-                        createButton, 
-                        React.DOM.div({className: "form-group pull-right"}, 
-                            React.DOM.div({className: "input-group search-field"}, 
-                                React.DOM.input({type: "text", className: "form-control", placeholder: "Search projects by name or client name...", name: "q", autocomplete: "off", onChange: this.handleSearch}), 
-                                React.DOM.span({className: "input-group-btn"}, 
-                                    React.DOM.button({type: "submit", className: "btn"}, React.DOM.span({className: "fui-search"}))
-                                )
-                            )
+                    React.DOM.h2(null, "All Projects")
+                ), 
+                React.DOM.div({className: "row"}, 
+                    createButton, 
+                    React.DOM.br(null), React.DOM.br(null), 
+                    React.DOM.div({className: "form-group"}, 
+                        React.DOM.div({className: "input-group col-xs-12 search-field"}, 
+                            React.DOM.input({type: "text", className: "form-control", placeholder: "Search projects by name or client name...", name: "q", autocomplete: "off", onChange: this.handleSearch})
                         )
                     )
                 ), 

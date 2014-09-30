@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, RedirectView, FormView
@@ -12,7 +13,7 @@ from .mixins import (SaveNextUrlInSessionMixin,
                      AuthenticateUserMixin,
                      LogOutMixin)
 
-
+import urllib
 import logging
 logger = logging.getLogger('django.request')
 

@@ -171,7 +171,8 @@ var BaseProjectDetailView = React.createClass({
 
     },
     renderNoVideoUploaderPad: function () {
-        var VideoUploader = <VideoUploaderView uploader_config={UploaderConfig}
+        var VideoUploader = <VideoUploaderView onMessage={this.onMessage}
+                                               uploader_config={UploaderConfig}
                                                project={this.state.project} />
         return (<div className="jumbotron">
                 <div className="container">
