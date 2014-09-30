@@ -268,7 +268,14 @@ PIPELINE_JS = {
             'js/videouploader.jsx',
         ),
         'output_filename': 'js/dist/uploader.js',
-    }
+    },
+    'published': {
+        'source_filenames': (
+            'js/publish_detail.jsx',
+        ),
+        'output_filename': 'js/dist/published.js',
+    },
+    
 }
 
 PIPELINE_COMPILERS = [

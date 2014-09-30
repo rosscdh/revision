@@ -1,88 +1,47 @@
-{% load compressed %}<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{% block page_description %}{% endblock %}">
-    <meta name="author" content="{% block page_author %}{% endblock %}">
-    <link rel="icon" href="/favicon.ico">
+{% extends 'index.html' %}{% load compressed %}
 
-    <title>{% block page_title %}{% endblock %}</title>
-
-    <!-- Bootstrap core CSS -->
-    {% compressed_css 'base' %}
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      {% compressed_js 'base_ie_only' %}
-    <![endif]-->
-    {% block css %}{% endblock css %}
-  </head>
-
-  <body>
-
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Re<span class="label-danger">&gt;</span>ision</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          {% if not user.is_authenticated %}
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="{% url 'public:signin' %}">Sign-in</a></li>
-              <li><a href="{% url 'public:signup' %}">Sign-up</a></li>
-            </ul>
-          {% else %}
-            <small>{{ user.get_full_name }}</small>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="{% url 'project:list' %}">Projects</a></li>
-              <li><a href="{% url 'me:settings' %}">Account</a></li>
-              <li class="divider"></li>
-              <li><a href="#" class="intercom">Help</a></li>
-              <li class="divider"></li>
-              <li><a href="{% url 'public:logout' %}">Sign-out</a></li>
-            </ul>
-          {% endif %}
-        </div><!--/.navbar-collapse -->
-      </div>
-    </div>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    {% block jumbo %}<p>&nbsp;</p>{% endblock %}
-
+{% block body %}
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
-      {% block content %}{% endblock %}
-      <hr>
-      <footer>
-        {% block footer %}{% endblock %}
-        <p>&copy; Company 2014</p>
-      </footer>
-    </div> <!-- /container -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Re<span class="label-danger">&gt;</span>ision</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        {% if not user.is_authenticated %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'public:signin' %}">Sign-in</a></li>
+            <li><a href="{% url 'public:signup' %}">Sign-up</a></li>
+          </ul>
+        {% else %}
+          <small>{{ user.get_full_name }}</small>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'project:list' %}">Projects</a></li>
+            <li><a href="{% url 'me:settings' %}">Account</a></li>
+            <li class="divider"></li>
+            <li><a href="#" class="intercom">Help</a></li>
+            <li class="divider"></li>
+            <li><a href="{% url 'public:logout' %}">Sign-out</a></li>
+          </ul>
+        {% endif %}
+      </div><!--/.navbar-collapse -->
+    </div>
+  </div>
 
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  {% block jumbo %}<p>&nbsp;</p>{% endblock %}
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/sugar/1.4.1/sugar.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/fuse.js/1.1.7/fuse.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.2/moment.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/mousetrap/1.4.6/mousetrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/parsley.js/2.0.4/parsley.min.js"></script>
-    <script src="//releases.flowplayer.org/5.5.0/flowplayer.js"></script>
-
-    {% compressed_js 'react' %}
-    {% compressed_js 'resources' %}
-    {% if debug %}<script src="{{ STATIC_URL }}js/reactjs/0.11.1/JSXTransformer.js"></script>{% endif %}
-
-    {% block js %}{% endblock %}
-  </body>
-</html>
+  <div class="container">
+    {% block content %}{% endblock %}
+    <hr>
+    <footer>
+      {% block footer %}{% endblock %}
+      <p>&copy; Company 2014</p>
+    </footer>
+  </div> <!-- /container -->
+{% endblock %}

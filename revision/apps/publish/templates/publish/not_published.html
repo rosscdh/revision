@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+
+{% block page_title %}Unfortunately, this video has not been published{% endblock %}
+
+{% block body %}
+{% csrf_token %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>We're sorry, video not available<br/><small>Video appears to be un-published</small></h1>
+    </div>
+</div>
+{% endblock %}

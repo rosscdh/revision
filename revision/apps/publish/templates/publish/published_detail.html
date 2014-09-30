@@ -1,1 +1,44 @@
-{% extends 'publish/base.html' %}
+{% extends 'index.html' %}{% load compressed revision_tags %}
+
+{% block page_title %}{{ project.name }}{% endblock %}
+
+{% block body %}
+{% csrf_token %}
+<div class="jumbotron">
+    <div class="container">
+        <div id="published-detail"></div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block css %}
+<link rel="stylesheet" href="//releases.flowplayer.org/5.5.0/skin/minimalist.css">
+<style>
+
+</style>
+{% endblock css %}
+
+{% block js %}
+
+    <script>
+    'use strict';
+    /**
+    * Setup the base javascript objects for our react handler
+    **/
+    var Today = moment();
+
+    var Video = {{ view.video_json|safe|default:'{}' }};
+
+    var Links = {};
+
+    var User = {
+      'username': '{{ request.user.username }}',
+      'initials': '{{ request.user.get_initials }}',
+      'email': '{{ request.user.email }}'
+    }
+    </script>
+
+    {% compressed_js 'published' %}
+
+{% endblock js %}

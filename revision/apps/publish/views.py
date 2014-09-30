@@ -4,7 +4,10 @@ from django.core.urlresolvers import reverse
 from django.views.generic import (DetailView, UpdateView,)
 from django.shortcuts import get_object_or_404
 
+from rest_framework.renderers import JSONRenderer
+
 from revision.apps.project.models import Video
+from revision.apps.project.api.serializers import (VideoSerializer,)
 
 from .models import Published
 from .forms import VideoSettingsForm
@@ -30,3 +33,12 @@ class PublishedVideoSettingsView(UpdateView):
 
 class PublishedVideoView(DetailView):
     model = Published
+
+    @property
+    def video_json(self):
+        return JSONRenderer().render(VideoSerializer(self.object.video).data)
+    def get_template_names(self, **kwargs):
+        if self.object.is_published is False:
+            return ('publish/not_published.html',)
+
+        return super(PublishedVideoView, self).get_template_names(**kwargs)

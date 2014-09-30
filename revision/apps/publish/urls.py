@@ -9,5 +9,5 @@ from .views import (PublishedVideoSettingsView,
 urlpatterns = patterns(
     '',
     url(r'^(?P<slug>[\d\w-]+)/settings/$', login_required(PublishedVideoSettingsView.as_view()), name='settings'),
-    url(r'^view/(?P<slug>[\d\w-]+)/$', login_required(PublishedVideoView.as_view()), name='view'),
+    url(r'^(?P<slug>[\d\w-]+)/$', login_required(PublishedVideoView.as_view()), name='view'),
 )
