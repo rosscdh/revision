@@ -177,10 +177,9 @@ class AccountSettingsForm(BaseAccountSettingsFields, forms.ModelForm):
     def save(self):
         user = super(AccountSettingsForm, self).save()
 
-        if user.profile.is_lawyer:
-            profile = user.profile
-            profile.data['firm_name'] = self.cleaned_data.get('firm_name')
-            profile.save(update_fields=['data'])
+        profile = user.profile
+        profile.data['firm_name'] = self.cleaned_data.get('firm_name')
+        profile.save(update_fields=['data'])
 
         return user
 
