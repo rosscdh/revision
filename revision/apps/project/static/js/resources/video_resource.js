@@ -9,8 +9,8 @@ var VideoResource = Resource.createClass({
     create: function ( post_params ) {
         return this.process( this.uri, 'POST', post_params );
     },
-    detail: function () {
-        var uri = this.base_url();
+    detail: function ( params ) {
+        var uri = this.base_url( params );
         return this.process( uri, 'GET' );
     },
     destroy: function ( pk ) {

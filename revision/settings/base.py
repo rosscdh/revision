@@ -238,6 +238,7 @@ PIPELINE_JS = {
     'project': {
         'source_filenames': (
             # react components
+            'js/showdown-0.3.1.min.js',
             'js/project_collaborators.jsx',
             'js/project_comments.jsx',
             'js/project_video.jsx',

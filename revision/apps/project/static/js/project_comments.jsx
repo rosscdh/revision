@@ -30,14 +30,11 @@ var CommentFormView = React.createClass({
 
         CommentResource.create( comment, comment_type, comment_by, progress ).defer().done(function ( data ) {
 
-            if ( data.status_text === undefined ) {
-                VideoResource.detail().defer().done(function ( data ) {
-                    self.setState({
-                        'comment': ''
-                    });
-                    self.props.onVideoUpdate( data );
-                });
-            }
+            VideoResource.detail( {video_slug: Video.slug} ).defer().done(function ( data ) {
+
+                self.refs.comment.getDOMNode().value = '';
+                self.props.onVideoUpdate( data );
+            });
 
         });
         return false;
@@ -70,7 +67,7 @@ var CommentFormView = React.createClass({
         }
 
         return (
-            <form onSubmit={this.handleSubmitComment} className="text-center">
+            <form ref="" onSubmit={this.handleSubmitComment} className="text-center">
                 {Timestamp}
 
                 <div className="input-group">
@@ -86,10 +83,11 @@ var CommentFormView = React.createClass({
                           </ul>
                         </div>
                     </span>
-                    <textarea ref="comment" name="comment" placeholder="Add comment here..." className="form-control input-lg" defaultValue={this.state.comment} />
+                    <textarea ref="comment" name="comment" placeholder="Add comment here..." className="form-control input-lg" />
                     <input type="hidden" ref="comment_type" value={current_type} />
                     <span className="input-group-addon"><input className="btn btn-primary" type="submit" value="send" /></span>
                 </div>
+                <small>*supports markdown</small>
             </form>
         );
     }
@@ -163,6 +161,8 @@ var CommentItemView = React.createClass({
     },
     render: function () {
         var comment = this.props.comment;
+        // markdownify the comment
+        comment_markdown = this.props.markdown_converter.makeHtml(comment.comment);
         var comment_type = comment.comment_type.toLowerCase();
         var collaborator = <CollaboratorView name={comment.comment_by} />
         var timestamp = <TimestampView onSeekTo={this.props.onSeekTo} progress={comment.progress}/>
@@ -190,7 +190,7 @@ var CommentItemView = React.createClass({
 
                 <blockquote>
                     {collaborator}&nbsp;
-                    {comment.comment}
+                    <span dangerouslySetInnerHTML={{__html: comment_markdown}} />
                 </blockquote>
                 {form}
             </li>
@@ -202,10 +202,12 @@ var CommentItemView = React.createClass({
 var CommentListView = React.createClass({
     render: function () {
         var self = this;
+        var markdown_converter = new Showdown.converter();
         var show_comment_form = (this.props.show_form !== undefined) ? this.props.show_form : true;
 
         var commentNodes = this.props.comments.map(function (comment) {
             return <CommentItemView key={comment.pk}
+                                    markdown_converter={markdown_converter}
                                     show_form={show_comment_form}
                                     onVideoUpdate={self.props.onVideoUpdate}
                                     onSeekTo={self.props.onSeekTo}

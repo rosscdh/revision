@@ -30,14 +30,11 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
 
         CommentResource.create( comment, comment_type, comment_by, progress ).defer().done(function ( data ) {
 
-            if ( data.status_text === undefined ) {
-                VideoResource.detail().defer().done(function ( data ) {
-                    self.setState({
-                        'comment': ''
-                    });
-                    self.props.onVideoUpdate( data );
-                });
-            }
+            VideoResource.detail( {video_slug: Video.slug} ).defer().done(function ( data ) {
+
+                self.refs.comment.getDOMNode().value = '';
+                self.props.onVideoUpdate( data );
+            });
 
         });
         return false;
@@ -70,7 +67,7 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
         }
 
         return (
-            React.DOM.form({onSubmit: this.handleSubmitComment, className: "text-center"}, 
+            React.DOM.form({ref: "", onSubmit: this.handleSubmitComment, className: "text-center"}, 
                 Timestamp, 
 
                 React.DOM.div({className: "input-group"}, 
@@ -86,10 +83,11 @@ var CommentFormView = React.createClass({displayName: 'CommentFormView',
                           )
                         )
                     ), 
-                    React.DOM.textarea({ref: "comment", name: "comment", placeholder: "Add comment here...", className: "form-control input-lg", defaultValue: this.state.comment}), 
+                    React.DOM.textarea({ref: "comment", name: "comment", placeholder: "Add comment here...", className: "form-control input-lg"}), 
                     React.DOM.input({type: "hidden", ref: "comment_type", value: current_type}), 
                     React.DOM.span({className: "input-group-addon"}, React.DOM.input({className: "btn btn-primary", type: "submit", value: "send"}))
-                )
+                ), 
+                React.DOM.small(null, "*supports markdown")
             )
         );
     }
@@ -163,6 +161,8 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
     },
     render: function () {
         var comment = this.props.comment;
+        // markdownify the comment
+        comment_markdown = this.props.markdown_converter.makeHtml(comment.comment);
         var comment_type = comment.comment_type.toLowerCase();
         var collaborator = CollaboratorView({name: comment.comment_by})
         var timestamp = TimestampView({onSeekTo: this.props.onSeekTo, progress: comment.progress})
@@ -190,7 +190,7 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
 
                 React.DOM.blockquote(null, 
                     collaborator, " ", 
-                    comment.comment
+                    React.DOM.span({dangerouslySetInnerHTML: {__html: comment_markdown}})
                 ), 
                 form
             )
@@ -202,10 +202,12 @@ var CommentItemView = React.createClass({displayName: 'CommentItemView',
 var CommentListView = React.createClass({displayName: 'CommentListView',
     render: function () {
         var self = this;
+        var markdown_converter = new Showdown.converter();
         var show_comment_form = (this.props.show_form !== undefined) ? this.props.show_form : true;
 
         var commentNodes = this.props.comments.map(function (comment) {
             return CommentItemView({key: comment.pk, 
+                                    markdown_converter: markdown_converter, 
                                     show_form: show_comment_form, 
                                     onVideoUpdate: self.props.onVideoUpdate, 
                                     onSeekTo: self.props.onSeekTo, 
