@@ -8,6 +8,16 @@
     <div class="container">
         <h2>{{ object.video.name }}</h2>
         <div id="published-detail"></div>
+        <script src="//checkout.stripe.com/checkout.js"
+            class="stripe-button"
+            data-key="{{ STRIPE_PUBLIC_KEY }}"
+            data-amount="{{ object.stripe_payment_amount }}"
+            data-name="{{ object.video.name }}"
+            data-description="Watch the video named '{{ object.video.name }}' for ${{ object.payment }}"
+            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+            data-label="Pay ${{ object.payment }} to watch"
+            data-email="{{ request.user.email }}">
+        </script>
     </div>
 </div>
 
@@ -42,14 +52,5 @@
     </script>
 
     {% compressed_js 'published' %}
-
-    <script src="//checkout.stripe.com/checkout.js"
-        class="stripe-button"
-        data-key="{{ STRIPE_PUBLIC_KEY }}"
-        data-amount="{{ object.stripe_payment_amount }}"
-        data-name="{{ object.video.name }}"
-        data-description="Subscribe to watch the video named '{{ object.video.name }}'"
-        data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
-    </script>
 
 {% endblock js %}
