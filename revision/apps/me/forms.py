@@ -66,7 +66,7 @@ class BaseAccountSettingsFields(forms.ModelForm):
             'invalid': "Email is invalid.",
             'required': "Email can't be blank."
         },
-        widget=forms.EmailInput(attrs={'placeholder': 'example@lawpal.com', 'size': 44})
+        widget=forms.EmailInput(attrs={'placeholder': 'example@revision.com', 'size': 44})
     )
 
     def __init__(self, *args, **kwargs):
@@ -77,18 +77,11 @@ class BaseAccountSettingsFields(forms.ModelForm):
         }
         self.helper.form_show_errors = False
 
-        if self.user.profile.data.get('two_factor_enabled', False):
-            two_factor_button = HTML('<a href="{% url "me:two-factor-disable" %}" data-toggle="modal" data-target="#disable-two-factor" class="btn btn-default btn-sm"> Disable two-factor authentication</a>')
-            two_factor_status = HTML('<p>Status: <strong>On</strong> <span class="input-icon fui-check-inverted text-success" style="margin-left: 5px;"></span></p>')
-        else:
-            two_factor_button = HTML('<a href="{% url "me:two-factor-enable" %}" data-toggle="modal" data-target="#enable-two-factor" class="btn btn-default btn-sm"> Enable two-factor authentication</a>')
-            two_factor_status = HTML('<p>Status: <strong>Off</strong></p>')
-
         self.helper.layout = Layout(
             HTML('{% include "partials/form-errors.html" with form=form %}'),
             Fieldset(
                 '',
-                Field('firm_name', css_class='input-hg') if self.user.profile.is_lawyer else HTML(''),
+                Field('firm_name', css_class='input-hg'),
                 Div(
                     HTML('<label>Full name<span class="asteriskField">*</span></label>'),
                     Div(
@@ -105,14 +98,6 @@ class BaseAccountSettingsFields(forms.ModelForm):
                     ),
                     css_class='form-group'
                 ),
-                Div(
-                    HTML('<label>Two-factor authentication</label>'),
-                    Div(
-                        two_factor_status,
-                        two_factor_button,
-                    ),
-                    css_class='form-group'
-                )
             ),
             ButtonHolder(
                 Submit('submit', 'Save changes', css_class='btn btn-primary btn-lg'),
@@ -240,7 +225,7 @@ class ConfirmAccountForm(BaseAccountSettingsFields, forms.ModelForm):
             Fieldset(
                 '',
                 Div(
-                    HTML('<p>Welcome to LawPal. Enter the information below to create your account.</p>')
+                    HTML('<p>Welcome to Revision. Enter the information below to create your account.</p>')
                 ),
                 Div(
                     HTML('<label>Full name*</label>'),
@@ -469,7 +454,7 @@ class PlanChangeForm(PlanForm):
             self.helper.layout = Layout(
                 'plan',
                 'stripe_token',
-                HTML('<p class="lead"><strong>Thank you for choosing LawPal. We will charge your card ${0} on the {1} of every month starting on {2}.</strong></p><p>If you change your mind, you can cancel your account at any time.</p> '.format(
+                HTML('<p class="lead"><strong>Thank you for choosing Revision. We will charge your card ${0} on the {1} of every month starting on {2}.</strong></p><p>If you change your mind, you can cancel your account at any time.</p> '.format(
                     self.plan['price'],
                     '{% now "jS" %}',
                     '{% now "F j, Y" %}'

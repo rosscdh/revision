@@ -1,0 +1,26 @@
+{% load crispy_forms_tags %}
+
+{% block css %}{% endblock css %}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">{% block modal_title %}{{ form.title }}{% endblock %}</h4>
+        </div>
+        {% block content %}
+            {% crispy form %}
+        {% endblock %}
+    </div>
+</div>
+
+{% block js %}
+<script type="text/javascript">
+// <![CDATA[
+(function($) {
+    // Re-bind our overloaded version of parsley to any forms
+    $('.modal [parsley-validate]').parsley();
+})(jQuery);
+// ]]>
+</script>
+{% endblock js %}

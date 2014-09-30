@@ -6,6 +6,7 @@ from .mixins import EmailIsValidatedMixin
 from .managers import CustomUserManager
 
 from jsonfield import JSONField
+#from sorl.thumbnail.images import ImageFile
 
 import logging
 logger = logging.getLogger('django.request')
@@ -22,6 +23,17 @@ class UserProfile(EmailIsValidatedMixin,
                                 related_name='profile')
 
     data = JSONField(default={})
+
+    @property
+    def firm_name(self):
+        return self.data.get('firm_name', None)
+
+    # @property
+    # def firm_logo(self):
+    #     firm_logo = self.data.get('firm_logo', None)
+    #     if firm_logo is not None:
+    #         return ImageFile(firm_logo)
+    #     return firm_logo
 
     def __unicode__(self):
         return '%s <%s>' % (self.user.get_full_name(), self.user.email)

@@ -65,7 +65,7 @@ class BaseMailerService(object):
         but to handle this we set teh reply_to header to be the lawyers email
         """
         site_email = settings.DEFAULT_FROM[0][1]
-        return '%s (via LawPal) %s' % (name, site_email) if email != site_email else email
+        return '%s (via Revision) %s' % (name, site_email) if email != site_email else email
 
     def process(self, attachments=None, **kwargs):
         self.params = kwargs

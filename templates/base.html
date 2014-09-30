@@ -51,7 +51,7 @@
             <small>{{ user.get_full_name }}</small>
             <ul class="nav navbar-nav navbar-right">
               <li><a href="{% url 'project:list' %}">Projects</a></li>
-              <li><a href="#">Account</a></li>
+              <li><a href="{% url 'me:settings' %}">Account</a></li>
               <li><a href="#">Billing</a></li>
               <li class="divider"></li>
               <li><a href="#" class="intercom">Help</a></li>
