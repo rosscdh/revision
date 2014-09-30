@@ -16,6 +16,9 @@ urlpatterns = patterns('',
     url(r'^me/password/', include('password_reset.urls')),
     url(r'^me/', include('revision.apps.me.urls', namespace='me')),
 
+    # Payments
+    url(r'^payments/', include('payments.urls')),
+
     url(r'^pub/', include('revision.apps.publish.urls', namespace='publish')),
     url(r'^p/', include('revision.apps.project.urls', namespace='project')),
     url(r'^', include('revision.apps.public.urls', namespace='public')),

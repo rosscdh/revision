@@ -173,8 +173,9 @@ class VideoCommentDetailEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
     def destroy(self, request, **kwargs):
         self.object = self.get_object()
+        pk = self.pk + 1  # account for - 1
         try:
-            index, data = [(index, c.copy()) for index, c in enumerate(self.object.comments) if c.get('pk') == self.pk][0]
+            index, data = [(index, c.copy()) for index, c in enumerate(self.object.comments) if c.get('pk') == pk][0]
         except IndexError:
             return Response(status=http_status.HTTP_404_NOT_FOUND, data={'errors': 'Comment %d: Does not exist' % self.pk})
 
