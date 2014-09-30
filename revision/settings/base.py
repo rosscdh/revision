@@ -213,6 +213,12 @@ PIPELINE_JS = {
             'bootstrap/js/html5shiv.min.js',
             'bootstrap/js/respond.min.js',
         ),
+        'output_filename': 'js/dist/base_ie_only.js'
+    },
+    'base': {
+        'source_filenames': (
+            'js/showdown-0.3.1.min.js',
+        ),
         'output_filename': 'js/dist/base.js'
     },
     'react': {
@@ -246,7 +252,6 @@ PIPELINE_JS = {
     'project': {
         'source_filenames': (
             # react components
-            'js/showdown-0.3.1.min.js',
             'js/project_collaborators.jsx',
             'js/project_comments.jsx',
             'js/project_video.jsx',
