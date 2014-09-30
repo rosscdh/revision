@@ -1,14 +1,16 @@
 {% extends 'index.html' %}{% load compressed revision_tags %}
 
-{% block page_title %}{{ project.name }}{% endblock %}
+{% block page_title %}View {{ object.video.name }}{% endblock %}
 
 {% block body %}
 {% csrf_token %}
 <div class="jumbotron">
     <div class="container">
+        <h2>{{ object.video.name }}</h2>
         <div id="published-detail"></div>
     </div>
 </div>
+
 {% endblock %}
 
 
@@ -40,5 +42,14 @@
     </script>
 
     {% compressed_js 'published' %}
+
+    <script src="//checkout.stripe.com/checkout.js"
+        class="stripe-button"
+        data-key="{{ STRIPE_PUBLIC_KEY }}"
+        data-amount="{{ object.stripe_payment_amount }}"
+        data-name="{{ object.video.name }}"
+        data-description="Subscribe to watch the video named '{{ object.video.name }}'"
+        data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
+    </script>
 
 {% endblock js %}

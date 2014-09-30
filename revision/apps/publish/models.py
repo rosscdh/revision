@@ -20,5 +20,12 @@ class Published(models.Model):
 
     data = JSONField(default={})
 
+    @property
+    def stripe_payment_amount(self):
+      """
+      Stripe wants the amount in cents
+      """
+      return round(self.payment * 100, 0)
+
     def get_absolute_url(self):
         return reverse('publish:view', kwargs={'slug': self.slug})
