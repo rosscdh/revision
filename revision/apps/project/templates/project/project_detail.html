@@ -136,6 +136,7 @@ var Video = {{ view.video_json|safe|default:'{}' }};
 
 var Links = {
   'chronicle': "{% url 'project:chronicle' slug=project.slug %}",
+  'publish': "{% url 'publish:settings' slug=view.current_video.slug %}",
   'upload_video': "{% url 'project_upload_video' slug=project.slug %}",
 };
 

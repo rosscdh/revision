@@ -1,0 +1,15 @@
+{% extends 'publish/base.html' %}{% load crispy_forms_tags %}
+
+
+{% block jumbo %}
+{{ block.super }}
+<div class="page-header">
+  <h1>Publish Settings <small>for: {{ published.video.name }}, <a href="{{ published.video.get_absolute_url }}">Back</a></small></h1>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% crispy form %}
+
+{% endblock %}

@@ -100,6 +100,7 @@ LOCAL_APPS = (
     'revision.apps.client',  # clients
     'revision.apps.project',  # projects
     'revision.apps.public',  # public views
+    'revision.apps.publish',  # exposed videos to public
     # 'revision.apps.revision',
     # 'revision.apps.comment',
     # 'revision.apps.comment',
