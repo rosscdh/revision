@@ -22,7 +22,7 @@ def env(var, default=None):
         raise ImproperlyConfigured('Set the %s environment variable' % var)
 
 # Paths
-PROJECT_DIR = Path(__file__).absolute().ancestor(2)
+BASE_DIR = PROJECT_DIR = Path(__file__).absolute().ancestor(2)
 
 # Debugging
 DEBUG = False
@@ -251,6 +251,8 @@ PIPELINE_JS = {
     },
     'project': {
         'source_filenames': (
+            # supporting
+            'canvasjs/canvasjs.min.js',
             # react components
             'js/project_collaborators.jsx',
             'js/project_comments.jsx',

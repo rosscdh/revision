@@ -5,6 +5,7 @@
 {% block jumbo %}
 {% csrf_token %}
 <div id="project-detail-base"></div>
+<div id="video-timeline"></div>
 {% endblock %}
 
 {% block content %}
@@ -67,6 +68,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="//releases.flowplayer.org/5.5.0/skin/minimalist.css">
+{% compressed_css 'project' %}
 <style>
 .badge > a {
     color:#fff;
@@ -160,10 +162,10 @@ var User = {
 ProjectVideoResource.params.slug = CollaboratorResource.params.slug = Project.slug;
 VideoResource.params.video_slug = '{{ view.current_video.slug }}';
 CommentResource.params.video_slug = '{{ view.current_video.slug }}';
-
 </script>
 
 {% compressed_js 'project' %}
+
 {% endblock js %}
 
 {% block footer %}

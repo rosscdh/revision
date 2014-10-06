@@ -4,6 +4,72 @@
 * Project detail controls
 *
 */
+var TimelineView = React.createClass({displayName: 'TimelineView',
+    componentWillMount: function () {
+        var self = this;
+
+        flowplayer(function ( api, root ) {
+            api.bind("ready", function () {
+
+                self.init_timeline( api );
+
+            });
+            
+        });
+
+    },
+    init_timeline: function ( player ) {
+
+        var container = this.refs.timeline.getDOMNode();
+        var comments = this.props.video.comments;
+        var duration = player.video.duration;
+        var dataPoints = [];
+
+        var dp = {};
+        $.each(comments, function ( index, comment ) {
+
+            dp[comment.comment_type] = (dp[comment.comment_type] === undefined) ? [] : dp[comment.comment_type];
+
+            //console.log(comment)
+            // console.log(index)
+            // console.log(dp[comment.comment_type])
+            dp[comment.comment_type].push({
+                'x': comment.progress,
+                'y': dp[comment.comment_type].length
+            })
+        });
+        var data = [];
+        for (var i = 0; i < duration - 1; i++) {
+            dataPoints.push({x: i, y: 2});
+        }
+        var chart = new CanvasJS.Chart("video-timeline",
+        {
+          title:{
+            text: "fdsfd"
+          },
+          data: [
+              {
+                type: "stackedArea",
+                dataPoints: dp['subtitle']
+              },
+              {
+                type: "stackedArea",
+                dataPoints: dp['comment']
+              }
+          ]
+        });
+        chart.render();
+
+    },
+    render: function () {
+        var styles = {
+            height: '200px',
+            width: '100%'
+        };
+        return (React.DOM.div({id: "video-timeline", ref: "timeline", style: styles}));
+    }
+});
+
 // title view
 var TitleView = React.createClass({displayName: 'TitleView',
     render: function () {
@@ -81,7 +147,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
     handleSeekTo: function ( seek_to, event ) {
         this.state.flowplayer.seek( seek_to );
     },
-    componentDidMount: function () {
+    componentWillMount: function () {
         var self = this;
         /**
         * Flowplayer setup and configuration
@@ -114,7 +180,6 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
             });
             // setup keyboard shortcuts
             self.setKeyboard( api );
-
         });
 
     },
@@ -199,7 +264,11 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
         var Title = TitleView({project: this.state.project, 
                                links: this.state.links})
 
+        // var Timeline = <TimelineView flowplayer={this.state.flowplayer}
+        //                              video={this.state.video} />
+
         var FlowPlayer = FlowPlayerView({video: this.state.video})
+
         var CommentForm = CommentFormView({onVideoUpdate: this.handleVideoUpdate, 
                                            onSetCurrentType: this.handleTypeChange, 
                                            current_type: this.state.current_type, 
@@ -218,6 +287,7 @@ var BaseProjectDetailView = React.createClass({displayName: 'BaseProjectDetailVi
                     messagesView, 
                     React.DOM.div({className: "row"}, 
                         React.DOM.div({className: "col-xs-8"}, 
+                        
                         FlowPlayer, 
                         CommentForm
                         ), 
