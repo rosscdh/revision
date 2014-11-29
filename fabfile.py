@@ -19,7 +19,7 @@ debug = True
 env.local_project_path = os.path.dirname(os.path.realpath(__file__))
 env.gui_dist_path = '%s/gui/dist' % env.local_project_path
 env.uwsgi_app_path = os.path.dirname(os.path.realpath(__file__)) + '/../revision-conf/uwsgi-app/files'
-env.environment_settings_path = os.path.dirname(os.path.realpath(__file__)) + '/../revision-conf'
+env.environment_settings_path = os.path.dirname(os.path.realpath(__file__)) + '/../conf'
 # default to local override in env
 env.remote_project_path = env.local_project_path
 
@@ -406,8 +406,8 @@ def deploy_settings():
     project_path = '%s%s' % (env.remote_project_path, env.project,)
 
     # note the removal of the envirnment name part
-    put(local_path='%s/%s.local_settings.py' % (env.environment_settings_path, env.environment), remote_path='%s/%s.local_settings.py' % (env.deploy_archive_path, env.environment,))
-    sudo('cp %s/%s.local_settings.py %s/%s/local_settings.py' % (env.deploy_archive_path, env.environment, full_version_path, env.project))
+    put(local_path='%s%s.local_settings.py' % (env.environment_settings_path, env.environment), remote_path='%s%s.local_settings.py' % (env.deploy_archive_path, env.environment,))
+    sudo('cp %s%s.local_settings.py %s/%slocal_settings.py' % (env.deploy_archive_path, env.environment, full_version_path, env.project))
     run('chown -R %s:%s %s/%s/local_settings.py' % (env.application_user, env.application_user, full_version_path, env.project) )
 
 @task

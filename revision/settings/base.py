@@ -378,6 +378,20 @@ AWS_HEADERS = {
     'x-amz-acl': 'public-read',
 }
 
+try:
+    LOCAL_SETTINGS
+except NameError:
+    try:
+        from local_settings import *
+    except ImportError:
+        pass
+
+if IS_TESTING:
+    try:
+        from test_settings import *
+    except ImportError:
+        pass
+
 # Logging
 LOGGING = {
     'version': 1,
