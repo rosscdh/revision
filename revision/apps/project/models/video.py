@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.db.models.signals import post_save
+#from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse_lazy
 from django.template.defaultfilters import slugify
 
 from revision.utils import get_namedtuple_choices
 
 from ..mixins import VideoCommentsMixin
-from ..signals import transcode_original_video
+#from ..signals import transcode_original_video
 
 from jsonfield import JSONField
 from uuidfield import UUIDField
@@ -90,4 +90,4 @@ class Video(VideoCommentsMixin,
 #
 # Signals
 #
-post_save.connect(transcode_original_video, sender=Video, dispatch_uid='video.post_save.transcode_original_video')
+#post_save.connect(transcode_original_video, sender=Video, dispatch_uid='video.post_save.transcode_original_video')
